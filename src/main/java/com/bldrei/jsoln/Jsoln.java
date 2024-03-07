@@ -12,6 +12,8 @@ import jdk.jshell.spi.ExecutionControl;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.bldrei.jsoln.Primitives.wrap;
@@ -43,7 +45,9 @@ public final class Jsoln {
   private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException {
     T obj = getNewEmptyInstance(tClass);
     var fields = tClass.getDeclaredFields();
-    var methods = tClass.getDeclaredMethods();
+    List<Method> setters = Arrays.stream(tClass.getDeclaredMethods())
+      .filter(m -> m.getName().startsWith("set") && m.getParameterTypes().length == 1)
+      .toList();
 
     for (Field fld : fields) {
       String fldName = fld.getName();
@@ -60,7 +64,7 @@ public final class Jsoln {
 
       //value is present
       JsonElement val = jsonObject.get(fldName);
-      var x = switch (val) {
+      var valueOfActualType = switch (val) {
         case JsonObject jo -> deserialize(jo, fldType);
         case JsonArray ignored -> throw new ExecutionControl.NotImplementedException("collection not done");
         case JsonBoolean jb -> convertPlainJsonElementToObjectOfType(val, fldType);
@@ -71,11 +75,10 @@ public final class Jsoln {
 
 
 
-      for (Method method : methods) {
-        if (method.getName().equals("set" + capitalizeFirstLetter(fldName))
-          && method.getParameterCount() == 1
-          && method.getParameterTypes()[0].equals(isOptional ? Optional.class : fldType)) {
-          method.invoke(obj, isOptional ? Optional.of(val) : val);
+      for (Method setter : setters) {
+        if (setter.getName().equals("set" + capitalizeFirstLetter(fldName))
+          && wrap(setter.getParameterTypes()[0]).equals(isOptional ? Optional.class : fldType)) {
+          setter.invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           break;
         }
       }

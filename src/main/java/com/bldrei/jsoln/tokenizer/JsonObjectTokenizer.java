@@ -25,7 +25,7 @@ public class JsonObjectTokenizer extends AbstractJsonTokenizer {
       if (remainingChars[i] != KV_DELIMITER) {
         continue;
       }
-      String possibleKey = remainingTxt.substring(0, i);
+      String possibleKey = remainingTxt.substring(0, i).trim(); //trim for parsing pretty formatted jsons
       if (!DeserializeUtil.isWrapped(possibleKey, DOUBLE_QUOTE, DOUBLE_QUOTE)) {
         throw new IllegalArgumentException("Illegal json syntax: key is not wrapped into double quotes: " + possibleKey);
       }
@@ -35,18 +35,18 @@ public class JsonObjectTokenizer extends AbstractJsonTokenizer {
       break;
     }
 
-    if (key == null) return Optional.empty();
+    if (key == null) return Optional.empty(); //todo: remove
 
     Stack<Character> openingBrackets = new Stack<>();
     for (; i < remainingChars.length; i++) {
       char currentChar = remainingChars[i];
       if (currentChar == PARAMS_DELIMITER && openingBrackets.empty()) {
-        value = remainingTxt.substring(kvDelimeterIndex + 1, i);
+        value = remainingTxt.substring(kvDelimeterIndex + 1, i).trim(); //trim for parsing pretty formatted jsons
         remainingTxt = remainingTxt.substring(i + 1); //starting from next char after comma
         return Optional.of(Map.entry(key, value));
       }
       else if (currentChar == OPENING_CURLY_BRACE || currentChar == OPENING_BRACKET) {
-        openingBrackets.push(currentChar);
+        openingBrackets.push(currentChar); //not implemented
       }
       else if (currentChar == CLOSING_CURLY_BRACE) {
         if (openingBrackets.peek() == OPENING_CURLY_BRACE) openingBrackets.pop();
@@ -58,6 +58,9 @@ public class JsonObjectTokenizer extends AbstractJsonTokenizer {
       }
     }
 
-    return Optional.empty();
+    value = remainingTxt.substring(kvDelimeterIndex + 1).trim(); //trim for parsing pretty formatted jsons
+    remainingTxt = "";
+    return Optional.of(Map.entry(key, value));
+
   }
 }
