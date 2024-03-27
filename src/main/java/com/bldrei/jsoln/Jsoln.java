@@ -16,8 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bldrei.jsoln.Primitives.wrap;
-
 public final class Jsoln {
 
   private static final String OPTIONAL_VALUE_FLD_NAME = "value";
@@ -53,7 +51,6 @@ public final class Jsoln {
       String fldName = fld.getName();
       boolean isOptional = fld.getType().equals(Optional.class);
       Class<?> fldType = isOptional ? getOptionalFieldValueType(fld) : fld.getType();
-      fldType = wrap(fldType);
       boolean noValuePresent = !jsonObject.hasField(fldName);
       if (noValuePresent && isOptional) {
         fld.setAccessible(true);
@@ -64,20 +61,20 @@ public final class Jsoln {
 
       //value is present
       JsonElement val = jsonObject.get(fldName);
-      var valueOfActualType = switch (val) {
-        case JsonObject jo -> deserialize(jo, fldType);
-        case JsonArray ignored -> throw new ExecutionControl.NotImplementedException("collection not done");
-        case JsonBoolean jb -> convertPlainJsonElementToObjectOfType(val, fldType);
-        case JsonText jt -> convertPlainJsonElementToObjectOfType(val, fldType);
-        case JsonNumber jn -> convertPlainJsonElementToObjectOfType(val, fldType);
-        case JsonNull jnull -> convertPlainJsonElementToObjectOfType(val, fldType);
-      };
-
-
+      Object valueOfActualType;
+      if (val instanceof JsonObject jo) {
+        valueOfActualType = deserialize(jo, fldType);
+      }
+      else if (val instanceof JsonArray ignored) {
+        throw new ExecutionControl.NotImplementedException("collection not done");
+      }
+      else {
+        valueOfActualType = convertPlainJsonElementToObjectOfType(val, fldType);
+      }
 
       for (Method setter : setters) {
         if (setter.getName().equals("set" + capitalizeFirstLetter(fldName))
-          && wrap(setter.getParameterTypes()[0]).equals(isOptional ? Optional.class : fldType)) {
+          && setter.getParameterTypes()[0].equals(isOptional ? Optional.class : fldType)) {
           setter.invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           break;
         }
@@ -89,13 +86,22 @@ public final class Jsoln {
   //not jsonobject, not jsonarray
   private static <E> E convertPlainJsonElementToObjectOfType(JsonElement jsonElement, Class<E> elClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
-    Object val = switch (jsonElement) {
-      case JsonBoolean jb -> jb.getValue();
-      case JsonNull ignored -> null;
-      case JsonNumber jn -> elClass.getDeclaredMethod("valueOf", String.class).invoke(null, jn.getNumberAsString());
-      case JsonText jt -> jt.getValue();
-      default -> throw new IllegalStateException("Unexpected value: " + jsonElement);
-    };
+    Object val;
+    if (jsonElement instanceof JsonText jt) {
+      val = jt.getValue();
+    }
+    else if (jsonElement instanceof JsonNumber jn) {
+      val = jn.getNumericValue((Class<? extends Number>) elClass);
+    }
+    else if (jsonElement instanceof JsonBoolean jb) {
+      val = jb.getValue();
+    }
+    else if (jsonElement instanceof JsonNull jNull) {
+      val = null;
+    }
+    else {
+      throw new IllegalStateException("JsonElement is not allowed to be: " + jsonElement.getClass().getSimpleName());
+    }
 
     return val == null ? null : (E) val;
   }

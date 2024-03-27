@@ -11,10 +11,10 @@ public final class JsonArray extends JsonElement {
   }
 
   public boolean hasNext() {
-    return array.getFirst() != null;
+    return array.get(0) != null;
   }
 
   public JsonElement next() {
-    return array.removeFirst();
+    return array.remove(0);
   }
 }
