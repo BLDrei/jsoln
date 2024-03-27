@@ -10,7 +10,7 @@ import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.tokenizer.JsonArrayTokenizer;
 import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class DeserializeUtil {
   private static JsonElement parseToJsonElement(String json)
   {
     if (isWrapped(json, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
-      Map<String, JsonElement> kvMap = new LinkedHashMap<>();
+      Map<String, JsonElement> kvMap = new HashMap<>();
       var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json));
 
       while (true) {
@@ -54,7 +54,7 @@ public class DeserializeUtil {
       }
     }
     else if (isWrapped(json, OPENING_BRACKET, CLOSING_BRACKET)) {
-      List<JsonElement> array = new LinkedList<>();
+      List<JsonElement> array = new LinkedList<>(); //come up with more optimal solution
       var tokenizer = new JsonArrayTokenizer(removeFirstLastChar(json));
 
       while (true) {
@@ -69,13 +69,13 @@ public class DeserializeUtil {
       return new JsonText(removeFirstLastChar(json));
     }
     else if (json.equals("true")) {
-      return new JsonBoolean(true);
+      return JsonBoolean.TRUE;
     }
     else if (json.equals("false")) {
-      return new JsonBoolean(false);
+      return JsonBoolean.FALSE;
     }
     else if (json.equals("null")) {
-      return new JsonNull(); //singleton or remove
+      return JsonNull.INSTANCE; //consider removing
     }
     else if (numericPattern.matcher(json).matches()) {
       return new JsonNumber(json);
