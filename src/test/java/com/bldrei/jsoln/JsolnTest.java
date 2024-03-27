@@ -15,7 +15,8 @@ public class JsolnTest {
 
   @Test
   public void deserializeSimpleObjectNoPrettyFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException {
-    Application application = Jsoln.deserialize("{\"country\":\"EE\",\"channelId\":6,\"income\":1300.12}", Application.class);
+    Application application = Jsoln.deserialize("""
+    {"country":"EE","channelId":6,"income":1300.12}""", Application.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
@@ -25,7 +26,8 @@ public class JsolnTest {
 
   @Test
   public void deserializeSimpleObjectWhitespaceFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException {
-    Application application = Jsoln.deserialize("{   \t    \"country\": \"EE\", \n \"channelId\": 6  , \"income\" :1300.12 }", Application.class);
+    Application application = Jsoln.deserialize("""
+      {   \t    "country": "EE", \n "channelId": 6  , "income" :1300.12 }""", Application.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
