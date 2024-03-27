@@ -68,8 +68,20 @@ public final class Jsoln {
       else if (val instanceof JsonArray ignored) {
         throw new ExecutionControl.NotImplementedException("collection not done");
       }
+      else if (val instanceof JsonText jt) {
+        valueOfActualType = jt.getValue();
+      }
+      else if (val instanceof JsonNumber jn) {
+        valueOfActualType = jn.getNumericValue((Class<? extends Number>) fldType);
+      }
+      else if (val instanceof JsonBoolean jb) {
+        valueOfActualType = jb.getValue();
+      }
+      else if (val instanceof JsonNull jNull) {
+        valueOfActualType = null;
+      }
       else {
-        valueOfActualType = convertPlainJsonElementToObjectOfType(val, fldType);
+        throw new IllegalStateException("Will be gone with pattern matching, unexpected jsonElement: " + val.getClass().getSimpleName());
       }
 
       for (Method setter : setters) {
@@ -83,61 +95,13 @@ public final class Jsoln {
     return obj;
   }
 
-  //not jsonobject, not jsonarray
-  private static <E> E convertPlainJsonElementToObjectOfType(JsonElement jsonElement, Class<E> elClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-
-    Object val;
-    if (jsonElement instanceof JsonText jt) {
-      val = jt.getValue();
-    }
-    else if (jsonElement instanceof JsonNumber jn) {
-      val = jn.getNumericValue((Class<? extends Number>) elClass);
-    }
-    else if (jsonElement instanceof JsonBoolean jb) {
-      val = jb.getValue();
-    }
-    else if (jsonElement instanceof JsonNull jNull) {
-      val = null;
-    }
-    else {
-      throw new IllegalStateException("JsonElement is not allowed to be: " + jsonElement.getClass().getSimpleName());
-    }
-
-    return val == null ? null : (E) val;
-  }
-
-//  private static Map<String, Object> getJsonMap(String json) {
-//    Map<String, Object> jsonMap = new HashMap<>();
-//
-//
-//    var tokenizer = new StringTokenizer(json, ",");
-//    while (tokenizer.hasMoreTokens()) {
-//      StringTokenizer kvPairTokenizer = new StringTokenizer(tokenizer.nextToken(), DOUBLE_QUOTE);
-//
-//      String keyStr = kvPairTokenizer.nextToken();
-//      String valStr = kvPairTokenizer.nextToken();
-//
-//      if (keyStr.charAt(0) != DOUBLE_QUOTE_CHAR
-//        || keyStr.charAt(keyStr.length() - 1) != DOUBLE_QUOTE_CHAR) {
-//        throw new IllegalArgumentException("Incorrect json");
-//      }
-//      keyStr = keyStr.substring(1, keyStr.length() - 1);
-//      if (valStr.startsWith("{") && valStr.endsWith("}")) {
-//        jsonMap.put(keyStr, getJsonMap(valStr));
-//      } else if (valStr.startsWith("[") && valStr.endsWith("]")) {
-//        jsonMap.put(keyStr, getJsonMap(valStr));
-//      }
-//    }
-//  }
-
-
 
   private static <T> T getNewEmptyInstance(Class<T> tClass) {
     try {
       return tClass.getDeclaredConstructor().newInstance();
     }
     catch (NoSuchMethodException e) {
-      throw new RuntimeException("TODO: find any accessible constructor");
+      throw new RuntimeException("Zero-argument constructor missing");
     }
     catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);
