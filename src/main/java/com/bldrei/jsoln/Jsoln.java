@@ -26,11 +26,11 @@ public final class Jsoln {
     return "";
   }
 
-  public static <T> T deserialize(String fullJson, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
+  public static <T> T deserialize(String fullJson, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     return deserialize(DeserializeUtil.parseFullJson(fullJson), tClass);
   }
 
-  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
+  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     return tClass.isRecord()
       ? deserializeRecordObject(jsonObject, tClass)
       : deserializeClassObject(jsonObject, tClass);
@@ -40,7 +40,7 @@ public final class Jsoln {
     return null;
   }
 
-  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException {
+  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     T obj = getNewEmptyInstance(tClass);
     var fields = tClass.getDeclaredFields();
     List<Method> setters = Arrays.stream(tClass.getDeclaredMethods())
@@ -112,8 +112,10 @@ public final class Jsoln {
     return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
-  private static Class<?> getOptionalFieldValueType(Field optionalField) throws NoSuchFieldException {
-    Class<Optional<?>> optionalClass = (Class<Optional<?>>) optionalField.getType();
-    return optionalClass.getDeclaredField(OPTIONAL_VALUE_FLD_NAME).getType();
+  private static Class<?> getOptionalFieldValueType(Field optionalField) throws ClassNotFoundException {
+    var actualClassName = optionalField.getGenericType().getTypeName()
+      .replaceFirst("java.util.Optional<", "")
+      .replace(">", ""); //optimize
+    return Class.forName(actualClassName);
   }
 }

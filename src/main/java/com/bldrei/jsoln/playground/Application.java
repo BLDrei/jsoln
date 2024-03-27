@@ -15,4 +15,5 @@ public class Application {
   private Optional<String> country;
   private Optional<String> emptyval;
   private BigDecimal income;
+  private Optional<Application> application;
 }

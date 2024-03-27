@@ -5,6 +5,7 @@ import jdk.jshell.spi.ExecutionControl;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JsolnTest {
 
   @Test
-  public void deserializeSimpleObjectNoPrettyFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException {
+  public void deserializeSimpleObjectNoPrettyFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     Application application = Jsoln.deserialize("""
     {"country":"EE","channelId":6,"income":1300.12}""", Application.class);
 
@@ -22,10 +23,11 @@ public class JsolnTest {
     assertEquals(6, application.getChannelId());
     assertEquals(Optional.of("EE"), application.getCountry());
     assertTrue(application.getEmptyval().isEmpty());
+    assertTrue(application.getApplication().isEmpty());
   }
 
   @Test
-  public void deserializeSimpleObjectWhitespaceFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException {
+  public void deserializeSimpleObjectWhitespaceFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     Application application = Jsoln.deserialize("""
       {   \t    "country": "EE", \n "channelId": 6  , "income" :1300.12 }""", Application.class);
 
@@ -33,5 +35,22 @@ public class JsolnTest {
     assertEquals(6, application.getChannelId());
     assertEquals(Optional.of("EE"), application.getCountry());
     assertTrue(application.getEmptyval().isEmpty());
+    assertTrue(application.getApplication().isEmpty());
+  }
+
+  @Test
+  public void deserializeRecursiveObject() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+    Application application = Jsoln.deserialize("""
+      {"country":"EE","channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6}}""", Application.class);
+
+    assertNotNull(application);
+    assertEquals(6, application.getChannelId());
+    assertEquals(Optional.of("EE"), application.getCountry());
+    assertTrue(application.getEmptyval().isEmpty());
+
+    Application innerApplication = application.getApplication().get();
+    assertEquals(new BigDecimal("12.3456"), innerApplication.getIncome());
+    assertEquals(6, innerApplication.getChannelId());
+    assertTrue(innerApplication.getApplication().isEmpty());
   }
 }
