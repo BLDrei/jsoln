@@ -49,22 +49,25 @@ public final class Jsoln {
       Class<?> fieldType = fld.getType();
       boolean isOptional = fieldType.equals(Optional.class);
       Class<?> actualType = isOptional ? getActualTypeFromOptional(fld) : fieldType;
-      boolean noValuePresent = !jsonObject.hasField(fldName);
-      if (noValuePresent && isOptional) {
-        fld.setAccessible(true);
-        fld.set(obj, Optional.empty());
-        continue;
+      boolean valuePresent = jsonObject.hasField(fldName);
+
+      if (!valuePresent && !isOptional) {
+        handleMissingValueForMandatoryField(fldName);
       }
-      if (noValuePresent) throw new IllegalArgumentException("Value not present, but field " + fldName + " is mandatory");
+      else {
+        Optional<Method> setter = findSetter(tClass, fldName, fieldType);
+        if (setter.isPresent()) { //todo refactor
+          if (!valuePresent) {
+            setter.get().invoke(obj, Optional.empty());
+          }
+          else {
+            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType);
+            setter.get().invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
+          }
+        } else {
+          System.out.println("Warn: setter for %s not found".formatted(fldName));
+        }
 
-      //value is present
-      Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType);
-
-      try {
-        Method setter = tClass.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), fieldType);
-        setter.invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
-      } catch (NoSuchMethodException e) {
-        System.out.println("Warn: setter for %s not found".formatted(fldName));
       }
     }
     return obj;
@@ -79,6 +82,24 @@ public final class Jsoln {
       case JsonBoolean jb -> jb.getValue();
       case JsonNull jNull -> null;
     };
+  }
+
+  private static void handleMissingValueForMandatoryField(String fldName) {
+    final boolean strictMode = true;
+    if (strictMode) {
+      throw new IllegalArgumentException("Value not present, but field " + fldName + " is mandatory");
+    } else {
+      System.out.println("Warn: Value not present, but field " + fldName + " is mandatory");
+    }
+  }
+
+  private static Optional<Method> findSetter(Class dto, String fldName, Class fieldType) {
+    try {
+      return Optional.of(dto.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), fieldType));
+    }
+    catch (NoSuchMethodException e) {
+      return Optional.empty();
+    }
   }
 
   private static String capitalizeFirstLetter(String str) {
