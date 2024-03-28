@@ -10,6 +10,7 @@ import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.tokenizer.JsonArrayTokenizer;
 import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,6 +83,18 @@ public class DeserializeUtil {
     }
 
     throw new IllegalArgumentException("Not JsonArray, and not JsonObject, and nothing else");
+  }
+
+  public static <T> T getNewEmptyInstance(Class<T> tClass) {
+    try {
+      return tClass.getDeclaredConstructor().newInstance();
+    }
+    catch (NoSuchMethodException e) {
+      throw new RuntimeException("Zero-argument constructor missing");
+    }
+    catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static String removeFirstLastChar(String txt) {

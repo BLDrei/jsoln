@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public final class Jsoln {
+import static com.bldrei.jsoln.DeserializeUtil.getNewEmptyInstance;
 
-  private static final String OPTIONAL_VALUE_FLD_NAME = "value";
+public final class Jsoln {
 
   private Jsoln() {}
 
@@ -43,14 +43,12 @@ public final class Jsoln {
   private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     T obj = getNewEmptyInstance(tClass);
     var fields = tClass.getDeclaredFields();
-    List<Method> setters = Arrays.stream(tClass.getDeclaredMethods())
-      .filter(m -> m.getName().startsWith("set") && m.getParameterTypes().length == 1)
-      .toList();
 
     for (Field fld : fields) {
       String fldName = fld.getName();
-      boolean isOptional = fld.getType().equals(Optional.class);
-      Class<?> fldType = isOptional ? getOptionalFieldValueType(fld) : fld.getType();
+      Class<?> fieldType = fld.getType();
+      boolean isOptional = fieldType.equals(Optional.class);
+      Class<?> actualType = isOptional ? getActualTypeFromOptional(fld) : fieldType;
       boolean noValuePresent = !jsonObject.hasField(fldName);
       if (noValuePresent && isOptional) {
         fld.setAccessible(true);
@@ -60,59 +58,34 @@ public final class Jsoln {
       if (noValuePresent) throw new IllegalArgumentException("Value not present, but field " + fldName + " is mandatory");
 
       //value is present
-      JsonElement val = jsonObject.get(fldName);
-      Object valueOfActualType;
-      if (val instanceof JsonObject jo) {
-        valueOfActualType = deserialize(jo, fldType);
-      }
-      else if (val instanceof JsonArray ignored) {
-        throw new ExecutionControl.NotImplementedException("collection not done");
-      }
-      else if (val instanceof JsonText jt) {
-        valueOfActualType = jt.getValue();
-      }
-      else if (val instanceof JsonNumber jn) {
-        valueOfActualType = jn.getNumericValue((Class<? extends Number>) fldType);
-      }
-      else if (val instanceof JsonBoolean jb) {
-        valueOfActualType = jb.getValue();
-      }
-      else if (val instanceof JsonNull jNull) {
-        valueOfActualType = null;
-      }
-      else {
-        throw new IllegalStateException("Will be gone with pattern matching, unexpected jsonElement: " + val.getClass().getSimpleName());
-      }
+      Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType);
 
-      for (Method setter : setters) {
-        if (setter.getName().equals("set" + capitalizeFirstLetter(fldName))
-          && setter.getParameterTypes()[0].equals(isOptional ? Optional.class : fldType)) {
-          setter.invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
-          break;
-        }
+      try {
+        Method setter = tClass.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), fieldType);
+        setter.invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
+      } catch (NoSuchMethodException e) {
+        System.out.println("Warn: setter for %s not found".formatted(fldName));
       }
     }
     return obj;
   }
 
-
-  private static <T> T getNewEmptyInstance(Class<T> tClass) {
-    try {
-      return tClass.getDeclaredConstructor().newInstance();
-    }
-    catch (NoSuchMethodException e) {
-      throw new RuntimeException("Zero-argument constructor missing");
-    }
-    catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+  private static Object extractValueFromJsonElement(JsonElement val, Class actualType) throws ExecutionControl.NotImplementedException, NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    return switch (val) {
+      case JsonObject jo -> deserialize(jo, actualType);
+      case JsonArray ignored -> throw new ExecutionControl.NotImplementedException("collection not implemented");
+      case JsonText jt -> jt.getValue();
+      case JsonNumber jn -> jn.getNumericValue((Class<? extends Number>) actualType);
+      case JsonBoolean jb -> jb.getValue();
+      case JsonNull jNull -> null;
+    };
   }
 
   private static String capitalizeFirstLetter(String str) {
-    return str.substring(0, 1).toUpperCase() + str.substring(1);
+    return Character.toUpperCase(str.charAt(0)) + str.substring(1);
   }
 
-  private static Class<?> getOptionalFieldValueType(Field optionalField) throws ClassNotFoundException {
+  private static Class<?> getActualTypeFromOptional(Field optionalField) throws ClassNotFoundException {
     var actualClassName = optionalField.getGenericType().getTypeName()
       .replaceFirst("java.util.Optional<", "")
       .replace(">", ""); //optimize
