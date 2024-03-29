@@ -22,8 +22,8 @@ public class JsonArrayTokenizer extends AbstractJsonTokenizer {
     Stack<Character> openingBrackets = new Stack<>();
     for (int i = 0; i < remainingChars.length; i++) {
       char currentChar = remainingChars[i];
-      if (currentChar == ARRAY_MEMBERS_DELIMITER && openingBrackets.empty()) {
-        arrayMember = remainingTxt.substring(0, i);
+      if ((currentChar == ARRAY_MEMBERS_DELIMITER || i == remainingChars.length - 1) && openingBrackets.empty()) {
+        arrayMember = remainingTxt.substring(0, i + 1);
         remainingTxt = remainingTxt.substring(i + 1); //starting from next char after comma
         return Optional.of(arrayMember);
       }

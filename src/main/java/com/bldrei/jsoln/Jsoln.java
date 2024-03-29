@@ -73,10 +73,10 @@ public final class Jsoln {
     return obj;
   }
 
-  private static Object extractValueFromJsonElement(JsonElement val, Class actualType) throws ExecutionControl.NotImplementedException, NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public static Object extractValueFromJsonElement(JsonElement val, Class actualType) throws ExecutionControl.NotImplementedException, NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     return switch (val) {
       case JsonObject jo -> deserialize(jo, actualType);
-      case JsonArray ignored -> throw new ExecutionControl.NotImplementedException("collection not implemented");
+      case JsonArray ja -> ja.getCollection(actualType);
       case JsonText jt -> jt.getValue();
       case JsonNumber jn -> jn.getNumericValue((Class<? extends Number>) actualType);
       case JsonBoolean jb -> jb.getValue();
