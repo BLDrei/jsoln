@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,7 @@ public class Application {
   private Optional<String> country;
   private List<String> accountsList;
 //  private Optional<Set<String>> accountsSet;
+  private Optional<LocalDate> expirationDate;
   private Optional<String> emptyval;
   private BigDecimal income;
   private Optional<Application> application;

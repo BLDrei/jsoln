@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +20,7 @@ public class JsolnTest {
   @Test
   public void deserializeSimpleObjectNoPrettyFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
     Application application = Jsoln.deserialize("""
-    {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"income":1300.12}""", Application.class);
+    {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12}""", Application.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
@@ -30,6 +32,7 @@ public class JsolnTest {
 //    assertEquals(1, accountsSet.size());
 //    assertTrue(accountsSet.contains("EE03s"));
 //    assertThrows(RuntimeException.class, () -> accountsSet.add(""));
+    assertEquals(LocalDate.of(2024, Month.MARCH, 31), application.getExpirationDate().get());
     assertTrue(application.getEmptyval().isEmpty());
     assertTrue(application.getApplication().isEmpty());
   }
