@@ -1,5 +1,6 @@
-package com.bldrei.jsoln;
+package com.bldrei.jsoln.util;
 
+import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
@@ -82,7 +83,7 @@ public class DeserializeUtil {
       return new JsonNumber(json);
     }
 
-    throw new IllegalArgumentException("Not JsonArray, and not JsonObject, and nothing else");
+    throw new JsolnException("'" + json + "' is not JsonArray, and not JsonObject, and nothing else");
   }
 
   public static <T> T getNewEmptyInstance(Class<T> tClass) {

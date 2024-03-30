@@ -7,16 +7,17 @@ import com.bldrei.jsoln.jsonmodel.JsonNull;
 import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
+import com.bldrei.jsoln.util.DeserializeUtil;
+import com.bldrei.jsoln.util.ReflectionUtil;
 import jdk.jshell.spi.ExecutionControl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bldrei.jsoln.DeserializeUtil.getNewEmptyInstance;
+import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
 
 public final class Jsoln {
 
@@ -26,11 +27,11 @@ public final class Jsoln {
     return "";
   }
 
-  public static <T> T deserialize(String fullJson, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  public static <T> T deserialize(String fullJson, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
     return deserialize(DeserializeUtil.parseFullJson(fullJson), tClass);
   }
 
-  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
     return tClass.isRecord()
       ? deserializeRecordObject(jsonObject, tClass)
       : deserializeClassObject(jsonObject, tClass);
@@ -40,7 +41,7 @@ public final class Jsoln {
     return null;
   }
 
-  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException {
     T obj = getNewEmptyInstance(tClass);
     var fields = tClass.getDeclaredFields();
 
@@ -48,7 +49,7 @@ public final class Jsoln {
       String fldName = fld.getName();
       Class<?> fieldType = fld.getType();
       boolean isOptional = fieldType.equals(Optional.class);
-      Class<?> actualType = isOptional ? getActualTypeFromOptional(fld) : fieldType;
+      Class<?> actualType = isOptional ? ReflectionUtil.getActualTypesFromGenericField(fld).getFirst() : fieldType;
       boolean valuePresent = jsonObject.hasField(fldName);
 
       if (!valuePresent && !isOptional) {
@@ -61,7 +62,7 @@ public final class Jsoln {
             setter.get().invoke(obj, Optional.empty());
           }
           else {
-            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType);
+            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType, ReflectionUtil.getActualTypesFromGenericField(fld));
             setter.get().invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           }
         } else {
@@ -73,11 +74,11 @@ public final class Jsoln {
     return obj;
   }
 
-  public static Object extractValueFromJsonElement(JsonElement val, Class actualType) throws ExecutionControl.NotImplementedException, NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public static Object extractValueFromJsonElement(JsonElement val, Class actualType, List<Class> genericParams) throws ExecutionControl.NotImplementedException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     return switch (val) {
       case JsonObject jo -> deserialize(jo, actualType);
-      case JsonArray ja -> ja.getCollection(actualType);
-      case JsonText jt -> jt.getValue();
+      case JsonArray ja -> ja.getCollection(actualType, genericParams.getFirst());
+      case JsonText jt -> jt.getValue(actualType);
       case JsonNumber jn -> jn.getNumericValue((Class<? extends Number>) actualType);
       case JsonBoolean jb -> jb.getValue();
       case JsonNull jNull -> null;
@@ -104,12 +105,5 @@ public final class Jsoln {
 
   private static String capitalizeFirstLetter(String str) {
     return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-  }
-
-  private static Class<?> getActualTypeFromOptional(Field optionalField) throws ClassNotFoundException {
-    var actualClassName = optionalField.getGenericType().getTypeName()
-      .replaceFirst("java.util.Optional<", "")
-      .replace(">", ""); //optimize
-    return Class.forName(actualClassName);
   }
 }

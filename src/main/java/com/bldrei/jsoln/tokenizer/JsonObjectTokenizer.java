@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.tokenizer;
 
-import com.bldrei.jsoln.DeserializeUtil;
+import com.bldrei.jsoln.util.DeserializeUtil;
 
 import java.util.Map;
 import java.util.Optional;
