@@ -3,9 +3,8 @@ plugins {
 }
 
 java {
-    toolchain {
-        version JavaLanguageVersion.of(21)
-    }
+    sourceCompatibility = 21
+    targetCompatibility = 21
 }
 
 group = 'com.bldrei'
@@ -23,6 +22,7 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
