@@ -4,7 +4,6 @@ import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonNull;
 import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
@@ -77,7 +76,7 @@ public class DeserializeUtil {
       return JsonBoolean.FALSE;
     }
     else if (json.equals("null")) {
-      return JsonNull.INSTANCE; //consider removing
+      return null;
     }
     else if (numericPattern.matcher(json).matches()) {
       return new JsonNumber(json);

@@ -3,20 +3,15 @@ package com.bldrei.jsoln;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonNull;
 import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.DeserializeUtil;
-import com.bldrei.jsoln.util.ReflectionUtil;
 import jdk.jshell.spi.ExecutionControl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Optional;
 
 import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
@@ -86,7 +81,6 @@ public final class Jsoln {
       case JsonText jt -> jt.getValue(classTree.rawType());
       case JsonNumber jn -> jn.getNumericValue(classTree);
       case JsonBoolean jb -> jb.getValue();
-      case JsonNull jNull -> null;
     };
   }
 
