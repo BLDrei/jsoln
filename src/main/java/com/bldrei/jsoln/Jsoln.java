@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
 import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
+import static com.bldrei.jsoln.util.ReflectionUtil.findSetter;
 
 public final class Jsoln {
 
@@ -50,25 +51,24 @@ public final class Jsoln {
 
     for (Field fld : fields) {
       String fldName = fld.getName();
-      Class<?> fieldType = fld.getType();
-      boolean isOptional = fieldType.equals(Optional.class);
       ClassTree tree = ClassTree.fromField(fld);
-      if (isOptional) tree = ClassTree.fromType(tree.genericParameters()[0]);
-      Type actualType = tree.rawType();
-      boolean valuePresent = jsonObject.hasField(fldName);
+      boolean isNullable = Optional.class.equals(tree.rawType());
+      if (isNullable) tree = ClassTree.fromType(tree.genericParameters()[0]);
+      var value = jsonObject.get(fldName);
+      boolean valuePresent = value.isPresent();
 
-      if (!valuePresent && !isOptional) {
+      if (!valuePresent && !isNullable) {
         handleMissingValueForMandatoryField(fldName);
       }
       else {
-        Optional<Method> setter = findSetter(tClass, fldName, fld.getType());
+        var setter = findSetter(tClass, fldName, fld.getType());
         if (setter.isPresent()) { //todo refactor
           if (!valuePresent) {
             setter.get().invoke(obj, Optional.empty());
           }
           else {
-            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), tree);
-            setter.get().invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
+            Object valueOfActualType = extractValueFromJsonElement(value.get(), tree);
+            setter.get().invoke(obj, isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           }
         } else {
           System.out.println("Warn: setter for %s not found".formatted(fldName));
@@ -97,18 +97,5 @@ public final class Jsoln {
     } else {
       System.out.println("Warn: Value not present, but field " + fldName + " is mandatory");
     }
-  }
-
-  private static Optional<Method> findSetter(Class dto, String fldName, Class param) {
-    try {
-      return Optional.of(dto.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), param));
-    }
-    catch (NoSuchMethodException e) {
-      return Optional.empty();
-    }
-  }
-
-  private static String capitalizeFirstLetter(String str) {
-    return Character.toUpperCase(str.charAt(0)) + str.substring(1);
   }
 }

@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class JsonObject extends JsonElement {
   Map<String, JsonElement> kvMap;
@@ -9,11 +10,7 @@ public final class JsonObject extends JsonElement {
     this.kvMap = kvMap;
   }
 
-  public boolean hasField(String fieldName) {
-    return kvMap.containsKey(fieldName);
-  }
-
-  public JsonElement get(String fieldName) {
-    return kvMap.get(fieldName);
+  public Optional<JsonElement> get(String fieldName) {
+    return Optional.ofNullable(kvMap.get(fieldName));
   }
 }
