@@ -22,4 +22,10 @@ public class Application {
   private Optional<String> emptyval;
   private BigDecimal income;
   private Optional<Application> application;
+  private Optional<Status> initialStatus;
+  private Status currentStatus;
+
+  public enum Status {
+    OK, ERROR, IN_PROGRESS
+  }
 }
