@@ -1,6 +1,6 @@
-package com.bldrei.jsoln;
+package com.bldrei.jsoln.simplesingleparam;
 
-import com.bldrei.jsoln.dto.SingleOptionalParamDto;
+import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +60,7 @@ public class SingleOptionalParamTest {
   }
 
   @Test
-  public void deserialize_jsonIsNotObject() {
+  public void deserialize_jsonIsNotWrittenAsObject() {
     Stream.of(
       "",
       "{",

@@ -1,4 +1,4 @@
-package com.bldrei.jsoln.dto;
+package com.bldrei.jsoln.simplesingleparam;
 
 import lombok.Getter;
 import lombok.Setter;
