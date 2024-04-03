@@ -1,5 +1,6 @@
-package com.bldrei.jsoln.playground;
+package com.bldrei.jsoln.dto;
 
+import com.bldrei.jsoln.dto.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,8 +25,4 @@ public class Application {
   private Optional<Application> application;
   private Optional<Status> initialStatus;
   private Status currentStatus;
-
-  public enum Status {
-    OK, ERROR, IN_PROGRESS
-  }
 }

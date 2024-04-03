@@ -1,9 +1,7 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.util.ClassTree;
-import jdk.jshell.spi.ExecutionControl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -24,15 +22,8 @@ public final class JsonArray extends JsonElement {
   public Collection getCollection(ClassTree classTree) {
     Class collectionClass = findClass(classTree.rawType());
     Class actualType = findClass(classTree.genericParameters()[0]);
-    Stream stream = array.stream().map(jsonElement -> {
-      try {
-        return extractValueFromJsonElement(jsonElement, ClassTree.fromType(actualType));
-      }
-      catch (ExecutionControl.NotImplementedException | NoSuchFieldException |
-             InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-        throw new IllegalArgumentException();
-      }
-    });
+    Stream stream = array.stream()
+      .map(jsonElement -> extractValueFromJsonElement(jsonElement, ClassTree.fromType(actualType)));
 
     if (List.class.equals(collectionClass)) {
       return stream.toList();

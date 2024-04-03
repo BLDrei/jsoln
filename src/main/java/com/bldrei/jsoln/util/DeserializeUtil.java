@@ -90,7 +90,7 @@ public class DeserializeUtil {
       return tClass.getDeclaredConstructor().newInstance();
     }
     catch (NoSuchMethodException e) {
-      throw new RuntimeException("Zero-argument constructor missing");
+      throw new JsolnException("Zero-argument constructor missing for " + tClass);
     }
     catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);

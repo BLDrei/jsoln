@@ -8,6 +8,7 @@ import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.DeserializeUtil;
+import com.bldrei.jsoln.util.ReflectionUtil;
 import jdk.jshell.spi.ExecutionControl;
 
 import java.lang.reflect.Field;
@@ -26,11 +27,11 @@ public final class Jsoln {
     return "";
   }
 
-  public static <T> T deserialize(String fullJson, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
+  public static <T> T deserialize(String fullJson, Class<T> tClass) {
     return deserialize(DeserializeUtil.parseFullJson(fullJson), tClass);
   }
 
-  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, ExecutionControl.NotImplementedException {
+  private static <T> T deserialize(JsonObject jsonObject, Class<T> tClass) {
     return tClass.isRecord()
       ? deserializeRecordObject(jsonObject, tClass)
       : deserializeClassObject(jsonObject, tClass);
@@ -40,7 +41,7 @@ public final class Jsoln {
     return null;
   }
 
-  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException, ExecutionControl.NotImplementedException {
+  private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) {
     T obj = getNewEmptyInstance(tClass);
     var fields = tClass.getDeclaredFields();
 
@@ -59,11 +60,11 @@ public final class Jsoln {
         var setter = findSetter(tClass, fldName, fld.getType());
         if (setter.isPresent()) { //todo refactor
           if (!valuePresent) {
-            setter.get().invoke(obj, Optional.empty());
+            ReflectionUtil.invokeMethod(obj, setter.get(), Optional.empty());
           }
           else {
             Object valueOfActualType = extractValueFromJsonElement(value.get(), tree);
-            setter.get().invoke(obj, isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
+            ReflectionUtil.invokeMethod(obj, setter.get(), isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           }
         } else {
           System.out.println("Warn: setter for %s not found".formatted(fldName));
@@ -74,7 +75,7 @@ public final class Jsoln {
     return obj;
   }
 
-  public static Object extractValueFromJsonElement(JsonElement val, ClassTree classTree) throws ExecutionControl.NotImplementedException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public static Object extractValueFromJsonElement(JsonElement val, ClassTree classTree) {
     return switch (val) {
       case JsonObject jo -> deserialize(jo, findClass(classTree.rawType()));
       case JsonArray ja -> ja.getCollection(classTree);

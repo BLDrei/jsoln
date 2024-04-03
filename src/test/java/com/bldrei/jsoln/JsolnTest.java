@@ -1,10 +1,8 @@
 package com.bldrei.jsoln;
 
-import com.bldrei.jsoln.playground.Application;
-import jdk.jshell.spi.ExecutionControl;
+import com.bldrei.jsoln.dto.Application;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
@@ -18,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JsolnTest {
 
   @Test
-  public void deserializeSimpleObjectNoPrettyFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  public void deserializeSimpleObjectNoPrettyFormatting() {
     Application application = Jsoln.deserialize("""
     {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", Application.class);
 
@@ -40,7 +38,7 @@ public class JsolnTest {
   }
 
   @Test
-  public void deserializeSimpleObjectWhitespaceFormatting() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  public void deserializeSimpleObjectWhitespaceFormatting() {
     Application application = Jsoln.deserialize("""
       {   \t    "country": "EE", \n "channelId": 6  , "accountsList" :[ "EE02" ,"empty"], "income" :1300.12 , "currentStatus" :"ERROR" }""", Application.class);
 
@@ -52,7 +50,7 @@ public class JsolnTest {
   }
 
   @Test
-  public void deserializeRecursiveObject() throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ExecutionControl.NotImplementedException, ClassNotFoundException {
+  public void deserializeRecursiveObject() {
     Application application = Jsoln.deserialize("""
       {"country":"EE","accountsList":["EE02","empty"],"channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6,"accountsList":[],"currentStatus":"ERROR"},"currentStatus":"OK"}""", Application.class);
 
