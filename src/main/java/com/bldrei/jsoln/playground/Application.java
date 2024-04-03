@@ -17,7 +17,7 @@ public class Application {
   private Integer channelId;
   private Optional<String> country;
   private List<String> accountsList;
-//  private Optional<Set<String>> accountsSet;
+  private Optional<Set<String>> accountsSet;
   private Optional<LocalDate> expirationDate;
   private Optional<String> emptyval;
   private BigDecimal income;

@@ -7,6 +7,7 @@ import com.bldrei.jsoln.jsonmodel.JsonNull;
 import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
+import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.DeserializeUtil;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import jdk.jshell.spi.ExecutionControl;
@@ -14,10 +15,12 @@ import jdk.jshell.spi.ExecutionControl;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
 import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
+import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
 
 public final class Jsoln {
 
@@ -49,20 +52,22 @@ public final class Jsoln {
       String fldName = fld.getName();
       Class<?> fieldType = fld.getType();
       boolean isOptional = fieldType.equals(Optional.class);
-      Class<?> actualType = isOptional ? ReflectionUtil.getActualTypesFromGenericField(fld).getFirst() : fieldType;
+      ClassTree tree = ClassTree.fromField(fld);
+      if (isOptional) tree = ClassTree.fromType(tree.genericParameters()[0]);
+      Type actualType = tree.rawType();
       boolean valuePresent = jsonObject.hasField(fldName);
 
       if (!valuePresent && !isOptional) {
         handleMissingValueForMandatoryField(fldName);
       }
       else {
-        Optional<Method> setter = findSetter(tClass, fldName, fieldType);
+        Optional<Method> setter = findSetter(tClass, fldName, fld.getType());
         if (setter.isPresent()) { //todo refactor
           if (!valuePresent) {
             setter.get().invoke(obj, Optional.empty());
           }
           else {
-            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), actualType, ReflectionUtil.getActualTypesFromGenericField(fld));
+            Object valueOfActualType = extractValueFromJsonElement(jsonObject.get(fldName), tree);
             setter.get().invoke(obj, isOptional ? Optional.ofNullable(valueOfActualType) : valueOfActualType);
           }
         } else {
@@ -74,12 +79,12 @@ public final class Jsoln {
     return obj;
   }
 
-  public static Object extractValueFromJsonElement(JsonElement val, Class actualType, List<Class> genericParams) throws ExecutionControl.NotImplementedException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+  public static Object extractValueFromJsonElement(JsonElement val, ClassTree classTree) throws ExecutionControl.NotImplementedException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
     return switch (val) {
-      case JsonObject jo -> deserialize(jo, actualType);
-      case JsonArray ja -> ja.getCollection(actualType, genericParams.getFirst());
-      case JsonText jt -> jt.getValue(actualType);
-      case JsonNumber jn -> jn.getNumericValue((Class<? extends Number>) actualType);
+      case JsonObject jo -> deserialize(jo, findClass(classTree.rawType()));
+      case JsonArray ja -> ja.getCollection(classTree);
+      case JsonText jt -> jt.getValue(classTree.rawType());
+      case JsonNumber jn -> jn.getNumericValue(classTree);
       case JsonBoolean jb -> jb.getValue();
       case JsonNull jNull -> null;
     };
@@ -94,9 +99,9 @@ public final class Jsoln {
     }
   }
 
-  private static Optional<Method> findSetter(Class dto, String fldName, Class fieldType) {
+  private static Optional<Method> findSetter(Class dto, String fldName, Class param) {
     try {
-      return Optional.of(dto.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), fieldType));
+      return Optional.of(dto.getDeclaredMethod("set" + capitalizeFirstLetter(fldName), param));
     }
     catch (NoSuchMethodException e) {
       return Optional.empty();

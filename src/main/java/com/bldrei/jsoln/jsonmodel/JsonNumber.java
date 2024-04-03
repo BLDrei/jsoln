@@ -9,6 +9,7 @@ import com.bldrei.jsoln.converter.number.FloatConverter;
 import com.bldrei.jsoln.converter.number.IntegerConverter;
 import com.bldrei.jsoln.converter.number.LongConverter;
 import com.bldrei.jsoln.converter.number.ShortConverter;
+import com.bldrei.jsoln.util.ClassTree;
 
 import java.util.List;
 
@@ -19,12 +20,12 @@ public final class JsonNumber extends JsonElement {
     this.numberAsString = numberAsString;
   }
 
-  public <N extends Number> N getNumericValue(Class<N> numericClass) {
+  public Number getNumericValue(ClassTree classTree) {
     return NUMBER_CONVERTERS.stream()
-      .filter(converter -> converter.getType().equals(numericClass))
+      .filter(converter -> converter.getType().equals(classTree.rawType()))
       .findAny()
-      .map(converter -> (N) converter.convert(numberAsString))
-      .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + numericClass));
+      .map(converter -> converter.convert(numberAsString))
+      .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + classTree.rawType()));
   }
 
   private static final List<AbstractConverter<? extends Number>> NUMBER_CONVERTERS = List.of(

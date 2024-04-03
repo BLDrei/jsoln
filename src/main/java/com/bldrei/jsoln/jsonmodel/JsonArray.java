@@ -1,18 +1,17 @@
 package com.bldrei.jsoln.jsonmodel;
 
-import com.bldrei.jsoln.util.ReflectionUtil;
+import com.bldrei.jsoln.util.ClassTree;
 import jdk.jshell.spi.ExecutionControl;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
+import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
 
 public final class JsonArray extends JsonElement {
 
@@ -22,18 +21,12 @@ public final class JsonArray extends JsonElement {
     this.array = array;
   }
 
-  public boolean hasNext() {
-    return array.get(0) != null;
-  }
-
-  public JsonElement next() {
-    return array.remove(0);
-  }
-
-  public <COLL extends Collection<ITEM>, ITEM> Collection getCollection(Class<COLL> collectionClass, Class<ITEM> actualType) {
+  public Collection getCollection(ClassTree classTree) {
+    Class collectionClass = findClass(classTree.rawType());
+    Class actualType = findClass(classTree.genericParameters()[0]);
     Stream stream = array.stream().map(jsonElement -> {
       try {
-        return extractValueFromJsonElement(jsonElement, actualType, Collections.emptyList() /*actually wont work if List<List<>>, so consider restricting such stuff*/);
+        return extractValueFromJsonElement(jsonElement, ClassTree.fromType(actualType));
       }
       catch (ExecutionControl.NotImplementedException | NoSuchFieldException |
              InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
@@ -45,7 +38,7 @@ public final class JsonArray extends JsonElement {
       return stream.toList();
     }
     if (Set.class.equals(collectionClass)) {
-      return (Set<ITEM>) stream.collect(Collectors.toUnmodifiableSet());
+      return (Set) stream.collect(Collectors.toUnmodifiableSet());
     }
     throw new IllegalArgumentException("Unexpected collection type: " + collectionClass);
   }
