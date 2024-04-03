@@ -28,10 +28,12 @@ public class JsolnTest {
     assertEquals(1, application.getAccountsList().size());
     assertEquals("EE02", application.getAccountsList().getFirst());
     assertThrows(RuntimeException.class, () -> application.getAccountsList().add(""));
+    assertThrows(RuntimeException.class, () -> application.getAccountsList().remove(""));
     var accountsSet = application.getAccountsSet().orElseThrow();
     assertEquals(1, accountsSet.size());
     assertTrue(accountsSet.contains("EE03s"));
     assertThrows(RuntimeException.class, () -> accountsSet.add(""));
+    assertThrows(RuntimeException.class, () -> accountsSet.remove(""));
     assertEquals(LocalDate.of(2024, Month.MARCH, 31), application.getExpirationDate().get());
     assertTrue(application.getEmptyval().isEmpty());
     assertTrue(application.getApplication().isEmpty());
