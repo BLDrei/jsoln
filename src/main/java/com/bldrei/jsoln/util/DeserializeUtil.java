@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.util;
 
 import com.bldrei.jsoln.exception.JsolnException;
+import com.bldrei.jsoln.exception.JsonSyntaxException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
@@ -34,8 +35,9 @@ public class DeserializeUtil {
     if (isWrapped(fullJson, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
       return (JsonObject) parseToJsonElement(fullJson);
     }
+    //to do: if (isWrapped(json, [, ]))
 
-    throw new IllegalArgumentException("json is not object or array");
+    throw new JsonSyntaxException("Valid json must be wrapped into {} or []");
   }
 
   //accepts text of any json type (array, object, text, number...)

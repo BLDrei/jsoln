@@ -1,5 +1,6 @@
 package com.bldrei.jsoln;
 
+import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
@@ -88,7 +89,7 @@ public final class Jsoln {
   private static void handleMissingValueForMandatoryField(String fldName) {
     final boolean strictMode = true;
     if (strictMode) {
-      throw new IllegalArgumentException("Value not present, but field " + fldName + " is mandatory");
+      throw new JsolnException("Value not present, but field " + fldName + " is mandatory");
     } else {
       System.out.println("Warn: Value not present, but field " + fldName + " is mandatory");
     }
