@@ -84,7 +84,7 @@ public class DeserializeUtil {
       return new JsonNumber(json);
     }
 
-    throw new JsolnException("'" + json + "' is not JsonArray, and not JsonObject, and nothing else");
+    throw new JsonSyntaxException("Invalid Json parameter value: '%s'".formatted(json));
   }
 
   public static <T> T getNewEmptyInstance(Class<T> tClass) {
@@ -104,7 +104,8 @@ public class DeserializeUtil {
   }
 
   public static boolean isWrapped(String json, char firstChar, char lastChar) {
-    return json.charAt(0) == firstChar
+    return json.length() >= 2
+      && json.charAt(0) == firstChar
       && json.charAt(json.length() - 1) == lastChar;
   }
 }
