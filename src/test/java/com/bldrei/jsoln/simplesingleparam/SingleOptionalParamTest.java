@@ -4,12 +4,11 @@ import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SingleOptionalParamTest {
@@ -53,10 +52,10 @@ public class SingleOptionalParamTest {
 
   @Test
   public void deserialize_requiredValueIsNul_throwsSyntaxException() {
-    Supplier<SingleOptionalParamDto> s = () -> Jsoln.deserialize("""
-      {"optionalString":nul}""", SingleOptionalParamDto.class);
-
-    assertThrowsExactly(JsonSyntaxException.class, s::get, "Invalid Json parameter value: 'nul'");
+    shouldThrow(JsonSyntaxException.class,
+      () -> Jsoln.deserialize("""
+      {"optionalString":nul}""", SingleOptionalParamDto.class),
+      "Invalid Json parameter value: 'nul'");
   }
 
   @Test
@@ -68,8 +67,9 @@ public class SingleOptionalParamTest {
       "\"optionalString\":\"12a \"",
       "{\"optionalString\":\"12a \"",
       "\"optionalString\":\"12a \"}"
-    ).forEach( json -> assertThrowsExactly(JsonSyntaxException.class,
+    ).forEach(json -> shouldThrow(JsonSyntaxException.class,
       () -> Jsoln.deserialize(json, SingleOptionalParamDto.class),
-      "Valid json must be wrapped into {} or []"));
+      "Valid json must be wrapped into {} or []")
+    );
   }
 }

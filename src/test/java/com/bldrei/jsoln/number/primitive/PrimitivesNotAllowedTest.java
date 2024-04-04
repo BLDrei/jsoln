@@ -3,30 +3,34 @@ package com.bldrei.jsoln.number.primitive;
 import com.bldrei.jsoln.Jsoln;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
 
 public class PrimitivesNotAllowedTest {
 
   @Test
   public void deserialize_toPrimitiveNumericTypes_shouldThrowException() {
-    assertThrowsExactly(UnsupportedOperationException.class,
+    shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveInt\":3}", PrimitiveIntDto.class),
-      "Not implemented numeric class: class java.lang.int");
+      "Not implemented numeric class: int");
 
-    assertThrowsExactly(UnsupportedOperationException.class,
+    shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveByte\":3}", PrimitiveByteDto.class),
-      "Not implemented numeric class: class java.lang.byte");
+      "Not implemented numeric class: byte");
 
-    assertThrowsExactly(UnsupportedOperationException.class,
+    shouldThrow(UnsupportedOperationException.class,
+      () -> Jsoln.deserialize("{\"primitiveShort\":3}", PrimitiveShortDto.class),
+      "Not implemented numeric class: short");
+
+    shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveLong\":3}", PrimitiveLongDto.class),
-      "Not implemented numeric class: class java.lang.long");
+      "Not implemented numeric class: long");
 
-    assertThrowsExactly(UnsupportedOperationException.class,
+    shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveFloat\":3}", PrimitiveFloatDto.class),
-      "Not implemented numeric class: class java.lang.float");
+      "Not implemented numeric class: float");
 
-    assertThrowsExactly(UnsupportedOperationException.class,
+    shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveDouble\":3}", PrimitiveDoubleDto.class),
-      "Not implemented numeric class: class java.lang.double");
+      "Not implemented numeric class: double");
   }
 }
