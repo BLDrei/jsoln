@@ -78,7 +78,7 @@ public final class Jsoln {
       case JsonObject jo -> deserialize(jo, (Class<?>) classTree.rawType());
       case JsonArray ja -> ja.getCollection(classTree);
       case JsonText jt -> jt.getValue(classTree.rawType());
-      case JsonNumber jn -> jn.getNumericValue(classTree);
+      case JsonNumber jn -> jn.getNumericValue(classTree.rawType());
       case JsonBoolean jb -> jb.getValue();
     };
   }

@@ -9,9 +9,13 @@ import com.bldrei.jsoln.converter.number.FloatConverter;
 import com.bldrei.jsoln.converter.number.IntegerConverter;
 import com.bldrei.jsoln.converter.number.LongConverter;
 import com.bldrei.jsoln.converter.number.ShortConverter;
-import com.bldrei.jsoln.util.ClassTree;
 
-import java.util.List;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public final class JsonNumber extends JsonElement {
   private final String numberAsString;
@@ -20,22 +24,22 @@ public final class JsonNumber extends JsonElement {
     this.numberAsString = numberAsString;
   }
 
-  public Number getNumericValue(ClassTree classTree) {
-    return NUMBER_CONVERTERS.stream()
-      .filter(converter -> converter.getType().equals(classTree.rawType()))
-      .findAny()
-      .map(converter -> converter.convert(numberAsString))
-      .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + classTree.rawType()));
+  public Number getNumericValue(Type rawType) {
+    Objects.requireNonNull(rawType);
+    var converter = NUMBER_CONVERTERS.get(rawType);
+    return Optional.ofNullable(converter)
+      .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + rawType))
+      .convert(numberAsString);
   }
 
-  private static final List<AbstractConverter<? extends Number>> NUMBER_CONVERTERS = List.of(
-    new IntegerConverter(),
-    new LongConverter(),
-    new DoubleConverter(),
-    new FloatConverter(),
-    new BigDecimalConverter(),
-    new BigIntegerConverter(),
-    new ShortConverter(),
-    new ByteConverter()
+  private static final Map<Class<?>, ? extends AbstractConverter<? extends Number>> NUMBER_CONVERTERS = Map.of(
+    Integer.class, new IntegerConverter(),
+    Long.class, new LongConverter(),
+    Double.class, new DoubleConverter(),
+    Float.class, new FloatConverter(),
+    BigDecimal.class, new BigDecimalConverter(),
+    BigInteger.class, new BigIntegerConverter(),
+    Short.class, new ShortConverter(),
+    Byte.class, new ByteConverter()
   );
 }

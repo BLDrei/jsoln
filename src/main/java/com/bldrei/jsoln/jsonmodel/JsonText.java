@@ -8,7 +8,10 @@ import com.bldrei.jsoln.util.ReflectionUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 public final class JsonText extends JsonElement {
   private final String value;
@@ -24,16 +27,15 @@ public final class JsonText extends JsonElement {
         .orElseThrow(() -> new IllegalStateException("valueOf(String) method not found for enum " + actualType));
       return ReflectionUtil.invokeMethod(null, valueOf, value);
     }
-    return TEXT_CONVERTERS.stream()
-      .filter(c -> c.getType().equals(actualType))
-      .findAny()
-      .map(c -> c.convert(value))
-      .orElseThrow(() -> new UnsupportedOperationException("Not implemented text class: " + actualType));
+    var converter = TEXT_CONVERTERS.get(actualType);
+    return Optional.ofNullable(converter)
+      .orElseThrow(() -> new UnsupportedOperationException("Not implemented text class: " + actualType))
+      .convert(value);
   }
 
-  private static final List<? extends AbstractConverter<?>> TEXT_CONVERTERS = List.of(
-    new StringConverter(),
-    new LocalDateConverter(),
-    new LocalDateTimeConverter()
+  private static final Map<Class<?>, ? extends AbstractConverter<?>> TEXT_CONVERTERS = Map.of(
+    String.class, new StringConverter(),
+    LocalDate.class, new LocalDateConverter(),
+    LocalDateTime.class, new LocalDateTimeConverter()
   );
 }
