@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
-import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
 
 public final class JsonArray extends JsonElement {
 
@@ -19,17 +18,17 @@ public final class JsonArray extends JsonElement {
     this.array = array;
   }
 
-  public Collection getCollection(ClassTree classTree) {
-    Class collectionClass = findClass(classTree.rawType());
-    Class actualType = findClass(classTree.genericParameters()[0]);
-    Stream stream = array.stream()
+  public Collection<?> getCollection(ClassTree classTree) {
+    Class<?> collectionClass = (Class<?>) classTree.rawType();
+    Class<?> actualType = (Class<?>) classTree.genericParameters()[0];
+    Stream<?> stream = array.stream()
       .map(jsonElement -> extractValueFromJsonElement(jsonElement, ClassTree.fromType(actualType)));
 
     if (List.class.equals(collectionClass)) {
       return stream.toList();
     }
     if (Set.class.equals(collectionClass)) {
-      return (Set) stream.collect(Collectors.toUnmodifiableSet());
+      return stream.collect(Collectors.toUnmodifiableSet());
     }
     throw new IllegalArgumentException("Unexpected collection type: " + collectionClass);
   }

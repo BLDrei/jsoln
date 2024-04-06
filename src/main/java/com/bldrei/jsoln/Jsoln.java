@@ -10,14 +10,11 @@ import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.DeserializeUtil;
 import com.bldrei.jsoln.util.ReflectionUtil;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
-import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
 import static com.bldrei.jsoln.util.ReflectionUtil.findSetter;
 
 public final class Jsoln {
@@ -78,7 +75,7 @@ public final class Jsoln {
 
   public static Object extractValueFromJsonElement(JsonElement val, ClassTree classTree) {
     return switch (val) {
-      case JsonObject jo -> deserialize(jo, findClass(classTree.rawType()));
+      case JsonObject jo -> deserialize(jo, (Class<?>) classTree.rawType());
       case JsonArray ja -> ja.getCollection(classTree);
       case JsonText jt -> jt.getValue(classTree.rawType());
       case JsonNumber jn -> jn.getNumericValue(classTree);

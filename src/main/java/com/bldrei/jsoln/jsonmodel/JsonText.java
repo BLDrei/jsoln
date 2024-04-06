@@ -10,8 +10,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import static com.bldrei.jsoln.util.ReflectionUtil.findClass;
-
 public final class JsonText extends JsonElement {
   private final String value;
 
@@ -20,7 +18,7 @@ public final class JsonText extends JsonElement {
   }
 
   public Object getValue(Type actualType) {
-    Class<?> clazz = findClass(actualType);
+    Class<?> clazz = (Class<?>) actualType;
     if (clazz.isEnum()) {
       Method valueOf = ReflectionUtil.findMethod(clazz, "valueOf", String.class)
         .orElseThrow(() -> new IllegalStateException("valueOf(String) method not found for enum " + actualType));
