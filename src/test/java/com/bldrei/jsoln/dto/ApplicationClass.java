@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class Application {
+public class ApplicationClass {
   private Integer channelId;
   private Optional<String> country;
   private List<String> accountsList;
@@ -22,7 +22,7 @@ public class Application {
   private Optional<LocalDate> expirationDate;
   private Optional<String> emptyval;
   private BigDecimal income;
-  private Optional<Application> application;
+  private Optional<ApplicationClass> application;
   private Optional<Status> initialStatus;
   private Status currentStatus;
 }

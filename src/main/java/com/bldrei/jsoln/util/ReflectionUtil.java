@@ -1,7 +1,9 @@
 package com.bldrei.jsoln.util;
 
 import com.bldrei.jsoln.exception.JsolnException;
+import lombok.SneakyThrows;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -50,6 +52,11 @@ public class ReflectionUtil {
       System.out.println("Warn: method " + method.getName() + " that you tried to invoke is not accessible");
     }
     return null;
+  }
+
+  @SneakyThrows
+  public static <T> T invokeConstructor(Constructor<T> constructor, Object... args) {
+    return constructor.newInstance(args);
   }
 
   private static String capitalizeFirstLetter(String str) {

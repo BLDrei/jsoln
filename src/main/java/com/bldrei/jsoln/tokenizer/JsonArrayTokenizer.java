@@ -9,7 +9,7 @@ import static com.bldrei.jsoln.Const.CLOSING_CURLY_BRACE;
 import static com.bldrei.jsoln.Const.OPENING_BRACKET;
 import static com.bldrei.jsoln.Const.OPENING_CURLY_BRACE;
 
-public class JsonArrayTokenizer extends AbstractJsonTokenizer {
+public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
 
   public JsonArrayTokenizer(String txt) {
     super(txt);

@@ -8,7 +8,7 @@ import java.util.Stack;
 
 import static com.bldrei.jsoln.Const.*;
 
-public class JsonObjectTokenizer extends AbstractJsonTokenizer {
+public final class JsonObjectTokenizer extends AbstractJsonTokenizer {
 
   public JsonObjectTokenizer(String txt) {
     super(txt);

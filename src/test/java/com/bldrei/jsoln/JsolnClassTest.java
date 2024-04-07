@@ -1,6 +1,6 @@
 package com.bldrei.jsoln;
 
-import com.bldrei.jsoln.dto.Application;
+import com.bldrei.jsoln.dto.ApplicationClass;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JsolnTest {
+public class JsolnClassTest {
 
   @Test
   public void deserializeSimpleObjectNoPrettyFormatting() {
-    Application application = Jsoln.deserialize("""
-    {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", Application.class);
+    ApplicationClass application = Jsoln.deserialize("""
+    {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", ApplicationClass.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
@@ -39,8 +39,8 @@ public class JsolnTest {
 
   @Test
   public void deserializeSimpleObjectWhitespaceFormatting() {
-    Application application = Jsoln.deserialize("""
-      {   \t    "country": "EE", \n "channelId": 6  , "accountsList" :[ "EE02" ,"empty"], "income" :1300.12 , "currentStatus" :"ERROR" }""", Application.class);
+    ApplicationClass application = Jsoln.deserialize("""
+      {   \t    "country": "EE", \n "channelId": 6  , "accountsList" :[ "EE02" ,"empty"], "income" :1300.12 , "currentStatus" :"ERROR" }""", ApplicationClass.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
@@ -51,15 +51,15 @@ public class JsolnTest {
 
   @Test
   public void deserializeRecursiveObject() {
-    Application application = Jsoln.deserialize("""
-      {"country":"EE","accountsList":["EE02","empty"],"channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6,"accountsList":[],"currentStatus":"ERROR"},"currentStatus":"OK"}""", Application.class);
+    ApplicationClass application = Jsoln.deserialize("""
+      {"country":"EE","accountsList":["EE02","empty"],"channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6,"accountsList":[],"currentStatus":"ERROR"},"currentStatus":"OK"}""", ApplicationClass.class);
 
     assertNotNull(application);
     assertEquals(6, application.getChannelId());
     assertEquals(Optional.of("EE"), application.getCountry());
     assertTrue(application.getEmptyval().isEmpty());
 
-    Application innerApplication = application.getApplication().get();
+    ApplicationClass innerApplication = application.getApplication().get();
     assertEquals(new BigDecimal("12.3456"), innerApplication.getIncome());
     assertEquals(6, innerApplication.getChannelId());
     assertTrue(innerApplication.getApplication().isEmpty());

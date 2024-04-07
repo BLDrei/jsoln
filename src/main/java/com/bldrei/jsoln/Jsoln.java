@@ -11,9 +11,14 @@ import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.DeserializeUtil;
 import com.bldrei.jsoln.util.ReflectionUtil;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
 import java.util.Optional;
 
+import static com.bldrei.jsoln.util.DeserializeUtil.getCanonicalConstructor;
 import static com.bldrei.jsoln.util.DeserializeUtil.getNewEmptyInstance;
 import static com.bldrei.jsoln.util.ReflectionUtil.findSetter;
 
@@ -36,7 +41,31 @@ public final class Jsoln {
   }
 
   private static <T> T deserializeRecordObject(JsonObject jsonObject, Class<T> tClass) {
-    return null;
+    RecordComponent[] recordComponents = tClass.getRecordComponents();
+    Constructor<T> canonicalConstructor = getCanonicalConstructor(tClass, recordComponents);
+
+    Object[] params = Arrays.stream(recordComponents).map(recordComponent -> {
+      String fldName = recordComponent.getName();
+      ClassTree tree = ClassTree.fromType(recordComponent.getGenericType());
+      boolean isNullable = Optional.class.equals(tree.rawType());
+      if (isNullable) tree = ClassTree.fromType(tree.genericParameters()[0]);
+      var value = jsonObject.get(fldName);
+      boolean valuePresent = value.isPresent();
+
+      if (!valuePresent && !isNullable) {
+        handleMissingValueForMandatoryField(fldName);
+        return null;
+      }
+      if (!valuePresent) {
+        return Optional.empty();
+      }
+      else {
+        Object valueOfActualType = extractValueFromJsonElement(value.get(), tree);
+        return isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType;
+      }
+    }).toArray();
+
+    return ReflectionUtil.invokeConstructor(canonicalConstructor, params);
   }
 
   private static <T> T deserializeClassObject(JsonObject jsonObject, Class<T> tClass) {
