@@ -14,6 +14,7 @@ import com.bldrei.jsoln.util.ReflectionUtil;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.RecordComponent;
 import java.util.Arrays;
 import java.util.Optional;
@@ -73,6 +74,8 @@ public final class Jsoln {
     var fields = tClass.getDeclaredFields();
 
     for (Field fld : fields) {
+      if (Modifier.isStatic(fld.getModifiers())) continue;
+
       String fldName = fld.getName();
       ClassTree tree = ClassTree.fromField(fld);
       boolean isNullable = Optional.class.equals(tree.rawType());

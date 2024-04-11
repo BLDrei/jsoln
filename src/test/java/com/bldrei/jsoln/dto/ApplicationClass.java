@@ -10,11 +10,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Vector;
 
 @Getter
 @Setter
 @ToString
 public class ApplicationClass {
+  private static String staticField;
+  private static Vector staticFieldOfTypeUnsupportedForSerialization;
+
   private Integer channelId;
   private Optional<String> country;
   private List<String> accountsList;

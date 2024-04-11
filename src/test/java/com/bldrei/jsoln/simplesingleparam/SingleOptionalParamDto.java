@@ -9,4 +9,5 @@ import java.util.Optional;
 @Setter
 public class SingleOptionalParamDto {
   private Optional<String> optionalString;
+  private static String staticString;
 }
