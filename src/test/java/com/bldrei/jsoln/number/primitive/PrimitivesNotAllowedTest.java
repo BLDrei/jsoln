@@ -1,11 +1,10 @@
 package com.bldrei.jsoln.number.primitive;
 
+import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import org.junit.jupiter.api.Test;
 
-import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
-
-public class PrimitivesNotAllowedTest {
+public class PrimitivesNotAllowedTest extends AbstractTest {
 
   @Test
   public void deserialize_toPrimitiveNumericTypes_shouldThrowException() {

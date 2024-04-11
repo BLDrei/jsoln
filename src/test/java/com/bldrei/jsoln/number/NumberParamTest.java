@@ -1,20 +1,12 @@
 package com.bldrei.jsoln.number;
 
+import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.exception.JsolnException;
-import com.bldrei.jsoln.exception.JsonSyntaxException;
-import com.bldrei.jsoln.number.NumberParamDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-
-public class NumberParamTest {
+public class NumberParamTest extends AbstractTest {
 
   @Test
   public void deserialize_unsupportedClass_shouldThrowException() {

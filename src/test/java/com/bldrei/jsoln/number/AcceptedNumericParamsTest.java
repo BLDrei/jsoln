@@ -1,15 +1,15 @@
 package com.bldrei.jsoln.number;
 
+import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AcceptedNumericParamsTest {
+public class AcceptedNumericParamsTest extends AbstractTest {
 
   @Test
   public void deserialize_numericParams_happyFlow() {

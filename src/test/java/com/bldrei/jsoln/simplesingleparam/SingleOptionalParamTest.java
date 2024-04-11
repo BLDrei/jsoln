@@ -1,17 +1,17 @@
 package com.bldrei.jsoln.simplesingleparam;
 
+import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SingleOptionalParamTest {
+public class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   public void deserialize_happyCase_success() {

@@ -1,15 +1,15 @@
 package com.bldrei.jsoln.simplesingleparam;
 
+import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
-import static com.bldrei.jsoln.utils.TestUtil.shouldThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class SingleParamTest {
+public class SingleParamTest extends AbstractTest {
 
   @Test
   public void deserialize_happyCase_success() {
