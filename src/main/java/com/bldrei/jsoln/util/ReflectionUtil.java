@@ -1,23 +1,16 @@
 package com.bldrei.jsoln.util;
 
-import com.bldrei.jsoln.exception.JsolnException;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ReflectionUtil {
-
-  public static Class findClass(Type type) {
-    try {
-      return Class.forName(type.getTypeName());
-    } catch (ClassNotFoundException d) {
-      throw new JsolnException("Error: class with name '%s' not found".formatted(type.getTypeName()));
-    }
-  }
 
   public static Optional<Method> findMethod(Class<?> clazz, String name, Class<?>... params) {
     try {
@@ -37,21 +30,19 @@ public class ReflectionUtil {
     }
   }
 
+  public static Optional<Method> findGetter(Class<?> dto, String fldName, Class<?> param) {
+    String prefix = boolean.class.equals(param) ? "is" : "get";
+    return findDeclaredMethod(dto, prefix + capitalizeFirstLetter(fldName), param)
+      .filter(m -> m.getReturnType().equals(param));
+  }
+
   public static Optional<Method> findSetter(Class<?> dto, String fldName, Class<?> param) {
     return findDeclaredMethod(dto, "set" + capitalizeFirstLetter(fldName), param);
   }
 
+  @SneakyThrows
   public static Object invokeMethod(Object obj, Method method, Object... args) {
-    try {
-      return method.invoke(obj, args);
-    }
-    catch (InvocationTargetException e) {
-      throw new RuntimeException("Method " + method + " threw an exception");
-    }
-    catch (IllegalAccessException e) {
-      System.out.println("Warn: method " + method.getName() + " that you tried to invoke is not accessible");
-    }
-    return null;
+    return method.invoke(obj, args);
   }
 
   @SneakyThrows
@@ -59,7 +50,47 @@ public class ReflectionUtil {
     return constructor.newInstance(args);
   }
 
-  private static String capitalizeFirstLetter(String str) {
+  public static String capitalizeFirstLetter(String str) {
     return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+  }
+
+  public static Field[] getNonStaticFields(Class<?> clazz) {
+    if (clazz.isRecord()) throw new IllegalStateException("Use record components for this");
+
+    return Arrays.stream(clazz.getDeclaredFields())
+      .filter(field -> !Modifier.isStatic(field.getModifiers()))
+      .toArray(Field[]::new);
+  }
+
+  @SneakyThrows(NoSuchMethodException.class)
+  public static <T> Constructor<T> getCanonicalConstructor(Class<T> recordClass) {
+    if (!recordClass.isRecord()) throw new IllegalStateException();
+
+    Class<?>[] types = Arrays.stream(recordClass.getRecordComponents())
+      .map(RecordComponent::getType)
+      .toArray(Class[]::new);
+    return recordClass.getDeclaredConstructor(types);
+  }
+
+  public static <T> Optional<Constructor<?>> getNoArgsConstructor(Class<T> tClass) { //todo: put T instead of ?
+    if (tClass.isRecord()) throw new IllegalStateException();
+
+    try {
+      return Optional.of(tClass.getDeclaredConstructor());
+    }
+    catch (NoSuchMethodException e) {
+      return Optional.empty();
+    }
+  }
+
+  public static <T> Optional<Constructor<?>> getAllArgsConstructor(Class<T> tClass, Field[] nonStaticFields) { //todo: put T instead of ?
+    if (tClass.isRecord()) throw new IllegalStateException();
+
+    try {
+      return Optional.of(tClass.getDeclaredConstructor(Arrays.stream(nonStaticFields).map(Field::getType).toArray(Class[]::new)));
+    }
+    catch (NoSuchMethodException e) {
+      return Optional.empty();
+    }
   }
 }

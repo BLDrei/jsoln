@@ -1,5 +1,6 @@
 package com.bldrei.jsoln;
 
+import com.bldrei.jsoln.cache.Cache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.function.Executable;
 
@@ -10,7 +11,8 @@ public class AbstractTest {
 
   @BeforeEach
   public void clearCache() {
-    //todo: clear cache
+    Cache.classDeserializationCache.clear();
+    Cache.recordDeserializationCache.clear();
   }
 
   public static void shouldThrow(Class<? extends RuntimeException> exception, Executable action, String errorMessage) {

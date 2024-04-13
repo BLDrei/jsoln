@@ -1,6 +1,5 @@
 package com.bldrei.jsoln.util;
 
-import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
@@ -11,10 +10,6 @@ import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.tokenizer.JsonArrayTokenizer;
 import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.RecordComponent;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,29 +83,6 @@ public class DeserializeUtil {
     }
 
     throw new JsonSyntaxException("Invalid Json parameter value: '%s'".formatted(json));
-  }
-
-  public static <T> T getNewEmptyInstance(Class<T> tClass) {
-    try {
-      return tClass.getDeclaredConstructor().newInstance();
-    }
-    catch (NoSuchMethodException e) {
-      throw new JsolnException("Zero-argument constructor missing for " + tClass);
-    }
-    catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static <T> Constructor<T> getCanonicalConstructor(Class<T> record, RecordComponent[] recordComponents) {
-    Class<?>[] types = Arrays.stream(recordComponents)
-      .map(c -> c.getType()).toArray(Class[]::new);
-    try {
-      return record.getDeclaredConstructor(types);
-    }
-    catch (NoSuchMethodException e) {
-      throw new JsolnException("Canonical constructor missing for " + record);
-    }
   }
 
   public static String removeFirstLastChar(String txt) {
