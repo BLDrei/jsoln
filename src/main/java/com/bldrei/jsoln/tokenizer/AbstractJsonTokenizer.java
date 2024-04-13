@@ -4,7 +4,7 @@ public abstract sealed class AbstractJsonTokenizer permits JsonArrayTokenizer, J
 
   protected String remainingTxt;
 
-  public AbstractJsonTokenizer(String txt) {
+  protected AbstractJsonTokenizer(String txt) {
     this.remainingTxt = txt;
   }
 

@@ -2,8 +2,6 @@ package com.bldrei.jsoln.converter.number;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
 
-import java.math.BigDecimal;
-
 public class ShortConverter extends AbstractConverter<Short> {
 
   public ShortConverter() {

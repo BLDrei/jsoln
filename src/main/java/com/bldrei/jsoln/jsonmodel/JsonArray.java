@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
 
-public final class JsonArray extends JsonElement {
+public final class JsonArray implements JsonElement {
 
   private final List<JsonElement> array;
 

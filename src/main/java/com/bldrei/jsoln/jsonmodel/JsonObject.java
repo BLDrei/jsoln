@@ -3,7 +3,7 @@ package com.bldrei.jsoln.jsonmodel;
 import java.util.Map;
 import java.util.Optional;
 
-public final class JsonObject extends JsonElement {
+public final class JsonObject implements JsonElement {
   Map<String, JsonElement> kvMap;
 
   public JsonObject(Map<String, JsonElement> kvMap) {

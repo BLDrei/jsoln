@@ -21,6 +21,8 @@ import static com.bldrei.jsoln.Const.CLOSING_CURLY_BRACE;
 import static com.bldrei.jsoln.Const.DOUBLE_QUOTE;
 import static com.bldrei.jsoln.Const.OPENING_BRACKET;
 import static com.bldrei.jsoln.Const.OPENING_CURLY_BRACE;
+import static com.bldrei.jsoln.util.StringUtil.isWrapped;
+import static com.bldrei.jsoln.util.StringUtil.removeFirstLastChar;
 
 public class DeserializeUtil {
 
@@ -40,8 +42,7 @@ public class DeserializeUtil {
 
   //accepts text of any json type (array, object, text, number...)
   //can be used recursively
-  private static JsonElement parseToJsonElement(String json)
-  {
+  private static JsonElement parseToJsonElement(String json) {
     if (isWrapped(json, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
       Map<String, JsonElement> kvMap = new HashMap<>();
       var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json));
@@ -83,15 +84,5 @@ public class DeserializeUtil {
     }
 
     throw new JsonSyntaxException("Invalid Json parameter value: '%s'".formatted(json));
-  }
-
-  public static String removeFirstLastChar(String txt) {
-    return txt.substring(1, txt.length() - 1);
-  }
-
-  public static boolean isWrapped(String json, char firstChar, char lastChar) {
-    return json.length() >= 2
-      && json.charAt(0) == firstChar
-      && json.charAt(json.length() - 1) == lastChar;
   }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-public final class JsonText extends JsonElement {
+public final class JsonText implements JsonElement {
   private final String value;
 
   public JsonText(String value) {

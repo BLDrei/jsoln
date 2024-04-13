@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SingleOptionalParamTest extends AbstractTest {
+class SingleOptionalParamTest extends AbstractTest {
 
   @Test
-  public void deserialize_happyCase_success() {
+  void deserialize_happyCase_success() {
     SingleOptionalParamDto dto = Jsoln.deserialize("""
       {"optionalString":"12a "}""", SingleOptionalParamDto.class);
 
@@ -23,7 +23,7 @@ public class SingleOptionalParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_spacesBetween_success() {
+  void deserialize_spacesBetween_success() {
     SingleOptionalParamDto dto = Jsoln.deserialize("""
       { \t "optionalString" \n:  "12a " \n\t  }""", SingleOptionalParamDto.class);
 
@@ -32,7 +32,7 @@ public class SingleOptionalParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_prettyPrinted_success() {
+  void deserialize_prettyPrinted_success() {
     SingleOptionalParamDto dto = Jsoln.deserialize("""
       {
         "optionalString": ""
@@ -43,7 +43,7 @@ public class SingleOptionalParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_requiredValueNotPresent_isOk() {
+  void deserialize_requiredValueNotPresent_isOk() {
     SingleOptionalParamDto dto =  Jsoln.deserialize("""
       {}""", SingleOptionalParamDto.class);
 
@@ -51,7 +51,7 @@ public class SingleOptionalParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_requiredValueIsNul_throwsSyntaxException() {
+  void deserialize_requiredValueIsNul_throwsSyntaxException() {
     shouldThrow(JsonSyntaxException.class,
       () -> Jsoln.deserialize("""
       {"optionalString":nul}""", SingleOptionalParamDto.class),
@@ -59,7 +59,7 @@ public class SingleOptionalParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_jsonIsNotWrittenAsObject() {
+  void deserialize_jsonIsNotWrittenAsObject() {
     Stream.of(
       "",
       "{",

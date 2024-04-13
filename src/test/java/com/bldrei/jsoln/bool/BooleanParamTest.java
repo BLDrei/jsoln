@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BooleanParamTest extends AbstractTest {
+class BooleanParamTest extends AbstractTest {
 
   @Test
-  public void deserialize_booleanParam_happyFlow() {
+  void deserialize_booleanParam_happyFlow() {
     BoolDto dto = Jsoln.deserialize("""
       {"boolPrimitive":  true , "boolWrapper": false}""", BoolDto.class);
 
@@ -19,7 +19,7 @@ public class BooleanParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_booleanParam_writtenAsString() {
+  void deserialize_booleanParam_writtenAsString() {
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("""
         {"boolPrimitive":  "true" , "boolWrapper": false}""", BoolDto.class),

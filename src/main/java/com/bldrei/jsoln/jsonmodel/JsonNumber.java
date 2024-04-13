@@ -10,21 +10,20 @@ import com.bldrei.jsoln.converter.number.IntegerConverter;
 import com.bldrei.jsoln.converter.number.LongConverter;
 import com.bldrei.jsoln.converter.number.ShortConverter;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.Optional;
 
-public final class JsonNumber extends JsonElement {
+public final class JsonNumber implements JsonElement {
   private final String numberAsString;
 
   public JsonNumber(String numberAsString) {
     this.numberAsString = numberAsString;
   }
 
-  public Number getNumericValue(Type rawType) {
-    var converter = NUMBER_CONVERTERS.get((Class<?>) rawType);
+  public Number getNumericValue(Class<?> rawType) {
+    var converter = NUMBER_CONVERTERS.get(rawType);
     return Optional.ofNullable(converter)
       .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + rawType))
       .convert(numberAsString);

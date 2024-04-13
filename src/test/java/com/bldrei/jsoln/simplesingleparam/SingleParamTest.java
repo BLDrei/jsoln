@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class SingleParamTest extends AbstractTest {
+class SingleParamTest extends AbstractTest {
 
   @Test
-  public void deserialize_happyCase_success() {
+  void deserialize_happyCase_success() {
     SingleRequiredParamDto dto = Jsoln.deserialize("""
       {"requiredString":"12a "}""", SingleRequiredParamDto.class);
 
@@ -21,7 +21,7 @@ public class SingleParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_spacesBetween_success() {
+  void deserialize_spacesBetween_success() {
     SingleRequiredParamDto dto = Jsoln.deserialize("""
       { \t "requiredString" \n:  "12a " \n\t  }""", SingleRequiredParamDto.class);
 
@@ -30,7 +30,7 @@ public class SingleParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_prettyPrinted_success() {
+  void deserialize_prettyPrinted_success() {
     SingleRequiredParamDto dto = Jsoln.deserialize("""
       {
         "requiredString": "12a "
@@ -41,7 +41,7 @@ public class SingleParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_requiredValueNotPresent_exception() {
+  void deserialize_requiredValueNotPresent_exception() {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("""
       {"someOtherKey":"12a "}""", SingleRequiredParamDto.class),
@@ -49,7 +49,7 @@ public class SingleParamTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_invalidSyntax() {
+  void deserialize_invalidSyntax() {
     shouldThrow(JsonSyntaxException.class,
       () -> Jsoln.deserialize("""
       "requiredString":"12a "\

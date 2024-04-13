@@ -1,5 +1,5 @@
 package com.bldrei.jsoln.jsonmodel;
 
-public abstract sealed class JsonElement
+public sealed interface JsonElement
   permits JsonObject, JsonArray, JsonBoolean, JsonText, JsonNumber {
 }

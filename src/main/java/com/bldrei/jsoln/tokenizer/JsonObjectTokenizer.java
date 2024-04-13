@@ -1,12 +1,18 @@
 package com.bldrei.jsoln.tokenizer;
 
-import com.bldrei.jsoln.util.DeserializeUtil;
+import com.bldrei.jsoln.util.StringUtil;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 
-import static com.bldrei.jsoln.Const.*;
+import static com.bldrei.jsoln.Const.CLOSING_BRACKET;
+import static com.bldrei.jsoln.Const.CLOSING_CURLY_BRACE;
+import static com.bldrei.jsoln.Const.DOUBLE_QUOTE;
+import static com.bldrei.jsoln.Const.KV_DELIMITER;
+import static com.bldrei.jsoln.Const.OPENING_BRACKET;
+import static com.bldrei.jsoln.Const.OPENING_CURLY_BRACE;
+import static com.bldrei.jsoln.Const.PARAMS_DELIMITER;
 
 public final class JsonObjectTokenizer extends AbstractJsonTokenizer {
 
@@ -26,16 +32,16 @@ public final class JsonObjectTokenizer extends AbstractJsonTokenizer {
         continue;
       }
       String possibleKey = remainingTxt.substring(0, i).trim(); //trim for parsing pretty formatted jsons
-      if (!DeserializeUtil.isWrapped(possibleKey, DOUBLE_QUOTE, DOUBLE_QUOTE)) {
+      if (!StringUtil.isWrapped(possibleKey, DOUBLE_QUOTE, DOUBLE_QUOTE)) {
         throw new IllegalArgumentException("Illegal json syntax: key is not wrapped into double quotes: " + possibleKey);
       }
-      key = DeserializeUtil.removeFirstLastChar(possibleKey);
+      key = StringUtil.removeFirstLastChar(possibleKey);
       kvDelimeterIndex = i;
       i++;
       break;
     }
 
-    if (key == null) return Optional.empty(); //todo: remove
+    if (key == null) return Optional.empty(); //to do: remove
 
     Stack<Character> openingBrackets = new Stack<>();
     for (; i < remainingChars.length; i++) {

@@ -2,7 +2,6 @@ package com.bldrei.jsoln.converter.number;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class BigIntegerConverter extends AbstractConverter<BigInteger> {

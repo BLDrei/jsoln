@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-public class NumberParamTest extends AbstractTest {
+class NumberParamTest extends AbstractTest {
 
   @Test
-  public void deserialize_unsupportedClass_shouldThrowException() {
+  void deserialize_unsupportedClass_shouldThrowException() {
     Stream.of(
 //      "{}", "{\"number\":null}", //todo implement: before deserialization, check if field is supported by Jsoln
       "{\"number\":12}"

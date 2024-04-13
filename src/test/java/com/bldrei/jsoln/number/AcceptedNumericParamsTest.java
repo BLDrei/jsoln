@@ -9,10 +9,10 @@ import java.math.BigInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AcceptedNumericParamsTest extends AbstractTest {
+class AcceptedNumericParamsTest extends AbstractTest {
 
   @Test
-  public void deserialize_numericParams_happyFlow() {
+  void deserialize_numericParams_happyFlow() {
     AcceptedNumericParamsDto dto = Jsoln.deserialize("""
       {
         "_float": 0.456,
@@ -36,7 +36,7 @@ public class AcceptedNumericParamsTest extends AbstractTest {
   }
 
   @Test
-  public void deserialize_decimalNumbersWrittenAsWholeNumbers_isAccepted() {
+  void deserialize_decimalNumbersWrittenAsWholeNumbers_isAccepted() {
     AcceptedNumericParamsDto dto = Jsoln.deserialize("""
       {
         "_float": 1,
@@ -48,7 +48,7 @@ public class AcceptedNumericParamsTest extends AbstractTest {
   }
 
   @Test
-  public void deserializeNumericParams_decimalTextToWholeNumber_errorWhen() {
+  void deserializeNumericParams_decimalTextToWholeNumber_errorWhen() {
     shouldThrow(NumberFormatException.class,
       () -> Jsoln.deserialize("""
       {

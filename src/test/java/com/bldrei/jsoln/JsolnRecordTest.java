@@ -13,21 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JsolnRecordTest extends AbstractTest {
+class JsolnRecordTest extends AbstractTest {
 
   @Test
-  public void deserializeSimpleObjectNoPrettyFormatting() {
+  void deserializeSimpleObjectNoPrettyFormatting() {
     ApplicationRecord application = Jsoln.deserialize("""
     {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", ApplicationRecord.class);
+    var accountsList = application.accountsList();
+    var accountsSet = application.accountsSet().orElseThrow();
 
     assertNotNull(application);
     assertEquals(6, application.channelId());
     assertEquals(Optional.of("EE"), application.country());
-    assertEquals(1, application.accountsList().size());
-    assertEquals("EE02", application.accountsList().getFirst());
-    assertThrows(RuntimeException.class, () -> application.accountsList().add(""));
-    assertThrows(RuntimeException.class, () -> application.accountsList().remove(""));
-    var accountsSet = application.accountsSet().orElseThrow();
+    assertEquals(1, accountsList.size());
+    assertEquals("EE02", accountsList.getFirst());
+    assertThrows(RuntimeException.class, () -> accountsList.add(""));
+    assertThrows(RuntimeException.class, () -> accountsList.remove(""));
     assertEquals(1, accountsSet.size());
     assertTrue(accountsSet.contains("EE03s"));
     assertThrows(RuntimeException.class, () -> accountsSet.add(""));
@@ -38,7 +39,7 @@ public class JsolnRecordTest extends AbstractTest {
   }
 
   @Test
-  public void deserializeSimpleObjectWhitespaceFormatting() {
+  void deserializeSimpleObjectWhitespaceFormatting() {
     ApplicationRecord application = Jsoln.deserialize("""
       {   \t    "country": "EE", \n "channelId": 6  , "accountsList" :[ "EE02" ,"empty"], "income" :1300.12 , "currentStatus" :"ERROR" }""", ApplicationRecord.class);
 
@@ -50,7 +51,7 @@ public class JsolnRecordTest extends AbstractTest {
   }
 
   @Test
-  public void deserializeRecursiveObject() {
+  void deserializeRecursiveObject() {
     ApplicationRecord application = Jsoln.deserialize("""
       {"country":"EE","accountsList":["EE02","empty"],"channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6,"accountsList":[],"currentStatus":"ERROR"},"currentStatus":"OK"}""", ApplicationRecord.class);
 

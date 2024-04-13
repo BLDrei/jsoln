@@ -4,10 +4,10 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import org.junit.jupiter.api.Test;
 
-public class PrimitivesNotAllowedTest extends AbstractTest {
+class PrimitivesNotAllowedTest extends AbstractTest {
 
   @Test
-  public void deserialize_toPrimitiveNumericTypes_shouldThrowException() {
+  void deserialize_toPrimitiveNumericTypes_shouldThrowException() {
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("{\"primitiveInt\":3}", PrimitiveIntDto.class),
       "Not implemented numeric class: int");

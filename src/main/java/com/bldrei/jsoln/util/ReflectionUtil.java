@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class ReflectionUtil {
+  private ReflectionUtil() {}
 
   public static Optional<Method> findMethod(Class<?> clazz, String name, Class<?>... params) {
     try {
