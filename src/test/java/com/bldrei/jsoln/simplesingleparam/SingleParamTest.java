@@ -45,7 +45,7 @@ public class SingleParamTest extends AbstractTest {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("""
       {"someOtherKey":"12a "}""", SingleRequiredParamDto.class),
-      "Value not present, but field requiredString is mandatory");
+      "Value not present, but field 'requiredString' is mandatory on dto class com.bldrei.jsoln.simplesingleparam.SingleRequiredParamDto");
   }
 
   @Test

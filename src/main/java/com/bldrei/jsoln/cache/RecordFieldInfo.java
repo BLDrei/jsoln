@@ -5,7 +5,6 @@ import com.bldrei.jsoln.util.ClassTree;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
-import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,16 +13,16 @@ public record RecordFieldInfo(
   boolean isNullable,
   ClassTree classTree,
   Method accessor,
-  Class<?> declaringRecord
+  Class<?> dtoClass
 ) {
   public RecordFieldInfo {
     Objects.requireNonNull(name);
     Objects.requireNonNull(classTree);
     Objects.requireNonNull(accessor);
-    Objects.requireNonNull(declaringRecord);
+    Objects.requireNonNull(dtoClass);
 
     if (Optional.class.equals(classTree.rawType())) {
-      throw BadDtoException.nestedOptional(declaringRecord);
+      throw BadDtoException.nestedOptional(dtoClass);
     }
   }
 
