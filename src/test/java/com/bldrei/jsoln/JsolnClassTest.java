@@ -20,7 +20,7 @@
 //  @Test
 //  void deserializeSimpleObjectNoPrettyFormatting() {
 //    ApplicationClass application = Jsoln.deserialize("""
-//    {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", ApplicationClass.class);
+//      {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", ApplicationClass.class);
 //    List<String> accountsList = application.getAccountsList();
 //    Set<String> accountsSet = application.getAccountsSet().orElseThrow();
 //

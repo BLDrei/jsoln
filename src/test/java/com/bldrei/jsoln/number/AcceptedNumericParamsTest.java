@@ -51,12 +51,12 @@ class AcceptedNumericParamsTest extends AbstractTest {
   void deserializeNumericParams_decimalTextToWholeNumber_errorWhen() {
     shouldThrow(NumberFormatException.class,
       () -> Jsoln.deserialize("""
-      {
-        "_byte": 0.1,
-        "_short": 0.1,
-        "_integer": 0.1,
-        "_long": 0.1
-      }""", AcceptedNumericParamsDto.class),
+        {
+          "_byte": 0.1,
+          "_short": 0.1,
+          "_integer": 0.1,
+          "_long": 0.1
+        }""", AcceptedNumericParamsDto.class),
       "For input string: \"0.1\"");
   }
 }
