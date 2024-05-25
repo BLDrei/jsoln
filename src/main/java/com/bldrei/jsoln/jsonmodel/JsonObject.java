@@ -3,6 +3,7 @@ package com.bldrei.jsoln.jsonmodel;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.util.ClassTree;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,13 +21,14 @@ public final class JsonObject implements JsonElement {
 
   public Object getValue(ClassTree classTree) {
     if (Map.class.equals(classTree.rawType())) {
-      if (!String.class.equals(classTree.genericParameters()[0])) {
+      Type keyType = classTree.genericParameters()[0].rawType();
+      if (!String.class.equals(keyType)) {
         throw new RuntimeException("Not implemented yet");
       }
       return kvMap.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
           Map.Entry::getKey,
-          e -> Jsoln.extractValueFromJsonElement(e.getValue(), ClassTree.fromType(classTree.genericParameters()[1])),
+          e -> Jsoln.extractValueFromJsonElement(e.getValue(), classTree.genericParameters()[1]),
           (k1, k2) -> new IllegalStateException("Duplicate keys %s and %s".formatted(k1, k2))
         ));
     }

@@ -29,7 +29,7 @@ public record RecordFieldInfo(
   public static RecordFieldInfo from(RecordComponent field) {
     ClassTree tree = ClassTree.fromType(field.getGenericType());
     boolean isNullable = Optional.class.equals(tree.rawType());
-    if (isNullable) tree = ClassTree.fromType(tree.genericParameters()[0]);
+    if (isNullable) tree = tree.genericParameters()[0];
     return new RecordFieldInfo(
       field.getName(),
       isNullable,

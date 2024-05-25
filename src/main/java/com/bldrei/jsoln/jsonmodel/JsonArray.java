@@ -20,9 +20,9 @@ public final class JsonArray implements JsonElement {
 
   public Collection<?> getCollection(ClassTree classTree) {
     Class<?> collectionClass = (Class<?>) classTree.rawType();
-    Class<?> actualType = (Class<?>) classTree.genericParameters()[0];
+    ClassTree actualType = classTree.genericParameters()[0];
     Stream<?> stream = array.stream()
-      .map(jsonElement -> extractValueFromJsonElement(jsonElement, ClassTree.fromType(actualType)));
+      .map(jsonElement -> extractValueFromJsonElement(jsonElement, actualType));
 
     if (List.class.equals(collectionClass)) {
       return stream.toList();

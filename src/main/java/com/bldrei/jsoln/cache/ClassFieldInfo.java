@@ -33,7 +33,7 @@ public record ClassFieldInfo(
     String name = field.getName();
     ClassTree classTree = ClassTree.fromField(field);
     boolean isOptional = Optional.class.equals(classTree.rawType());
-    if (isOptional) classTree = ClassTree.fromType(classTree.genericParameters()[0]);
+    if (isOptional) classTree = classTree.genericParameters()[0];
     return new ClassFieldInfo(
       name,
       isOptional,
