@@ -19,7 +19,7 @@ class SingleOptionalParamTest extends AbstractTest {
       {"optionalString":"12a "}""", SingleOptionalParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("12a ", dto.getOptionalString().get());
+    assertEquals("12a ", dto.optionalString().get());
   }
 
   @Test
@@ -28,7 +28,7 @@ class SingleOptionalParamTest extends AbstractTest {
       { \t "optionalString" \n:  "12a " \n\t  }""", SingleOptionalParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("12a ", dto.getOptionalString().get());
+    assertEquals("12a ", dto.optionalString().get());
   }
 
   @Test
@@ -39,22 +39,22 @@ class SingleOptionalParamTest extends AbstractTest {
       }""", SingleOptionalParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("", dto.getOptionalString().get());
+    assertEquals("", dto.optionalString().get());
   }
 
   @Test
   void deserialize_requiredValueNotPresent_isOk() {
-    SingleOptionalParamDto dto =  Jsoln.deserialize("""
+    SingleOptionalParamDto dto = Jsoln.deserialize("""
       {}""", SingleOptionalParamDto.class);
 
-    assertTrue(dto.getOptionalString().isEmpty());
+    assertTrue(dto.optionalString().isEmpty());
   }
 
   @Test
   void deserialize_requiredValueIsNul_throwsSyntaxException() {
     shouldThrow(JsonSyntaxException.class,
       () -> Jsoln.deserialize("""
-      {"optionalString":nul}""", SingleOptionalParamDto.class),
+        {"optionalString":nul}""", SingleOptionalParamDto.class),
       "Invalid Json parameter value: 'nul'");
   }
 

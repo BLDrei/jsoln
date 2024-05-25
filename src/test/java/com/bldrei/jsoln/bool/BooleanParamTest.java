@@ -14,8 +14,8 @@ class BooleanParamTest extends AbstractTest {
     BoolDto dto = Jsoln.deserialize("""
       {"boolPrimitive":  true , "boolWrapper": false}""", BoolDto.class);
 
-    assertTrue(dto.isBoolPrimitive());
-    assertFalse(dto.getBoolWrapper()); //todo: should both boolean and Boolean be accepted?
+    assertTrue(dto.boolPrimitive());
+    assertFalse(dto.boolWrapper()); //todo: should both boolean and Boolean be accepted?
   }
 
   @Test

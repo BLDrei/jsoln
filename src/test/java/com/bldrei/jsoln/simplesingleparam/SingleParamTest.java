@@ -17,7 +17,7 @@ class SingleParamTest extends AbstractTest {
       {"requiredString":"12a "}""", SingleRequiredParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("12a ", dto.getRequiredString());
+    assertEquals("12a ", dto.requiredString());
   }
 
   @Test
@@ -26,7 +26,7 @@ class SingleParamTest extends AbstractTest {
       { \t "requiredString" \n:  "12a " \n\t  }""", SingleRequiredParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("12a ", dto.getRequiredString());
+    assertEquals("12a ", dto.requiredString());
   }
 
   @Test
@@ -37,14 +37,14 @@ class SingleParamTest extends AbstractTest {
       }""", SingleRequiredParamDto.class);
 
     assertNotNull(dto);
-    assertEquals("12a ", dto.getRequiredString());
+    assertEquals("12a ", dto.requiredString());
   }
 
   @Test
   void deserialize_requiredValueNotPresent_exception() {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("""
-      {"someOtherKey":"12a "}""", SingleRequiredParamDto.class),
+        {"someOtherKey":"12a "}""", SingleRequiredParamDto.class),
       "Value not present, but field 'requiredString' is mandatory on dto class com.bldrei.jsoln.simplesingleparam.SingleRequiredParamDto");
   }
 
@@ -52,8 +52,8 @@ class SingleParamTest extends AbstractTest {
   void deserialize_invalidSyntax() {
     shouldThrow(JsonSyntaxException.class,
       () -> Jsoln.deserialize("""
-      "requiredString":"12a "\
-      """, SingleRequiredParamDto.class),
+        "requiredString":"12a "\
+        """, SingleRequiredParamDto.class),
       "Valid json must be wrapped into {} or []");
   }
 }
