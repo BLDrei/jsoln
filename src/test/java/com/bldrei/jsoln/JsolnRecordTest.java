@@ -18,7 +18,7 @@ class JsolnRecordTest extends AbstractTest {
   @Test
   void deserializeSimpleObjectNoPrettyFormatting() {
     ApplicationRecord application = Jsoln.deserialize("""
-      {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS"}""", ApplicationRecord.class);
+      {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS","application":null}""", ApplicationRecord.class);
     var accountsList = application.accountsList();
     var accountsSet = application.accountsSet().orElseThrow();
 

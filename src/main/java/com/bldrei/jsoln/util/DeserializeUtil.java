@@ -52,7 +52,10 @@ public class DeserializeUtil {
         if (nextKvPair.isEmpty()) {
           return new JsonObject(kvMap);
         }
-        kvMap.put(nextKvPair.get().getKey(), parseToJsonElement(nextKvPair.get().getValue()));
+        var jsonElem = parseToJsonElement(nextKvPair.get().getValue());
+        if (jsonElem != null) {
+          kvMap.put(nextKvPair.get().getKey(), jsonElem);
+        }
       }
     }
     else if (isWrapped(json, OPENING_BRACKET, CLOSING_BRACKET)) {
