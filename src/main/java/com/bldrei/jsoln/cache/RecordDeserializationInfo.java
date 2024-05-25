@@ -8,7 +8,7 @@ import static com.bldrei.jsoln.util.ReflectionUtil.getCanonicalConstructor;
 
 public record RecordDeserializationInfo(
   Constructor<?> canonicalConstructor,
-  List<RecordFieldInfo> fieldsInfos
+  List<RecordFieldInfo> fieldsInfo
 ) {
   public static RecordDeserializationInfo from(Class<?> recordClass) {
     if (!recordClass.isRecord()) throw new IllegalStateException();

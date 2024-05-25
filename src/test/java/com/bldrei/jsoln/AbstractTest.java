@@ -11,8 +11,7 @@ public abstract class AbstractTest {
 
   @BeforeEach
   public void clearCache() {
-    Cache.classDeserializationCache.clear();
-    Cache.recordDeserializationCache.clear();
+    Cache.clear();
   }
 
   public static void shouldThrow(Class<? extends RuntimeException> exception, Executable action, String errorMessage) {

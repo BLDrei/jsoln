@@ -1,32 +1,33 @@
 package com.bldrei.jsoln.cache;
 
+import lombok.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cache {
   private Cache() {}
 
-  public static final Map<Class<?>, ClassDeserializationInfo> classDeserializationCache = new HashMap<>(); //todo: private
-  public static final Map<Class<?>, RecordDeserializationInfo> recordDeserializationCache = new HashMap<>(); //todo: private
+  private static final Map<Class<?>, ClassDeserializationInfo> classDeserializationCache = new HashMap<>();
+  private static final Map<Class<?>, RecordDeserializationInfo> recordDeserializationCache = new HashMap<>();
 
-  public static boolean isDtoTypeCached(Class<?> clazz) {
-    if (clazz.isRecord()) {
-      return recordDeserializationCache.containsKey(clazz);
-    }
-    return classDeserializationCache.containsKey(clazz);
+  public static void clear() {
+    classDeserializationCache.clear();
+    recordDeserializationCache.clear();
   }
 
-  public static void cacheIfUnknown(Class<?> clazz) { //todo: validate dto as well
-    if (isDtoTypeCached(clazz)) return;
+  //todo: validate dto as well
 
-    if (clazz.isRecord()) {
-      var recordDeserializationInfo = RecordDeserializationInfo.from(clazz);
-      recordDeserializationCache.put(clazz, recordDeserializationInfo);
-    }
-    else {
-      var classDeserializationInfo = ClassDeserializationInfo.from(clazz);
-      classDeserializationCache.put(clazz, classDeserializationInfo);
-    }
+  @NonNull
+  public static ClassDeserializationInfo getClassDeserializationInfo(Class<?> clazz) {
+    if (clazz.isRecord()) throw new IllegalStateException();
+    return classDeserializationCache.computeIfAbsent(clazz, ClassDeserializationInfo::from);
+  }
+
+  @NonNull
+  public static RecordDeserializationInfo getRecordDeserializationInfo(Class<?> clazz) {
+    if (!clazz.isRecord()) throw new IllegalStateException();
+    return recordDeserializationCache.computeIfAbsent(clazz, RecordDeserializationInfo::from);
   }
 
 }

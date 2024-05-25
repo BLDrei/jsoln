@@ -1,34 +1,34 @@
 plugins {
-    id 'java'
+  id 'java'
 }
 
 java {
-    sourceCompatibility = 21
-    targetCompatibility = 21
+  sourceCompatibility = 21
+  targetCompatibility = 21
 }
 
 group = 'com.bldrei'
 version = '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
-    testCompileOnly 'org.projectlombok:lombok:1.18.32'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
+  compileOnly 'org.projectlombok:lombok:1.18.32'
+  annotationProcessor 'org.projectlombok:lombok:1.18.32'
+  testCompileOnly 'org.projectlombok:lombok:1.18.32'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-    testImplementation platform('org.junit:junit-bom:5.10.2')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  testImplementation platform('org.junit:junit-bom:5.10.2')
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add("-Xlint:unchecked")
-}
+//tasks.withType(JavaCompile).configureEach {
+//  options.compilerArgs.add("-Xlint:unchecked")
+//}
