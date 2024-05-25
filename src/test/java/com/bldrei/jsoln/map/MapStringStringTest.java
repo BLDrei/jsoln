@@ -22,5 +22,9 @@ class MapStringStringTest extends AbstractTest {
     assertEquals("v1", map.get("k1"));
     assertEquals("v2", map.get("k2"));
     assertNull(map.get("K1"));
+    assertNull(map.get("k3"));
+    shouldThrow(UnsupportedOperationException.class, map::clear, null);
+    shouldThrow(UnsupportedOperationException.class, () -> map.put("k4", "v4"), null);
+    shouldThrow(UnsupportedOperationException.class, () -> map.remove("k2"), null);
   }
 }

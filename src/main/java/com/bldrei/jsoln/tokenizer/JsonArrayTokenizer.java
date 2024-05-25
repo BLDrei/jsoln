@@ -30,7 +30,7 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
       if (i == remainingChars.length - 1 && openingBrackets.empty()) {
         arrayMember = remainingTxt;
         remainingTxt = "";
-        return Optional.of(arrayMember.trim());
+        return Optional.of(arrayMember.strip());
       }
       else if (currentChar == OPENING_CURLY_BRACE || currentChar == OPENING_BRACKET) {
         openingBrackets.push(currentChar);

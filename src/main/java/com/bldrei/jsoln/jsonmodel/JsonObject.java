@@ -26,7 +26,8 @@ public final class JsonObject implements JsonElement {
       return kvMap.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
           Map.Entry::getKey,
-          e -> Jsoln.extractValueFromJsonElement(e.getValue(), ClassTree.fromType(classTree.genericParameters()[1]))
+          e -> Jsoln.extractValueFromJsonElement(e.getValue(), ClassTree.fromType(classTree.genericParameters()[1])),
+          (k1, k2) -> new IllegalStateException("Duplicate keys %s and %s".formatted(k1, k2))
         ));
     }
     return Jsoln.deserialize(this, (Class<?>) classTree.rawType());
