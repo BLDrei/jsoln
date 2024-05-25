@@ -54,7 +54,7 @@ public class ReflectionUtil {
       .toArray(Field[]::new);
   }
 
-  public static <T> Constructor<T> getCanonicalConstructor(Class<T> recordClass) {
+  public static <T> Constructor<T> findCanonicalConstructor(Class<T> recordClass) {
     if (!recordClass.isRecord()) throw new IllegalStateException();
 
     Class<?>[] types = Arrays.stream(recordClass.getRecordComponents())
@@ -68,7 +68,7 @@ public class ReflectionUtil {
     }
   }
 
-  public static <T> Optional<Constructor<?>> getNoArgsConstructor(Class<T> tClass) { //todo: put T instead of ?
+  public static <T> Optional<Constructor<T>> findNoArgsConstructor(Class<T> tClass) {
     if (tClass.isRecord()) throw new IllegalStateException();
 
     try {

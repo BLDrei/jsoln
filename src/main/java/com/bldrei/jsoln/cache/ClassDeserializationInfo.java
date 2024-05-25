@@ -2,43 +2,41 @@ package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.util.ReflectionUtil;
-import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-@Builder
-public record ClassDeserializationInfo(
-  Optional<Constructor<?>> noArgsConstructor,
-  List<ClassFieldInfo> fieldsInfo
-) {
+@Getter
+public final class ClassDeserializationInfo<C> {
+  @NonNull
+  private final Constructor<C> noArgsConstructor;
+  @NonNull
+  private final List<ClassFieldInfo> fieldsInfo;
 
-  public ClassDeserializationInfo {
-    Objects.requireNonNull(noArgsConstructor);
-    Objects.requireNonNull(fieldsInfo);
-
-    if (noArgsConstructor.isEmpty()) {
-      throw new BadDtoException("NoArgsConstructor must be present");
-    }
+  private ClassDeserializationInfo(Constructor<C> noArgsConstructor, List<ClassFieldInfo> fieldsInfo) {
     if (fieldsInfo.isEmpty()) {
       throw new BadDtoException("Dto has no fields");
     }
     if (fieldsInfo.stream().map(ClassFieldInfo::setter).allMatch(Optional::isEmpty)) {
       throw new BadDtoException("None of the fields has a setter. Consider using a record.");
     }
+    this.noArgsConstructor = noArgsConstructor;
+    this.fieldsInfo = fieldsInfo;
   }
 
-  public static ClassDeserializationInfo from(Class<?> clazz) {
+  public static <C> ClassDeserializationInfo<C> from(Class<C> clazz) {
     if (clazz.isRecord()) throw new IllegalStateException();
 
-    Field[] notStaticFields = ReflectionUtil.getPrivateNonStaticFields(clazz);
-    return ClassDeserializationInfo.builder()
-      .noArgsConstructor(ReflectionUtil.getNoArgsConstructor(clazz))
-      .fieldsInfo(Arrays.stream(notStaticFields).map(fld -> ClassFieldInfo.from(clazz, fld)).toList())
-      .build();
+    return new ClassDeserializationInfo<>(
+      ReflectionUtil.findNoArgsConstructor(clazz)
+        .orElseThrow(() -> new BadDtoException("NoArgsConstructor must be present: " + clazz)),
+      Arrays.stream(ReflectionUtil.getPrivateNonStaticFields(clazz))
+        .map(fld -> ClassFieldInfo.from(clazz, fld))
+        .toList()
+    );
   }
 }

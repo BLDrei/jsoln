@@ -8,8 +8,8 @@ import java.util.Map;
 public class Cache {
   private Cache() {}
 
-  private static final Map<Class<?>, ClassDeserializationInfo> classDeserializationCache = new HashMap<>();
-  private static final Map<Class<?>, RecordDeserializationInfo> recordDeserializationCache = new HashMap<>();
+  private static final Map<Class<?>, ClassDeserializationInfo<?>> classDeserializationCache = new HashMap<>();
+  private static final Map<Class<?>, RecordDeserializationInfo<?>> recordDeserializationCache = new HashMap<>();
 
   public static void clear() {
     classDeserializationCache.clear();
@@ -19,15 +19,17 @@ public class Cache {
   //todo: validate dto as well
 
   @NonNull
-  public static ClassDeserializationInfo getClassDeserializationInfo(Class<?> clazz) {
+  @SuppressWarnings({"unchecked", "unused"})
+  public static <C> ClassDeserializationInfo<C> getClassDeserializationInfo(Class<C> clazz) {
     if (clazz.isRecord()) throw new IllegalStateException();
-    return classDeserializationCache.computeIfAbsent(clazz, ClassDeserializationInfo::from);
+    return (ClassDeserializationInfo<C>) classDeserializationCache.computeIfAbsent(clazz, ClassDeserializationInfo::from);
   }
 
   @NonNull
-  public static RecordDeserializationInfo getRecordDeserializationInfo(Class<?> clazz) {
+  @SuppressWarnings("unchecked")
+  public static <R> RecordDeserializationInfo<R> getRecordDeserializationInfo(Class<R> clazz) {
     if (!clazz.isRecord()) throw new IllegalStateException();
-    return recordDeserializationCache.computeIfAbsent(clazz, RecordDeserializationInfo::from);
+    return (RecordDeserializationInfo<R>) recordDeserializationCache.computeIfAbsent(clazz, RecordDeserializationInfo::from);
   }
 
 }

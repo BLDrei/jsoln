@@ -1,20 +1,28 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.util.ReflectionUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.bldrei.jsoln.util.ReflectionUtil.getCanonicalConstructor;
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+public final class RecordDeserializationInfo<T> {
+  @NonNull
+  private final Constructor<T> canonicalConstructor;
+  @NonNull
+  private final List<RecordFieldInfo> fieldsInfo;
 
-public record RecordDeserializationInfo(
-  Constructor<?> canonicalConstructor,
-  List<RecordFieldInfo> fieldsInfo
-) {
-  public static RecordDeserializationInfo from(Class<?> recordClass) {
+  public static <R> RecordDeserializationInfo<R> from(Class<R> recordClass) {
     if (!recordClass.isRecord()) throw new IllegalStateException();
 
-    return new RecordDeserializationInfo(
-      getCanonicalConstructor(recordClass),
+    return new RecordDeserializationInfo<>(
+      ReflectionUtil.findCanonicalConstructor(recordClass),
       Arrays.stream(recordClass.getRecordComponents())
         .map(RecordFieldInfo::from)
         .toList()
