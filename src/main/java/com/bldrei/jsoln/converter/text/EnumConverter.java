@@ -1,8 +1,7 @@
 package com.bldrei.jsoln.converter.text;
 
-import com.bldrei.jsoln.cache.Cache;
+import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.util.ReflectionUtil;
-import lombok.NonNull;
 
 import java.lang.reflect.Method;
 
@@ -12,10 +11,12 @@ public final class EnumConverter<E> extends TextConverter<E> {
 
   public EnumConverter(Class<E> enumType) {
     super(enumType);
-    this.valueOf = Cache.getEnumValueOf(enumType);
+    this.valueOf = ReflectionUtil.findPublicMethod(enumType, "valueOf", String.class)
+      .orElseThrow(() -> new BadDtoException("public valueOf(String) method not found for enum: " + enumType));
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public E convert(String value) {
     return (E) ReflectionUtil.invokeStaticMethod(this.valueOf, value); //what if value=null?
   }

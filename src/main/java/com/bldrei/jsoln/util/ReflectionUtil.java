@@ -17,7 +17,8 @@ public class ReflectionUtil {
   public static Optional<Method> findPublicMethod(Class<?> clazz, String name, Class<?>... params) {
     try {
       return Optional.of(clazz.getDeclaredMethod(name, params))
-        .filter(m -> Modifier.isPublic(m.getModifiers()));
+        .filter(m -> Modifier.isPublic(m.getModifiers()))
+        .filter(m -> m.getReturnType().equals(clazz));
     }
     catch (NoSuchMethodException e) {
       return Optional.empty();
