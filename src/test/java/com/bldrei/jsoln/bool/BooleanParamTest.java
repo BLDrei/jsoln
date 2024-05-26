@@ -23,11 +23,11 @@ class BooleanParamTest extends AbstractTest {
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("""
         {"boolPrimitive":  "true" , "boolWrapper": false}""", BoolDto.class),
-      "Not implemented text class: boolean");
+      "Cannot deserialize text '\"true\"' to: boolean");
 
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("""
         {"boolPrimitive":  true , "boolWrapper": "false"}""", BoolDto.class),
-      "Not implemented text class: class java.lang.Boolean");
+      "Cannot deserialize text '\"false\"' to: class java.lang.Boolean");
   }
 }

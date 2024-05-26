@@ -1,8 +1,6 @@
 package com.bldrei.jsoln.converter.number;
 
-import com.bldrei.jsoln.converter.AbstractConverter;
-
-public class DoubleConverter extends AbstractConverter<Double> {
+public final class DoubleConverter extends NumberConverter<Double> {
 
   public DoubleConverter() {
     super(Double.class);

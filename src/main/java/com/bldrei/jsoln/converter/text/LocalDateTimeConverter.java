@@ -1,12 +1,11 @@
 package com.bldrei.jsoln.converter.text;
 
 import com.bldrei.jsoln.Configuration;
-import com.bldrei.jsoln.converter.AbstractConverter;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class LocalDateTimeConverter extends AbstractConverter<LocalDateTime> {
+public final class LocalDateTimeConverter extends TextConverter<LocalDateTime> {
 
   public LocalDateTimeConverter() {
     super(LocalDateTime.class);

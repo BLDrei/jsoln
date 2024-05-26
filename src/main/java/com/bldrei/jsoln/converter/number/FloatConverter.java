@@ -1,8 +1,6 @@
 package com.bldrei.jsoln.converter.number;
 
-import com.bldrei.jsoln.converter.AbstractConverter;
-
-public class FloatConverter extends AbstractConverter<Float> {
+public final class FloatConverter extends NumberConverter<Float> {
 
   public FloatConverter() {
     super(Float.class);

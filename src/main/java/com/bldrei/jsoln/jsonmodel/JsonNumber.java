@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.jsonmodel;
 
-import com.bldrei.jsoln.converter.AbstractConverter;
+import com.bldrei.jsoln.converter.PlainTypeConverter;
 import com.bldrei.jsoln.converter.number.BigDecimalConverter;
 import com.bldrei.jsoln.converter.number.BigIntegerConverter;
 import com.bldrei.jsoln.converter.number.ByteConverter;
@@ -8,6 +8,7 @@ import com.bldrei.jsoln.converter.number.DoubleConverter;
 import com.bldrei.jsoln.converter.number.FloatConverter;
 import com.bldrei.jsoln.converter.number.IntegerConverter;
 import com.bldrei.jsoln.converter.number.LongConverter;
+import com.bldrei.jsoln.converter.number.NumberConverter;
 import com.bldrei.jsoln.converter.number.ShortConverter;
 
 import java.math.BigDecimal;
@@ -29,7 +30,7 @@ public final class JsonNumber implements JsonElement {
       .convert(numberAsString);
   }
 
-  private static final Map<Class<? extends Number>, ? extends AbstractConverter<? extends Number>> NUMBER_CONVERTERS = Map.of(
+  private static final Map<Class<? extends Number>, ? extends NumberConverter<? extends Number>> NUMBER_CONVERTERS = Map.of(
     Integer.class, new IntegerConverter(),
     Long.class, new LongConverter(),
     Double.class, new DoubleConverter(),

@@ -1,10 +1,8 @@
 package com.bldrei.jsoln.converter.number;
 
-import com.bldrei.jsoln.converter.AbstractConverter;
-
 import java.math.BigDecimal;
 
-public class BigDecimalConverter extends AbstractConverter<BigDecimal> {
+public final class BigDecimalConverter extends NumberConverter<BigDecimal> {
 
   public BigDecimalConverter() {
     super(BigDecimal.class);

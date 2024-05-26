@@ -1,8 +1,6 @@
 package com.bldrei.jsoln.converter.text;
 
-import com.bldrei.jsoln.converter.AbstractConverter;
-
-public class StringConverter extends AbstractConverter<String> {
+public final class StringConverter extends TextConverter<String> {
 
   public StringConverter() {
     super(String.class);
