@@ -3,6 +3,8 @@ package com.bldrei.jsoln.util;
 import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.Jsoln;
+import com.bldrei.jsoln.cache.Cache;
+import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import lombok.NonNull;
@@ -17,23 +19,30 @@ import java.util.stream.Collectors;
 public class SerializeUtil {
   private SerializeUtil() {}
 
-  public static StringBuffer serializeRecordObject(@NonNull Object obj,
-                                                   @NonNull List<RecordFieldInfo> recordFieldInfos,
-                                                   @NonNull StringBuffer sb) {
+  public static <T> StringBuffer appendObjectTypeToStringBuffer(T obj, StringBuffer sb) {
+    Class<T> clazz = (Class<T>) obj.getClass();
+
+    var recordDeserializationInfo = Cache.getRecordDeserializationInfo(clazz);
+    return SerializeUtil.serializeRecordObject(obj, recordDeserializationInfo, sb);
+  }
+
+  public static <R> StringBuffer serializeRecordObject(@NonNull R record,
+                                                       @NonNull RecordDeserializationInfo<R> recordDeserializationInfo,
+                                                       @NonNull StringBuffer sb) {
     sb.append(Const.OPENING_CURLY_BRACE);
-    for (RecordFieldInfo recordFieldInfo : recordFieldInfos) {
-      Object val = ReflectionUtil.invokeInstanceMethod(obj, recordFieldInfo.accessor());
-      Object v = switch (val) {
+    for (RecordFieldInfo recordFieldInfo : recordDeserializationInfo.getFieldsInfo()) {
+      Object actualValue = ReflectionUtil.invokeInstanceMethod(record, recordFieldInfo.accessor());
+      Object flatValue = switch (actualValue) {
         case null -> null;
         case Optional<?> o -> o.orElse(null);
-        default -> val;
+        default -> actualValue;
       };
 
-      if (v == null && !Configuration.serializeIncludeNull) continue;
+      if (flatValue == null && !Configuration.serializeIncludeNull) continue;
       sb
         .append(Const.DOUBLE_QUOTE).append(recordFieldInfo.name()).append(Const.DOUBLE_QUOTE)
         .append(Const.KV_DELIMITER)
-        .append(v == null ? null : convertToJsonString(v, recordFieldInfo.classTree()))
+        .append(flatValue == null ? null : convertToJsonString(flatValue, recordFieldInfo.classTree()))
         .append(Const.PARAMS_DELIMITER);
     }
     sb.append(Const.CLOSING_CURLY_BRACE);
@@ -46,6 +55,10 @@ public class SerializeUtil {
     if (!classTree.rawType().equals(v.getClass())) {
       throw new JsolnException("Object type mismatch, expected: " + classTree.rawType() + ", actual: " + v.getClass());
     }
+    //if is text type, wrap in double quotes and use converter
+    //if is number type, do use number converter
+    //if boolean, append true/false
+    //if object, use
     return switch (v) {
       //str
       case String s -> Const.DOUBLE_QUOTE + s + Const.DOUBLE_QUOTE;

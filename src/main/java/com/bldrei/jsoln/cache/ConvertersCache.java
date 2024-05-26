@@ -45,10 +45,10 @@ public class ConvertersCache {
 
   @SuppressWarnings("unchecked")
   public static <T> Optional<TextConverter<T>> getTextConverter(Class<T> clazz) {
-    if (clazz.isEnum()) {
-      return Optional.of((TextConverter<T>) enumConvertersCache.computeIfAbsent(clazz, ecl -> new EnumConverter<>(clazz)));
-    }
-    return Optional.ofNullable((TextConverter<T>) textConvertersCache.get(clazz));
+    var converter = clazz.isEnum()
+      ? enumConvertersCache.computeIfAbsent(clazz, ecl -> new EnumConverter<>(clazz))
+      : textConvertersCache.get(clazz);
+    return Optional.ofNullable((TextConverter<T>) converter);
   }
 
   @SuppressWarnings("unchecked")

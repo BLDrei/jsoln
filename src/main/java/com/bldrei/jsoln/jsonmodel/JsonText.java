@@ -9,7 +9,7 @@ public final class JsonText implements JsonElement {
     this.value = value;
   }
 
-  public Object getValue(Class<?> clazz) {
+  public <T> T getValue(Class<T> clazz) {
     return ConvertersCache.getTextConverter(clazz)
       .orElseThrow(() -> new UnsupportedOperationException("Cannot deserialize text '\"" + value + "\"' to: " + clazz))
       .convert(value);
