@@ -1,5 +1,7 @@
 package com.bldrei.jsoln.converter.text;
 
+import lombok.NonNull;
+
 public final class StringConverter extends TextConverter<String> {
 
   public StringConverter() {
@@ -9,5 +11,10 @@ public final class StringConverter extends TextConverter<String> {
   @Override
   public String convert(String value) {
     return value;
+  }
+
+  @Override
+  public String stringifyT(@NonNull String s) {
+    return s;
   }
 }

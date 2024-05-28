@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.bldrei.jsoln.Const.CLOSING_BRACKET;
 import static com.bldrei.jsoln.Const.CLOSING_CURLY_BRACE;

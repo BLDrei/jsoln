@@ -12,5 +12,5 @@ public class Configuration {
   public static BiConsumer<String, Class<?>> missingRequiredValueHandler = (String fldName, Class<?> dto) -> {
     throw new JsolnException("Value not present, but field '%s' is mandatory on dto class %s".formatted(fldName, dto.getName()));
   };
-  public static boolean serializeIncludeNull = false;
+  public static boolean serializeIncludeNull = false; //not used yet
 }

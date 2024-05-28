@@ -39,4 +39,8 @@ public class AcceptedTypes {
       || BigInteger.class.equals(type)
       || Byte.class.equals(type);
   }
+
+  public boolean isAcceptableBooleanType(@NonNull Class<?> type) {
+    return Boolean.class.equals(type) || boolean.class.equals(type);
+  }
 }
