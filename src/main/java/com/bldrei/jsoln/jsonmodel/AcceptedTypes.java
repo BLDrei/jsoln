@@ -14,22 +14,22 @@ import java.util.Set;
 @UtilityClass
 public class AcceptedTypes {
 
-  public boolean isAcceptableObjectType(@NonNull Class<?> type) {
-    return type.isRecord() || type.equals(Map.class);
+  public boolean isAcceptableObjectTypeForField(@NonNull Class<?> type) {
+    return type.isRecord() || Map.class.equals(type);
   }
 
-  public boolean isAcceptableArrayType(@NonNull Class<?> type) {
+  public boolean isAcceptableArrayTypeForField(@NonNull Class<?> type) {
     return List.class.equals(type) || Set.class.equals(type);
   }
 
-  public boolean isAcceptableStringType(@NonNull Class<?> type) {
+  public boolean isAcceptableTextTypeForField(@NonNull Class<?> type) {
     return String.class.equals(type)
       || type.isEnum()
       || LocalDate.class.equals(type)
       || LocalDateTime.class.equals(type);
   }
 
-  public boolean isAcceptableNumberType(@NonNull Class<?> type) {
+  public boolean isAcceptableNumberTypeForField(@NonNull Class<?> type) {
     return Short.class.equals(type)
       || Integer.class.equals(type)
       || Long.class.equals(type)
@@ -40,7 +40,13 @@ public class AcceptedTypes {
       || Byte.class.equals(type);
   }
 
-  public boolean isAcceptableBooleanType(@NonNull Class<?> type) {
+  public boolean isAcceptableBooleanTypeForField(@NonNull Class<?> type) {
     return Boolean.class.equals(type) || boolean.class.equals(type);
+  }
+
+  public boolean isActualObjectTypeMatchingWithFieldType(Class<?> actualType, Class<?> fieldType) {
+    return fieldType.equals(actualType)
+      || ((Map.class.equals(fieldType) || List.class.equals(fieldType) || Set.class.equals(fieldType))
+          && fieldType.isAssignableFrom(actualType));
   }
 }

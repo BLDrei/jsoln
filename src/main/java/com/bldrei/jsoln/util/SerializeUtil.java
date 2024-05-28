@@ -17,19 +17,19 @@ public class SerializeUtil {
   public static <T> JsonElement convertObjectToJsonElement(T obj, ClassTree classTree) {
     Class<?> clazz = classTree.rawType();
 
-    if (AcceptedTypes.isAcceptableStringType(clazz)) {
+    if (AcceptedTypes.isAcceptableTextTypeForField(clazz)) {
       return JsonText.from(obj, clazz);
     }
-    else if (AcceptedTypes.isAcceptableNumberType(clazz)) {
+    else if (AcceptedTypes.isAcceptableNumberTypeForField(clazz)) {
       return JsonNumber.from(obj, (Class<? extends Number>) clazz);
     }
-    else if (AcceptedTypes.isAcceptableBooleanType(clazz)) {
+    else if (AcceptedTypes.isAcceptableBooleanTypeForField(clazz)) {
       return JsonBoolean.from(obj, clazz);
     }
-    else if (AcceptedTypes.isAcceptableArrayType(clazz)) {
+    else if (AcceptedTypes.isAcceptableArrayTypeForField(clazz)) {
       return JsonArray.from(obj, classTree);
     }
-    else if (AcceptedTypes.isAcceptableObjectType(clazz)) {
+    else if (AcceptedTypes.isAcceptableObjectTypeForField(clazz)) {
       return JsonObject.from(obj, classTree);
     }
     throw new JsolnException("Unsupported type: " + classTree);

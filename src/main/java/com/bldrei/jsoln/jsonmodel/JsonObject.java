@@ -6,16 +6,16 @@ import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.ReflectionUtil;
-import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.Getter;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.bldrei.jsoln.util.SerializeUtil.convertJsonElementToString;
+import static com.bldrei.jsoln.util.SerializeUtil.convertObjectToJsonElement;
 
 @Getter
 public final class JsonObject implements JsonElement {
@@ -46,6 +46,14 @@ public final class JsonObject implements JsonElement {
   }
 
   public static JsonObject from(Object obj, ClassTree classTree) {
+    if (Map.class.equals(classTree.rawType())) {
+      Map<String, JsonElement> kvMap = ((Map<?, ?>) obj).entrySet().stream()
+        .collect(Collectors.toUnmodifiableMap(
+          e -> convertJsonElementToString(convertObjectToJsonElement(e.getKey(), classTree.genericParameters()[0])),
+          e -> convertObjectToJsonElement(e.getValue(), classTree.genericParameters()[1])
+        ));
+      return new JsonObject(kvMap);
+    }
     var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.rawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
     for (RecordFieldInfo recordFieldInfo : recordDeserializationInfo.getFieldsInfo()) {
@@ -58,10 +66,10 @@ public final class JsonObject implements JsonElement {
 
       if (flatValue == null) continue;
 
-      if (!recordFieldInfo.classTree().rawType().equals(flatValue.getClass())) { //what about List vs ArrayList / set / map?
+      if (!AcceptedTypes.isActualObjectTypeMatchingWithFieldType(flatValue.getClass(), recordFieldInfo.classTree().rawType())) {
         throw new JsolnException("Object type mismatch, expected: " + recordFieldInfo.classTree().rawType() + ", actual: " + flatValue.getClass());
       }
-      kvMap.put(recordFieldInfo.name(), SerializeUtil.convertObjectToJsonElement(flatValue, recordFieldInfo.classTree()));
+      kvMap.put(recordFieldInfo.name(), convertObjectToJsonElement(flatValue, recordFieldInfo.classTree()));
     }
     return new JsonObject(kvMap);
   }
