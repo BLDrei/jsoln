@@ -2,6 +2,7 @@ package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.SerializeUtil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Collection;
@@ -13,13 +14,10 @@ import java.util.stream.Stream;
 import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
 
 @Getter
+@AllArgsConstructor
 public final class JsonArray implements JsonElement {
 
   private final List<JsonElement> array;
-
-  public JsonArray(List<JsonElement> array) {
-    this.array = array;
-  }
 
   public Collection<?> getCollection(ClassTree classTree) {
     Class<?> collectionClass = classTree.rawType();

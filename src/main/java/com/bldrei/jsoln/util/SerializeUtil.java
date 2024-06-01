@@ -22,7 +22,7 @@ public class SerializeUtil {
       return JsonText.from(obj, clazz);
     }
     else if (AcceptedTypes.isAcceptableNumberTypeForField(clazz)) {
-      return JsonNumber.from(obj, (Class<? extends Number>) clazz);
+      return JsonNumber.from(obj, clazz);
     }
     else if (AcceptedTypes.isAcceptableBooleanTypeForField(clazz)) {
       return JsonBoolean.from(obj, clazz);

@@ -6,6 +6,7 @@ import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.ReflectionUtil;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.lang.reflect.Type;
@@ -18,12 +19,9 @@ import static com.bldrei.jsoln.util.SerializeUtil.convertJsonElementToString;
 import static com.bldrei.jsoln.util.SerializeUtil.convertObjectToJsonElement;
 
 @Getter
+@AllArgsConstructor
 public final class JsonObject implements JsonElement {
   Map<String, JsonElement> kvMap;
-
-  public JsonObject(Map<String, JsonElement> kvMap) {
-    this.kvMap = kvMap;
-  }
 
   public Optional<JsonElement> get(String fieldName) {
     return Optional.ofNullable(kvMap.get(fieldName));

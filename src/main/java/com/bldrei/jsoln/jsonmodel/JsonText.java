@@ -1,15 +1,13 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.cache.ConvertersCache;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public final class JsonText implements JsonElement {
   private final String valueAsString;
-
-  public JsonText(String valueAsString) {
-    this.valueAsString = valueAsString;
-  }
 
   public <T> T getValue(Class<T> clazz) {
     return ConvertersCache.getTextConverter(clazz)

@@ -32,7 +32,7 @@ public class ConvertersCache {
     LocalDateTime.class, new LocalDateTimeConverter()
   );
   private static final Map<Class<?>, TextConverter<?>> enumConvertersCache = new HashMap<>();
-  private static final Map<Class<? extends Number>, NumberConverter<?>> numberConvertersCache = Map.of(
+  private static final Map<Class<?>, NumberConverter<?>> numberConvertersCache = Map.of(
     Integer.class, new IntegerConverter(),
     Long.class, new LongConverter(),
     Double.class, new DoubleConverter(),
@@ -52,7 +52,7 @@ public class ConvertersCache {
   }
 
   @SuppressWarnings("unchecked")
-  public static <N extends Number> Optional<NumberConverter<N>> getNumberConverter(Class<N> clazz) {
+  public static <N> Optional<NumberConverter<N>> getNumberConverter(Class<N> clazz) {
     return Optional.ofNullable((NumberConverter<N>) numberConvertersCache.get(clazz));
   }
 }
