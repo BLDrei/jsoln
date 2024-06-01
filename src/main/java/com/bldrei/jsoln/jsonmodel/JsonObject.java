@@ -64,7 +64,7 @@ public final class JsonObject implements JsonElement {
 
       if (flatValue == null) continue;
 
-      if (!AcceptedTypes.isActualObjectTypeMatchingWithFieldType(flatValue.getClass(), recordFieldInfo.classTree().rawType())) {
+      if (!AcceptedFieldTypes.isActualObjectTypeMatchingWithFieldType(flatValue.getClass(), recordFieldInfo.classTree().rawType())) {
         throw new JsolnException("Object type mismatch, expected: " + recordFieldInfo.classTree().rawType() + ", actual: " + flatValue.getClass());
       }
       kvMap.put(recordFieldInfo.name(), convertObjectToJsonElement(flatValue, recordFieldInfo.classTree()));
