@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.util;
 
+import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.AcceptedTypes;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
@@ -39,15 +40,16 @@ public class SerializeUtil {
     return switch (jsonElement) {
       case JsonBoolean jb -> Boolean.toString(jb.value());
       case JsonNumber jn -> jn.getNumberAsString();
-      case JsonText jt -> "\"" + jt.getValueAsString() + "\"";
+      case JsonText jt -> Const.DOUBLE_QUOTE_STR + jt.getValueAsString() + Const.DOUBLE_QUOTE_STR;
       case JsonObject jo -> jo.getKvMap().entrySet()
         .stream()
-        .map(e -> "\"" + e.getKey() + "\":" + convertJsonElementToString(e.getValue()))
-        .collect(Collectors.joining(",", "{", "}"));
+        .map(e -> Const.DOUBLE_QUOTE_STR + e.getKey() + Const.DOUBLE_QUOTE_STR
+          + Const.KV_DELIMITER_STR + convertJsonElementToString(e.getValue()))
+        .collect(Collectors.joining(Const.PARAMS_DELIMITER_STR, Const.OPENING_CURLY_BRACE_STR, Const.CLOSING_CURLY_BRACE_STR));
       case JsonArray ja -> ja.getArray()
         .stream()
         .map(SerializeUtil::convertJsonElementToString)
-        .collect(Collectors.joining(",", "[", "]"));
+        .collect(Collectors.joining(Const.ARRAY_MEMBERS_DELIMITER_STR, Const.OPENING_BRACKET_STR, Const.CLOSING_BRACKET_STR));
     };
   }
 }

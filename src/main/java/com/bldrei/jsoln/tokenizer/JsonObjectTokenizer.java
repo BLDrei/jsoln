@@ -13,6 +13,7 @@ import static com.bldrei.jsoln.Const.KV_DELIMITER;
 import static com.bldrei.jsoln.Const.OPENING_BRACKET;
 import static com.bldrei.jsoln.Const.OPENING_CURLY_BRACE;
 import static com.bldrei.jsoln.Const.PARAMS_DELIMITER;
+import static com.bldrei.jsoln.util.StringUtil.isWrapped;
 
 public final class JsonObjectTokenizer extends AbstractJsonTokenizer {
 
@@ -25,14 +26,14 @@ public final class JsonObjectTokenizer extends AbstractJsonTokenizer {
     int i = 0;
     int kvDelimeterIndex = -1;
     String key = null;
-    String value = null;
+    String value;
 
     for (; i < remainingChars.length; i++) {
       if (remainingChars[i] != KV_DELIMITER) {
         continue;
       }
       String possibleKey = remainingTxt.substring(0, i).trim(); //trim for parsing pretty formatted jsons
-      if (!StringUtil.isWrapped(possibleKey, DOUBLE_QUOTE, DOUBLE_QUOTE)) {
+      if (!isWrapped(possibleKey, DOUBLE_QUOTE, DOUBLE_QUOTE)) {
         throw new IllegalArgumentException("Illegal json syntax: key is not wrapped into double quotes: " + possibleKey);
       }
       key = StringUtil.removeFirstLastChar(possibleKey);
