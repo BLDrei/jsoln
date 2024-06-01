@@ -15,38 +15,38 @@ import java.util.Set;
 public class AcceptedTypes {
 
   public boolean isAcceptableObjectTypeForField(@NonNull Class<?> type) {
-    return type.isRecord() || Map.class.equals(type);
+    return type.isRecord() || Map.class == type;
   }
 
   public boolean isAcceptableArrayTypeForField(@NonNull Class<?> type) {
-    return List.class.equals(type) || Set.class.equals(type);
+    return List.class == type || Set.class == type;
   }
 
   public boolean isAcceptableTextTypeForField(@NonNull Class<?> type) {
-    return String.class.equals(type)
+    return String.class == type
       || type.isEnum()
-      || LocalDate.class.equals(type)
-      || LocalDateTime.class.equals(type);
+      || LocalDate.class == type
+      || LocalDateTime.class == type;
   }
 
   public boolean isAcceptableNumberTypeForField(@NonNull Class<?> type) {
-    return Short.class.equals(type)
-      || Integer.class.equals(type)
-      || Long.class.equals(type)
-      || Double.class.equals(type)
-      || Float.class.equals(type)
-      || BigDecimal.class.equals(type)
-      || BigInteger.class.equals(type)
-      || Byte.class.equals(type);
+    return Short.class == type
+      || Integer.class == type
+      || Long.class == type
+      || Double.class == type
+      || Float.class == type
+      || BigDecimal.class == type
+      || BigInteger.class == type
+      || Byte.class == type;
   }
 
   public boolean isAcceptableBooleanTypeForField(@NonNull Class<?> type) {
-    return Boolean.class.equals(type) || boolean.class.equals(type);
+    return Boolean.class == type || boolean.class == type;
   }
 
   public boolean isActualObjectTypeMatchingWithFieldType(Class<?> actualType, Class<?> fieldType) {
-    return fieldType.equals(actualType)
-      || ((Map.class.equals(fieldType) || List.class.equals(fieldType) || Set.class.equals(fieldType))
-          && fieldType.isAssignableFrom(actualType));
+    return fieldType == actualType
+      || isAcceptableObjectTypeForField(fieldType)
+      || isAcceptableArrayTypeForField(fieldType);
   }
 }
