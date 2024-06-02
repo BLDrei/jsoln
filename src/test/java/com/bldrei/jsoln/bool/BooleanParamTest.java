@@ -23,7 +23,7 @@ class BooleanParamTest extends AbstractTest {
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("""
         {"boolPrimitive":  "true" , "boolWrapper": false}""", BoolDto.class),
-      "Cannot deserialize text '\"true\"' to: boolean");
+      "Cannot deserialize text '\"true\"' to: boolean"); //todo: change to wrong type exception (expected JsonBoolean, was JsonText)
 
     shouldThrow(UnsupportedOperationException.class,
       () -> Jsoln.deserialize("""

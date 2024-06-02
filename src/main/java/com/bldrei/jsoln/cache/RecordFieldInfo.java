@@ -1,6 +1,8 @@
 package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.exception.BadDtoException;
+import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
+import com.bldrei.jsoln.jsonmodel.JsonDataType;
 import com.bldrei.jsoln.util.ClassTree;
 
 import java.lang.reflect.Method;
@@ -13,12 +15,14 @@ public record RecordFieldInfo(
   boolean isNullable,
   ClassTree classTree,
   Method accessor,
+  JsonDataType jsonType,
   Class<?> dtoClass
 ) {
   public RecordFieldInfo {
     Objects.requireNonNull(name);
     Objects.requireNonNull(classTree);
     Objects.requireNonNull(accessor);
+    Objects.requireNonNull(jsonType);
     Objects.requireNonNull(dtoClass);
 
     if (Optional.class.equals(classTree.rawType())) {
@@ -35,6 +39,7 @@ public record RecordFieldInfo(
       isNullable,
       tree,
       field.getAccessor(),
+      AcceptedFieldTypes.determineJsonDataType(tree.rawType()),
       field.getDeclaringRecord()
     );
   }

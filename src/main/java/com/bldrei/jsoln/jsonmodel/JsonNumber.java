@@ -11,7 +11,7 @@ public final class JsonNumber implements JsonElement {
 
   public <N> N getNumericValue(Class<N> clazz) {
     return ConvertersCache.getNumberConverter(clazz)
-      .orElseThrow(() -> new UnsupportedOperationException("Not implemented numeric class: " + clazz))
+      .orElseThrow(IllegalStateException::new)
       .convert(numberAsString);
   }
 

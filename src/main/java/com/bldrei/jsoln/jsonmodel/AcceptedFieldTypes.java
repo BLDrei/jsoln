@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.jsonmodel;
 
+import com.bldrei.jsoln.exception.JsolnException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -47,7 +48,18 @@ public class AcceptedFieldTypes {
     return BOOLEAN_FINAL_TYPES.contains(type);
   }
 
-  public boolean isActualObjectTypeMatchingWithFieldType(Class<?> actualType, Class<?> fieldType) {
+  public JsonDataType determineJsonDataType(@NonNull Class<?> type) {
+    return switch (type) {
+      case Class<?> cl when isAcceptableObjectTypeForField(cl) -> JsonDataType.OBJECT;
+      case Class<?> cl when isAcceptableArrayTypeForField(cl) -> JsonDataType.ARRAY;
+      case Class<?> cl when isAcceptableTextTypeForField(cl) -> JsonDataType.TEXT;
+      case Class<?> cl when isAcceptableNumberTypeForField(cl) -> JsonDataType.NUMBER;
+      case Class<?> cl when isAcceptableBooleanTypeForField(cl) -> JsonDataType.BOOLEAN;
+      default -> throw new JsolnException("Unsupported field type: " + type);
+    };
+  }
+
+  public boolean isActualObjectTypeMatchingWithFieldType(@NonNull Class<?> actualType, @NonNull Class<?> fieldType) {
     return fieldType == actualType
       || isAcceptableObjectTypeForField(fieldType)
       || isAcceptableArrayTypeForField(fieldType);

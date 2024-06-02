@@ -11,7 +11,7 @@ public final class JsonText implements JsonElement {
 
   public <T> T getValue(Class<T> clazz) {
     return ConvertersCache.getTextConverter(clazz)
-      .orElseThrow(() -> new UnsupportedOperationException("Cannot deserialize text '\"" + valueAsString + "\"' to: " + clazz))
+      .orElseThrow(IllegalStateException::new)
       .convert(valueAsString);
   }
 
