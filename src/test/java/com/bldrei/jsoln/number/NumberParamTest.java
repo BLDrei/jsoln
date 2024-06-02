@@ -12,7 +12,8 @@ class NumberParamTest extends AbstractTest {
   @Test
   void deserialize_unsupportedClass_shouldThrowException() {
     Stream.of(
-//      "{}", "{\"number\":null}", //todo implement: before deserialization, check if field is supported by Jsoln
+      "{}",
+      "{\"number\":null}",
       "{\"number\":12}"
     ).forEach(json -> {
         shouldThrow(JsolnException.class,
