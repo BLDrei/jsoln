@@ -24,7 +24,7 @@ class BooleanParamTest extends AbstractTest {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("""
         {"boolPrimitive":  "true" , "boolWrapper": false}""", BoolDto.class),
-      "For field 'boolPrimitive', expected json type is BOOLEAN, but received TEXT"); //todo: change to wrong type exception (expected JsonBoolean, was JsonText)
+      "For field 'boolPrimitive', expected json type is BOOLEAN, but received TEXT");
 
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("""
