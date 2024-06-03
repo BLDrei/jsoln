@@ -18,8 +18,4 @@ public abstract class PlainTypeConverter<T> {
   public String stringify(@NonNull Object flatValue) { //i don't like Object, consider how to bring back T
     return stringifyT((T) flatValue);
   }
-
-//  protected boolean isTypeMatchingTheConverter(@NonNull Class<?> clazz) {
-//    return type.equals(clazz); //consider switching back to map for performance, or even append matching converter to RecordFieldInfo
-//  }
 }

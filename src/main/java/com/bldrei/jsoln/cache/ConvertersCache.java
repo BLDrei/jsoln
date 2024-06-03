@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.converter.BooleanConverter;
 import com.bldrei.jsoln.converter.number.BigDecimalConverter;
 import com.bldrei.jsoln.converter.number.BigIntegerConverter;
 import com.bldrei.jsoln.converter.number.ByteConverter;
@@ -14,6 +15,7 @@ import com.bldrei.jsoln.converter.text.LocalDateConverter;
 import com.bldrei.jsoln.converter.text.LocalDateTimeConverter;
 import com.bldrei.jsoln.converter.text.StringConverter;
 import com.bldrei.jsoln.converter.text.TextConverter;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -42,6 +44,8 @@ public class ConvertersCache {
     Short.class, new ShortConverter(),
     Byte.class, new ByteConverter()
   );
+  @Getter
+  private static final BooleanConverter booleanConverter = new BooleanConverter();
 
   @SuppressWarnings("unchecked")
   public static <T> Optional<TextConverter<T>> getTextConverter(Class<T> clazz) {
