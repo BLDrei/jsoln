@@ -38,7 +38,7 @@ public class SerializeUtil {
 
   public static String convertJsonElementToString(JsonElement jsonElement) { //todo: use stringBuffer
     return switch (jsonElement) {
-      case JsonBoolean jb -> Boolean.toString(jb.value());
+      case JsonBoolean jb -> Boolean.toString(jb.getValue());
       case JsonNumber jn -> jn.getNumberAsString();
       case JsonText jt -> Const.DOUBLE_QUOTE_STR + jt.getValueAsString() + Const.DOUBLE_QUOTE_STR;
       case JsonObject jo -> jo.getKvMap().entrySet()
