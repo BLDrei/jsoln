@@ -26,7 +26,7 @@ public final class RecordDeserializationInfo<T> {
 
     return new RecordDeserializationInfo<>(
       ReflectionUtil.findCanonicalConstructor(recordClass),
-      ClassTree.fromType(recordClass),
+      ClassTree.fromClass(recordClass),
       Arrays.stream(recordClass.getRecordComponents())
         .map(RecordFieldInfo::from)
         .toList()

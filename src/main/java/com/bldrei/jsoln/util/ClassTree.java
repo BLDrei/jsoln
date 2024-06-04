@@ -19,6 +19,10 @@ public record ClassTree(Class<?> rawType, ClassTree[] genericParameters) {
     return fromType(fld.getGenericType());
   }
 
+  public static ClassTree fromClass(Class<?> clazz) {
+    return fromType(clazz);
+  }
+
   public static ClassTree fromType(Type type) {
     if (type instanceof ParameterizedType parameterizedType) {
       return new ClassTree(
