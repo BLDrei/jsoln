@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.cache.ConvertersCache;
+import com.bldrei.jsoln.util.ClassTree;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,8 +10,8 @@ import lombok.Getter;
 public final class JsonText implements JsonElement {
   private final String valueAsString;
 
-  public <T> T getValue(Class<T> clazz) {
-    return ConvertersCache.getTextConverter(clazz)
+  public Object toObject(ClassTree classTree) {
+    return ConvertersCache.getTextConverter(classTree.rawType())
       .orElseThrow(IllegalStateException::new)
       .convert(valueAsString);
   }

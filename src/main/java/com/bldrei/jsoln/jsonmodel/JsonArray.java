@@ -5,13 +5,10 @@ import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
 
 @Getter
 @AllArgsConstructor
@@ -19,11 +16,11 @@ public final class JsonArray implements JsonElement {
 
   private final List<JsonElement> array;
 
-  public Collection<?> getCollection(ClassTree classTree) {
+  public Object toObject(ClassTree classTree) {
     Class<?> collectionClass = classTree.rawType();
-    ClassTree actualType = classTree.genericParameters()[0];
+    ClassTree actualTypeTree = classTree.genericParameters()[0];
     Stream<?> stream = array.stream()
-      .map(jsonElement -> extractValueFromJsonElement(jsonElement, actualType));
+      .map(jsonElement -> jsonElement.toObject(actualTypeTree));
 
     if (List.class.equals(collectionClass)) {
       return stream.toList();

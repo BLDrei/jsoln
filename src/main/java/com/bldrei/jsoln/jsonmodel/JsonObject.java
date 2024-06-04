@@ -8,6 +8,7 @@ import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bldrei.jsoln.Jsoln.extractValueFromJsonElement;
 import static com.bldrei.jsoln.util.SerializeUtil.convertJsonElementToString;
 import static com.bldrei.jsoln.util.SerializeUtil.convertObjectToJsonElement;
 
@@ -28,7 +28,7 @@ public final class JsonObject implements JsonElement {
     return Optional.ofNullable(kvMap.get(fieldName));
   }
 
-  public Object getValue(ClassTree classTree) {
+  public Object toObject(@NonNull ClassTree classTree) {
     if (Map.class.equals(classTree.rawType())) {
       Type keyType = classTree.genericParameters()[0].rawType();
       if (!String.class.equals(keyType)) {
@@ -37,7 +37,7 @@ public final class JsonObject implements JsonElement {
       return kvMap.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
           Map.Entry::getKey,
-          e -> extractValueFromJsonElement(e.getValue(), classTree.genericParameters()[1]),
+          e -> e.getValue().toObject(classTree.genericParameters()[1]),
           (k1, k2) -> new IllegalStateException("Duplicate keys %s and %s".formatted(k1, k2))
         ));
     }
@@ -52,7 +52,7 @@ public final class JsonObject implements JsonElement {
         if (value.get().getJsonDataType() != recordComponent.jsonType()) {
           throw new JsolnException("For field '" + recordComponent.name() + "', expected json type is " + recordComponent.jsonType() + ", but received " + value.get().getJsonDataType());
         }
-        Object valueOfActualType = extractValueFromJsonElement(value.get(), recordComponent.classTree());
+        Object valueOfActualType = value.get().toObject(recordComponent.classTree());
         return isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType;
       }
       else if (isNullable) {
