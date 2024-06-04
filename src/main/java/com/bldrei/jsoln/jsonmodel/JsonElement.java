@@ -6,7 +6,8 @@ public sealed interface JsonElement
   permits JsonObject, JsonArray, JsonBoolean, JsonText, JsonNumber {
 
   Object toObject(ClassTree classTree);
-//  String serialize(); //todo: change to appendToSB
+
+  String serialize(); //todo: change to appendToSB
 
   @SuppressWarnings("unused")
   default JsonDataType getJsonDataType() {

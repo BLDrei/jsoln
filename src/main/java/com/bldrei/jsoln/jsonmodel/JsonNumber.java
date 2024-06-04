@@ -3,9 +3,7 @@ package com.bldrei.jsoln.jsonmodel;
 import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.util.ClassTree;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public final class JsonNumber implements JsonElement {
   private final String numberAsString;
@@ -14,6 +12,10 @@ public final class JsonNumber implements JsonElement {
     return ConvertersCache.getNumberConverter(classTree.rawType())
       .orElseThrow(IllegalStateException::new)
       .convert(numberAsString);
+  }
+
+  public String serialize() {
+    return numberAsString;
   }
 
   public static <N> JsonNumber from(Object flatValue, Class<N> clazz) {

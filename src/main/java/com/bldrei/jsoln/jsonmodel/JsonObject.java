@@ -1,13 +1,13 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.Cache;
 import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 
 import java.lang.reflect.Type;
@@ -16,10 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bldrei.jsoln.util.SerializeUtil.convertJsonElementToString;
 import static com.bldrei.jsoln.util.SerializeUtil.convertObjectToJsonElement;
 
-@Getter
 @AllArgsConstructor
 public final class JsonObject implements JsonElement {
   Map<String, JsonElement> kvMap;
@@ -67,11 +65,19 @@ public final class JsonObject implements JsonElement {
     return ReflectionUtil.invokeConstructor(recordDeserializationInfo.getCanonicalConstructor(), params);
   }
 
+  public String serialize() {
+    return kvMap.entrySet()
+      .stream()
+      .map(e -> Const.DOUBLE_QUOTE_STR + e.getKey() + Const.DOUBLE_QUOTE_STR
+        + Const.KV_DELIMITER_STR + e.getValue().serialize())
+      .collect(Collectors.joining(Const.PARAMS_DELIMITER_STR, Const.OPENING_CURLY_BRACE_STR, Const.CLOSING_CURLY_BRACE_STR));
+  }
+
   public static JsonObject from(Object obj, ClassTree classTree) {
     if (Map.class.equals(classTree.rawType())) {
       Map<String, JsonElement> kvMap = ((Map<?, ?>) obj).entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
-          e -> convertJsonElementToString(convertObjectToJsonElement(e.getKey(), classTree.genericParameters()[0])),
+          e -> convertObjectToJsonElement(e.getKey(), classTree.genericParameters()[0]).serialize(),
           e -> convertObjectToJsonElement(e.getValue(), classTree.genericParameters()[1])
         ));
       return new JsonObject(kvMap);

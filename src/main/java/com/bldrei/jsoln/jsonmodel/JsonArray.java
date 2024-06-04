@@ -1,16 +1,15 @@
 package com.bldrei.jsoln.jsonmodel;
 
+import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Getter
 @AllArgsConstructor
 public final class JsonArray implements JsonElement {
 
@@ -22,13 +21,20 @@ public final class JsonArray implements JsonElement {
     Stream<?> stream = array.stream()
       .map(jsonElement -> jsonElement.toObject(actualTypeTree));
 
-    if (List.class.equals(collectionClass)) {
+    if (List.class.equals(collectionClass)) { //todo: converters
       return stream.toList();
     }
     if (Set.class.equals(collectionClass)) {
       return stream.collect(Collectors.toUnmodifiableSet());
     }
     throw new IllegalArgumentException("Unexpected collection type: " + collectionClass);
+  }
+
+  public String serialize() {
+    return array
+      .stream()
+      .map(JsonElement::serialize)
+      .collect(Collectors.joining(Const.ARRAY_MEMBERS_DELIMITER_STR, Const.OPENING_BRACKET_STR, Const.CLOSING_BRACKET_STR));
   }
 
   public static JsonArray from(Object collection, ClassTree classTree) {

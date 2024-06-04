@@ -1,11 +1,10 @@
 package com.bldrei.jsoln.jsonmodel;
 
+import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.util.ClassTree;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public final class JsonText implements JsonElement {
   private final String valueAsString;
@@ -14,6 +13,10 @@ public final class JsonText implements JsonElement {
     return ConvertersCache.getTextConverter(classTree.rawType())
       .orElseThrow(IllegalStateException::new)
       .convert(valueAsString);
+  }
+
+  public String serialize() {
+    return Const.DOUBLE_QUOTE_STR + valueAsString + Const.DOUBLE_QUOTE_STR;
   }
 
   public static JsonText from(Object flatValue, Class<?> clazz) {
