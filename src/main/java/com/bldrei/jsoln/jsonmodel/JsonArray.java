@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.Const;
+import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.util.ClassTree;
 import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.AllArgsConstructor;
@@ -21,13 +22,9 @@ public final class JsonArray implements JsonElement {
     Stream<?> stream = array.stream()
       .map(jsonElement -> jsonElement.toObject(actualTypeTree));
 
-    if (List.class.equals(collectionClass)) { //todo: converters
-      return stream.toList();
-    }
-    if (Set.class.equals(collectionClass)) {
-      return stream.collect(Collectors.toUnmodifiableSet());
-    }
-    throw new IllegalArgumentException("Unexpected collection type: " + collectionClass);
+    return ConvertersCache.getCollectionConverter(collectionClass)
+      .orElseThrow(() -> new IllegalArgumentException("Unexpected collection type: " + collectionClass))
+      .convert(stream);
   }
 
   public String serialize() {

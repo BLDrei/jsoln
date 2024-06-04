@@ -1,6 +1,9 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.converter.ArrayConverter;
 import com.bldrei.jsoln.converter.BooleanConverter;
+import com.bldrei.jsoln.converter.array.ListConverter;
+import com.bldrei.jsoln.converter.array.SetConverter;
 import com.bldrei.jsoln.converter.number.BigDecimalConverter;
 import com.bldrei.jsoln.converter.number.BigIntegerConverter;
 import com.bldrei.jsoln.converter.number.ByteConverter;
@@ -22,8 +25,10 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class ConvertersCache {
   private ConvertersCache() {}
@@ -46,6 +51,10 @@ public class ConvertersCache {
   );
   @Getter
   private static final BooleanConverter booleanConverter = new BooleanConverter();
+  private static final Map<Class<?>, ArrayConverter<?>> arrayConvertersCache = Map.of(
+    List.class, new ListConverter(),
+    Set.class, new SetConverter()
+  );
 
   @SuppressWarnings("unchecked")
   public static <T> Optional<TextConverter<T>> getTextConverter(Class<T> clazz) {
@@ -58,5 +67,10 @@ public class ConvertersCache {
   @SuppressWarnings("unchecked")
   public static <N> Optional<NumberConverter<N>> getNumberConverter(Class<N> clazz) {
     return Optional.ofNullable((NumberConverter<N>) numberConvertersCache.get(clazz));
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <C> Optional<ArrayConverter<C>> getCollectionConverter(Class<C> clazz) {
+    return Optional.ofNullable((ArrayConverter<C>) arrayConvertersCache.get(clazz));
   }
 }
