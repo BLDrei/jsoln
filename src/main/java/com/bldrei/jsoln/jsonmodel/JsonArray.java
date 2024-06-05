@@ -3,11 +3,9 @@ package com.bldrei.jsoln.jsonmodel;
 import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.util.ClassTree;
-import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,16 +33,9 @@ public final class JsonArray implements JsonElement {
   }
 
   public static JsonArray from(Object collection, ClassTree classTree) {
-    ClassTree collectionOfWhat = classTree.genericParameters()[0];
-    List<JsonElement> jsonElements = switch (collection) {
-      case List<?> l -> l.stream()
-        .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
-        .toList();
-      case Set<?> s -> s.stream()
-        .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
-        .toList();
-      default -> throw new IllegalStateException();
-    };
-    return new JsonArray(jsonElements);
+    List<JsonElement> jsonElementsList = ConvertersCache.getCollectionConverter(classTree.rawType())
+      .orElseThrow(IllegalStateException::new)
+      .toJsonElementsList(collection, classTree);
+    return new JsonArray(jsonElementsList);
   }
 }

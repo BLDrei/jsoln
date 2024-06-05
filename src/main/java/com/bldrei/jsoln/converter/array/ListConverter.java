@@ -17,7 +17,7 @@ public class ListConverter extends ArrayConverter<List> {
   }
 
   @Override
-  protected String stringifyT(@NonNull List flatValue) {
-    return ""; //todo
+  protected Stream<?> toStream(@NonNull List list) {
+    return list.stream();
   }
 }
