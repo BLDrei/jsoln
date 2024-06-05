@@ -21,7 +21,6 @@ public final class JsonArray implements JsonElement {
       .map(jsonElement -> jsonElement.toObject(actualTypeTree));
 
     return ConvertersCache.getArrayConverter(collectionClass)
-      .orElseThrow(() -> new IllegalArgumentException("Unexpected collection type: " + collectionClass))
       .convert(stream);
   }
 

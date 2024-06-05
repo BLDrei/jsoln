@@ -11,7 +11,6 @@ public final class JsonText implements JsonElement {
 
   public Object toObject(ClassTree classTree) {
     return ConvertersCache.getTextConverter(classTree.rawType())
-      .orElseThrow(IllegalStateException::new)
       .stringToObject(valueAsString);
   }
 

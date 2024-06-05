@@ -10,7 +10,6 @@ public final class JsonNumber implements JsonElement {
 
   public Object toObject(ClassTree classTree) {
     return ConvertersCache.getNumberConverter(classTree.rawType())
-      .orElseThrow(IllegalStateException::new)
       .convert(numberAsString);
   }
 

@@ -14,12 +14,10 @@ public class SerializeUtil {
 
     if (AcceptedFieldTypes.isAcceptableTextTypeForField(clazz)) {
       return ConvertersCache.getTextConverter(clazz)
-        .orElseThrow(IllegalStateException::new)
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableNumberTypeForField(clazz)) {
       return ConvertersCache.getNumberConverter(clazz)
-        .orElseThrow(IllegalStateException::new)
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableBooleanTypeForField(clazz)) {
@@ -28,7 +26,6 @@ public class SerializeUtil {
     }
     else if (AcceptedFieldTypes.isAcceptableArrayTypeForField(clazz)) {
       return ConvertersCache.getArrayConverter(clazz)
-        .orElseThrow(IllegalStateException::new)
         .objectToJsonArray(obj, classTree);
     }
     else if (AcceptedFieldTypes.isAcceptableObjectTypeForField(clazz)) {

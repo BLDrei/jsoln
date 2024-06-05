@@ -1,9 +1,9 @@
 package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.converter.ArrayConverter;
-import com.bldrei.jsoln.converter.bool.BooleanConverter;
 import com.bldrei.jsoln.converter.array.ListConverter;
 import com.bldrei.jsoln.converter.array.SetConverter;
+import com.bldrei.jsoln.converter.bool.BooleanConverter;
 import com.bldrei.jsoln.converter.number.BigDecimalConverter;
 import com.bldrei.jsoln.converter.number.BigIntegerConverter;
 import com.bldrei.jsoln.converter.number.ByteConverter;
@@ -24,10 +24,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class ConvertersCache {
@@ -57,20 +57,40 @@ public class ConvertersCache {
   );
 
   @SuppressWarnings("unchecked")
-  public static <T> Optional<TextConverter<T>> getTextConverter(Class<T> clazz) {
+  public static <T> TextConverter<T> getTextConverter(Class<T> clazz) {
     var converter = clazz.isEnum()
       ? enumConvertersCache.computeIfAbsent(clazz, ecl -> new EnumConverter<>(clazz))
       : textConvertersCache.get(clazz);
-    return Optional.ofNullable((TextConverter<T>) converter);
+    if (converter == null) {
+      throw new IllegalStateException("""
+        Unexpected json type: %s.
+        Supported JsonText converters are: %s"""
+        .formatted(clazz, Arrays.toString(TextConverter.class.getPermittedSubclasses())));
+    }
+    return (TextConverter<T>) converter;
   }
 
   @SuppressWarnings("unchecked")
-  public static <N> Optional<NumberConverter<N>> getNumberConverter(Class<N> clazz) {
-    return Optional.ofNullable((NumberConverter<N>) numberConvertersCache.get(clazz));
+  public static <N> NumberConverter<N> getNumberConverter(Class<N> clazz) {
+    var converter = (NumberConverter<N>) numberConvertersCache.get(clazz);
+    if (converter == null) {
+      throw new IllegalStateException("""
+        Unexpected json type: %s.
+        Supported JsonNumber converters are: %s"""
+        .formatted(clazz, numberConvertersCache.values()));
+    }
+    return converter;
   }
 
   @SuppressWarnings("unchecked")
-  public static <C> Optional<ArrayConverter<C>> getArrayConverter(Class<C> clazz) {
-    return Optional.ofNullable((ArrayConverter<C>) arrayConvertersCache.get(clazz));
+  public static <C> ArrayConverter<C> getArrayConverter(Class<C> clazz) {
+    var converter = (ArrayConverter<C>) arrayConvertersCache.get(clazz);
+    if (converter == null) {
+      throw new IllegalStateException("""
+        Unexpected json type: %s.
+        Supported JsonArray converters are: %s"""
+        .formatted(clazz, arrayConvertersCache.values()));
+    }
+    return converter;
   }
 }
