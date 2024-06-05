@@ -14,13 +14,5 @@ public record JsonBoolean(boolean value) implements JsonElement {
   public String serialize() {
     return Boolean.toString(value);
   }
-
-  @SuppressWarnings("unused")
-  public static JsonBoolean from(Object flatValue, Class<?> clazz) {
-    return switch (flatValue) {
-      case Boolean b -> b ? TRUE : FALSE;
-      default -> throw new IllegalStateException();
-    };
-  }
 }
 

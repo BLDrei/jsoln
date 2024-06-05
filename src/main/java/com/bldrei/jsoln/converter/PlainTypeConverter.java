@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.converter;
 
+import com.bldrei.jsoln.jsonmodel.JsonElement;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -18,4 +19,6 @@ public abstract class PlainTypeConverter<T> {
   public String stringify(@NonNull Object flatValue) { //i don't like Object, consider how to bring back T
     return stringifyT((T) flatValue);
   }
+
+  public abstract JsonElement objectToJsonElement(@NonNull Object flatValue);
 }

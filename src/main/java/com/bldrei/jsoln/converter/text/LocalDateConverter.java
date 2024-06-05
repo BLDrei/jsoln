@@ -13,7 +13,7 @@ public final class LocalDateConverter extends TextConverter<LocalDate> {
   }
 
   @Override
-  public LocalDate convert(String value) {
+  public LocalDate stringToObject(String value) {
     return Optional.ofNullable(Configuration.dateTimeFormatter)
       .map(formatter -> LocalDate.parse(value, formatter))
       .orElse(LocalDate.parse(value));

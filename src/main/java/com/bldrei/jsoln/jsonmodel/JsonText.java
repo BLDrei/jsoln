@@ -12,15 +12,10 @@ public final class JsonText implements JsonElement {
   public Object toObject(ClassTree classTree) {
     return ConvertersCache.getTextConverter(classTree.rawType())
       .orElseThrow(IllegalStateException::new)
-      .convert(valueAsString);
+      .stringToObject(valueAsString);
   }
 
   public String serialize() {
     return Const.DOUBLE_QUOTE_STR + valueAsString + Const.DOUBLE_QUOTE_STR;
-  }
-
-  public static JsonText from(Object flatValue, Class<?> clazz) {
-    var converter = ConvertersCache.getTextConverter(clazz).orElseThrow(IllegalStateException::new);
-    return new JsonText(converter.stringify(flatValue));
   }
 }

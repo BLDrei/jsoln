@@ -70,7 +70,7 @@ public class ConvertersCache {
   }
 
   @SuppressWarnings("unchecked")
-  public static <C> Optional<ArrayConverter<C>> getCollectionConverter(Class<C> clazz) {
+  public static <C> Optional<ArrayConverter<C>> getArrayConverter(Class<C> clazz) {
     return Optional.ofNullable((ArrayConverter<C>) arrayConvertersCache.get(clazz));
   }
 }

@@ -9,7 +9,7 @@ public final class StringConverter extends TextConverter<String> {
   }
 
   @Override
-  public String convert(String value) {
+  public String stringToObject(String value) {
     return value;
   }
 

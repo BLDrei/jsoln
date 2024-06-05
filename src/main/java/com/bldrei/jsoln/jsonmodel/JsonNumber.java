@@ -17,9 +17,4 @@ public final class JsonNumber implements JsonElement {
   public String serialize() {
     return numberAsString;
   }
-
-  public static <N> JsonNumber from(Object flatValue, Class<N> clazz) {
-    var converter = ConvertersCache.getNumberConverter(clazz).orElseThrow(IllegalStateException::new);
-    return new JsonNumber(converter.stringify(flatValue));
-  }
 }

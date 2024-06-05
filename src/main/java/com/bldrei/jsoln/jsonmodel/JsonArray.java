@@ -20,7 +20,7 @@ public final class JsonArray implements JsonElement {
     Stream<?> stream = array.stream()
       .map(jsonElement -> jsonElement.toObject(actualTypeTree));
 
-    return ConvertersCache.getCollectionConverter(collectionClass)
+    return ConvertersCache.getArrayConverter(collectionClass)
       .orElseThrow(() -> new IllegalArgumentException("Unexpected collection type: " + collectionClass))
       .convert(stream);
   }
@@ -30,12 +30,5 @@ public final class JsonArray implements JsonElement {
       .stream()
       .map(JsonElement::serialize)
       .collect(Collectors.joining(Const.ARRAY_MEMBERS_DELIMITER_STR, Const.OPENING_BRACKET_STR, Const.CLOSING_BRACKET_STR));
-  }
-
-  public static JsonArray from(Object collection, ClassTree classTree) {
-    List<JsonElement> jsonElementsList = ConvertersCache.getCollectionConverter(classTree.rawType())
-      .orElseThrow(IllegalStateException::new)
-      .toJsonElementsList(collection, classTree);
-    return new JsonArray(jsonElementsList);
   }
 }
