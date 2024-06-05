@@ -1,7 +1,7 @@
 package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.converter.ArrayConverter;
-import com.bldrei.jsoln.converter.BooleanConverter;
+import com.bldrei.jsoln.converter.bool.BooleanConverter;
 import com.bldrei.jsoln.converter.array.ListConverter;
 import com.bldrei.jsoln.converter.array.SetConverter;
 import com.bldrei.jsoln.converter.number.BigDecimalConverter;

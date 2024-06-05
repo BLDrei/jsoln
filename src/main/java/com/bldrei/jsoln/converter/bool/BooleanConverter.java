@@ -1,5 +1,6 @@
-package com.bldrei.jsoln.converter;
+package com.bldrei.jsoln.converter.bool;
 
+import com.bldrei.jsoln.converter.PlainTypeConverter;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import lombok.NonNull;
