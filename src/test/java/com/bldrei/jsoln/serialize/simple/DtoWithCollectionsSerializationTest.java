@@ -37,9 +37,9 @@ class DtoWithCollectionsSerializationTest extends AbstractTest {
 
   @Test
   public void testListSerialization() {
-    String serialized = Jsoln.serialize(new CollectionDto(List.of(2, 4, 17), null, null));
+    String serialized = Jsoln.serialize(new CollectionDto(List.of(2, 4, 17), Set.of("ira"), Map.of("ira", List.of("nona", "mima"))));
     assertEquals("""
-      {"ages":[2,4,17]}\
+      {"ages":[2,4,17],"names":["ira"],"childNames":{"ira":["nona","mima"]}}\
       """, serialized);
   }
 }
