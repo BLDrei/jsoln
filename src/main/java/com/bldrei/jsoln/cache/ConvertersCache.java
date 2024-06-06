@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.converter.ArrayConverter;
+import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.converter.object.MapConverter;
 import com.bldrei.jsoln.converter.object.ObjectConverter;
 import com.bldrei.jsoln.converter.array.ListConverter;

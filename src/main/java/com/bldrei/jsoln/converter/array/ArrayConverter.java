@@ -1,4 +1,4 @@
-package com.bldrei.jsoln.converter;
+package com.bldrei.jsoln.converter.array;
 
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Getter
-public abstract class ArrayConverter<C> {
+public abstract sealed class ArrayConverter<C> permits ListConverter, SetConverter {
 
   private final Class<C> type;
 
