@@ -9,14 +9,18 @@ public sealed interface JsonElement
 
   String serialize(); //todo: change to appendToSB
 
+  enum Type {
+    ARRAY, BOOLEAN, NUMBER, OBJECT, TEXT
+  }
+
   @SuppressWarnings("unused")
-  default JsonDataType getJsonDataType() {
+  default JsonElement.Type getJsonDataType() {
     return switch (this) {
-      case JsonArray jsonArray -> JsonDataType.ARRAY;
-      case JsonBoolean jsonBoolean -> JsonDataType.BOOLEAN;
-      case JsonNumber jsonNumber -> JsonDataType.NUMBER;
-      case JsonObject jsonObject -> JsonDataType.OBJECT;
-      case JsonText jsonText -> JsonDataType.TEXT;
+      case JsonArray jsonArray -> Type.ARRAY;
+      case JsonBoolean jsonBoolean -> Type.BOOLEAN;
+      case JsonNumber jsonNumber -> Type.NUMBER;
+      case JsonObject jsonObject -> Type.OBJECT;
+      case JsonText jsonText -> Type.TEXT;
     };
   }
 }

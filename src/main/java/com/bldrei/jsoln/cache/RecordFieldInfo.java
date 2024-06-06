@@ -2,7 +2,7 @@ package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonDataType;
+import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTree;
 
 import java.lang.reflect.Method;
@@ -15,7 +15,7 @@ public record RecordFieldInfo(
   boolean isNullable,
   ClassTree classTree,
   Method accessor,
-  JsonDataType jsonType,
+  JsonElement.Type jsonType,
   Class<?> dtoClass
 ) {
   public RecordFieldInfo {

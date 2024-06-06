@@ -9,7 +9,6 @@ import com.bldrei.jsoln.util.ReflectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ public final class JsonObject implements JsonElement {
 
   public Object toObject(@NonNull ClassTree classTree) {
     if (Map.class.equals(classTree.rawType())) {
-      Type keyType = classTree.genericParameters()[0].rawType();
+      Class<?> keyType = classTree.genericParameters()[0].rawType();
       if (!String.class.equals(keyType)) {
         throw new RuntimeException("Not implemented yet");
       }

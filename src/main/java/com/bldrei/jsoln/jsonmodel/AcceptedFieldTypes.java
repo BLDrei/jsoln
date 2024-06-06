@@ -15,17 +15,17 @@ import java.util.Set;
 @UtilityClass
 public class AcceptedFieldTypes {
 
-  public static Set<Class<?>> OBJECT_FINAL_TYPES = Set.of(Map.class);
-  public static Set<Class<?>> ARRAY_FINAL_TYPES = Set.of(List.class, Set.class);
-  public static Set<Class<?>> TEXT_FINAL_TYPES = Set.of(String.class, LocalDate.class, LocalDateTime.class);
-  public static Set<Class<?>> NUMBER_FINAL_TYPES = Set.of(
+  private static final Set<Class<?>> OBJECT_FINAL_TYPES = Set.of(Map.class);
+  private static final Set<Class<?>> ARRAY_FINAL_TYPES = Set.of(List.class, Set.class);
+  private static final Set<Class<?>> TEXT_FINAL_TYPES = Set.of(String.class, LocalDate.class, LocalDateTime.class);
+  private static final Set<Class<?>> NUMBER_FINAL_TYPES = Set.of(
     Short.class, Integer.class, Long.class, Double.class,
     Float.class, BigDecimal.class, BigInteger.class, Byte.class
   );
-  public static Set<Class<?>> BOOLEAN_FINAL_TYPES = Set.of(Boolean.class, boolean.class);
+  private static final Set<Class<?>> BOOLEAN_FINAL_TYPES = Set.of(Boolean.class, boolean.class);
 
-  public static Class<?> OBJECT_TYPE_RECORD = Record.class;
-  public static Class<?> TEXT_TYPES_ENUM = Enum.class;
+  private static final Class<?> OBJECT_TYPE_RECORD = Record.class;
+  private static final Class<?> TEXT_TYPE_ENUM = Enum.class;
 
   public boolean isAcceptableObjectTypeForField(@NonNull Class<?> type) {
     return OBJECT_TYPE_RECORD.isAssignableFrom(type) || OBJECT_FINAL_TYPES.contains(type);
@@ -37,7 +37,7 @@ public class AcceptedFieldTypes {
 
   public boolean isAcceptableTextTypeForField(@NonNull Class<?> type) {
     return TEXT_FINAL_TYPES.contains(type)
-      || TEXT_TYPES_ENUM.isAssignableFrom(type);
+      || TEXT_TYPE_ENUM.isAssignableFrom(type);
   }
 
   public boolean isAcceptableNumberTypeForField(@NonNull Class<?> type) {
@@ -48,13 +48,13 @@ public class AcceptedFieldTypes {
     return BOOLEAN_FINAL_TYPES.contains(type);
   }
 
-  public JsonDataType determineJsonDataType(@NonNull Class<?> type) {
+  public JsonElement.Type determineJsonDataType(@NonNull Class<?> type) {
     return switch (type) {
-      case Class<?> cl when isAcceptableObjectTypeForField(cl) -> JsonDataType.OBJECT;
-      case Class<?> cl when isAcceptableArrayTypeForField(cl) -> JsonDataType.ARRAY;
-      case Class<?> cl when isAcceptableTextTypeForField(cl) -> JsonDataType.TEXT;
-      case Class<?> cl when isAcceptableNumberTypeForField(cl) -> JsonDataType.NUMBER;
-      case Class<?> cl when isAcceptableBooleanTypeForField(cl) -> JsonDataType.BOOLEAN;
+      case Class<?> cl when isAcceptableObjectTypeForField(cl) -> JsonElement.Type.OBJECT;
+      case Class<?> cl when isAcceptableArrayTypeForField(cl) -> JsonElement.Type.ARRAY;
+      case Class<?> cl when isAcceptableTextTypeForField(cl) -> JsonElement.Type.TEXT;
+      case Class<?> cl when isAcceptableNumberTypeForField(cl) -> JsonElement.Type.NUMBER;
+      case Class<?> cl when isAcceptableBooleanTypeForField(cl) -> JsonElement.Type.BOOLEAN;
       default -> throw new JsolnException("Unsupported field type: " + type);
     };
   }
