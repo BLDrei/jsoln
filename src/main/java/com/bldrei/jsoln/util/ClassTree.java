@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
-public record ClassTree(Class<?> rawType, ClassTree[] genericParameters) {
+public record ClassTree(Class<?> rawType, ClassTree[] genericParameters) { //todo: rename, it's probably not a Tree
 
   public static final ClassTree[] NO_TYPES = new ClassTree[]{};
 

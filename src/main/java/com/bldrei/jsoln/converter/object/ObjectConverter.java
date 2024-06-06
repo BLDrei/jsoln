@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Getter
 public abstract sealed class ObjectConverter<T> permits RecordConverter, MapConverter {
@@ -18,7 +17,7 @@ public abstract sealed class ObjectConverter<T> permits RecordConverter, MapConv
     this.type = type;
   }
 
-  public abstract T convert(Stream<?> stream);
+  public abstract T convert(Map<String, JsonElement> kvMap, ClassTree classTree);
 
   protected abstract Map<String, JsonElement> toJsonElementMap(@NonNull T flatValue, ClassTree classTree);
 

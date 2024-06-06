@@ -1,6 +1,8 @@
 package com.bldrei.jsoln.converter.object;
 
+import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.cache.Cache;
+import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
@@ -13,7 +15,6 @@ import lombok.NonNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public final class RecordConverter<R> extends ObjectConverter<R> {
   public RecordConverter(Class<R> type) {
@@ -21,8 +22,31 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   }
 
   @Override
-  public R convert(Stream<?> stream) {
-    return null;
+  @SuppressWarnings("unchecked")
+  public R convert(Map<String, JsonElement> kvMap, ClassTree classTree) {
+    var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.rawType());
+    Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
+      boolean isNullable = recordComponent.isNullable();
+      var value = Optional.ofNullable(kvMap.get(recordComponent.name()));
+      boolean valuePresent = value.isPresent();
+
+      if (valuePresent) {
+        if (value.get().getJsonDataType() != recordComponent.jsonType()) {
+          throw new JsolnException("For field '" + recordComponent.name() + "', expected json type is " + recordComponent.jsonType() + ", but received " + value.get().getJsonDataType());
+        }
+        Object valueOfActualType = value.get().toObject(recordComponent.classTree());
+        return isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType;
+      }
+      else if (isNullable) {
+        return Optional.empty();
+      }
+      else {
+        Configuration.missingRequiredValueHandler.accept(recordComponent.name(), recordComponent.dtoClass());
+        return null;
+      }
+    }).toArray();
+
+    return ReflectionUtil.invokeConstructor(recordDeserializationInfo.getCanonicalConstructor(), params);
   }
 
   @Override
