@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 public final class JsonArray implements JsonElement {
@@ -15,13 +14,8 @@ public final class JsonArray implements JsonElement {
   private final List<JsonElement> array;
 
   public Object toObject(ClassTree classTree) {
-    Class<?> collectionClass = classTree.rawType();
-    ClassTree actualTypeTree = classTree.genericParameters()[0];
-    Stream<?> stream = array.stream()
-      .map(jsonElement -> jsonElement.toObject(actualTypeTree));
-
-    return ConvertersCache.getArrayConverter(collectionClass)
-      .convert(stream);
+    return ConvertersCache.getArrayConverter(classTree.rawType())
+      .jsonElementsToObject(array, classTree);
   }
 
   public String serialize() {

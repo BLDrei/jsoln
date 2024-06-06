@@ -12,12 +12,12 @@ public final class SetConverter extends ArrayConverter<Set> {
   }
 
   @Override
-  public Set convert(Stream<?> stream) {
+  protected Set streamToObject(Stream<?> stream) {
     return stream.collect(Collectors.toUnmodifiableSet());
   }
 
   @Override
-  protected Stream<?> toStream(@NonNull Set set) {
+  protected Stream<?> objectToStream(@NonNull Set set) {
     return set.stream();
   }
 }

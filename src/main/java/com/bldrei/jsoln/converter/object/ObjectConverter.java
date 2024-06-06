@@ -17,13 +17,13 @@ public abstract sealed class ObjectConverter<T> permits RecordConverter, MapConv
     this.type = type;
   }
 
-  public abstract T convert(Map<String, JsonElement> kvMap, ClassTree classTree);
-
-  protected abstract Map<String, JsonElement> toJsonElementMap(@NonNull T flatValue, ClassTree classTree);
+  public abstract T jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTree classTree);
 
   @SuppressWarnings("unchecked")
   public JsonObject objectToJsonObject(@NonNull Object obj, @NonNull ClassTree classTree) {
-    return new JsonObject(toJsonElementMap((T) obj, classTree));
+    return new JsonObject(objectToJsonElementsMap((T) obj, classTree));
   }
+
+  protected abstract Map<String, JsonElement> objectToJsonElementsMap(@NonNull T flatValue, ClassTree classTree);
 }
 

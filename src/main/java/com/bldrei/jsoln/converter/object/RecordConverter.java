@@ -23,7 +23,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public R convert(Map<String, JsonElement> kvMap, ClassTree classTree) {
+  public R jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTree classTree) {
     var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.rawType());
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
       boolean isNullable = recordComponent.isNullable();
@@ -50,7 +50,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   }
 
   @Override
-  protected Map<String, JsonElement> toJsonElementMap(@NonNull R obj, ClassTree classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj, ClassTree classTree) {
     var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.rawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 

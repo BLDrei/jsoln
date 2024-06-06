@@ -19,19 +19,24 @@ public abstract sealed class ArrayConverter<C> permits ListConverter, SetConvert
     this.type = type;
   }
 
-  public abstract C convert(Stream<?> stream);
-
-  protected abstract Stream<?> toStream(@NonNull C flatValue);
+  public C jsonElementsToObject(List<JsonElement> array, @NonNull ClassTree classTree) {
+    ClassTree actualType = classTree.genericParameters()[0];
+    Stream<?> stream = array.stream()
+      .map(jsonElement -> jsonElement.toObject(actualType));
+    return streamToObject(stream);
+  }
 
   @SuppressWarnings("unchecked")
-  private List<JsonElement> collectionToJsonElementsList(@NonNull Object flatValue, ClassTree classTree) {
+  public JsonArray objectToJsonArray(@NonNull Object collection, @NonNull ClassTree classTree) {
     ClassTree collectionOfWhat = classTree.genericParameters()[0];
-    return toStream((C) flatValue)
+    var jsonElements = objectToStream((C) collection)
       .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
       .toList();
+    return new JsonArray(jsonElements);
   }
 
-  public JsonArray objectToJsonArray(@NonNull Object collection, @NonNull ClassTree classTree) {
-    return new JsonArray(collectionToJsonElementsList(collection, classTree));
-  }
+  protected abstract C streamToObject(Stream<?> stream);
+
+  protected abstract Stream<?> objectToStream(@NonNull C flatValue);
+
 }

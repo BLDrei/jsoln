@@ -16,7 +16,7 @@ public final class MapConverter extends ObjectConverter<Map> {
   }
 
   @Override
-  public Map convert(Map<String, JsonElement> kvMap, ClassTree classTree) {
+  public Map jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTree classTree) {
     ClassTree keyType = classTree.genericParameters()[0];
     ClassTree valueType = classTree.genericParameters()[1];
     if (!String.class.equals(keyType.rawType())) { //todo: move to dto validator
@@ -31,7 +31,7 @@ public final class MapConverter extends ObjectConverter<Map> {
   }
 
   @Override
-  protected Map<String, JsonElement> toJsonElementMap(@NonNull Map map, ClassTree classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map map, ClassTree classTree) {
     if (map.isEmpty()) {
       return Collections.emptyMap();
     }

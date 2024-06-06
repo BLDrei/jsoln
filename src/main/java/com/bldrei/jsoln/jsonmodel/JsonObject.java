@@ -15,7 +15,7 @@ public final class JsonObject implements JsonElement {
 
   public Object toObject(@NonNull ClassTree classTree) {
     return ConvertersCache.getObjectConverter(classTree.rawType())
-      .convert(kvMap, classTree);
+      .jsonElementsMapToObject(kvMap, classTree);
   }
 
   public String serialize() {

@@ -11,12 +11,12 @@ public final class ListConverter extends ArrayConverter<List> {
   }
 
   @Override
-  public List convert(Stream<?> stream) {
+  protected List streamToObject(Stream<?> stream) {
     return stream.toList();
   }
 
   @Override
-  protected Stream<?> toStream(@NonNull List list) {
+  protected Stream<?> objectToStream(@NonNull List list) {
     return list.stream();
   }
 }
