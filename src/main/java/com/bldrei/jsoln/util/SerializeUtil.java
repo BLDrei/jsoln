@@ -4,7 +4,6 @@ import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
 
 public class SerializeUtil {
   private SerializeUtil() {}
@@ -29,7 +28,8 @@ public class SerializeUtil {
         .objectToJsonArray(obj, classTree);
     }
     else if (AcceptedFieldTypes.isAcceptableObjectTypeForField(clazz)) {
-      return JsonObject.from(obj, classTree);
+      return ConvertersCache.getObjectConverter(clazz)
+        .objectToJsonObject(obj, classTree);
     }
     throw new JsolnException("Unsupported type: " + classTree);
   }
