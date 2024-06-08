@@ -5,7 +5,7 @@ import lombok.NonNull;
 public final class FloatConverter extends NumberConverter<Float> {
 
   @Override
-  public Float convert(@NonNull String value) {
+  public Float stringToObject(@NonNull String value) {
     return Float.valueOf(value);
   }
 

@@ -5,7 +5,7 @@ import lombok.NonNull;
 public final class ByteConverter extends NumberConverter<Byte> {
 
   @Override
-  public Byte convert(@NonNull String value) {
+  public Byte stringToObject(@NonNull String value) {
     return Byte.valueOf(value);
   }
 

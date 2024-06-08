@@ -7,7 +7,7 @@ import java.math.BigInteger;
 public final class BigIntegerConverter extends NumberConverter<BigInteger> {
 
   @Override
-  public BigInteger convert(@NonNull String value) {
+  public BigInteger stringToObject(@NonNull String value) {
     return new BigInteger(value);
   }
 

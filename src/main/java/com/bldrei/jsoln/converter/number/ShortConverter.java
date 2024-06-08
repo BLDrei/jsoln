@@ -5,7 +5,7 @@ import lombok.NonNull;
 public final class ShortConverter extends NumberConverter<Short> {
 
   @Override
-  public Short convert(@NonNull String value) {
+  public Short stringToObject(@NonNull String value) {
     return Short.valueOf(value);
   }
 

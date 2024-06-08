@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public final class BigDecimalConverter extends NumberConverter<BigDecimal> {
 
   @Override
-  public BigDecimal convert(@NonNull String value) {
+  public BigDecimal stringToObject(@NonNull String value) {
     return new BigDecimal(value);
   }
 

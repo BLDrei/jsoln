@@ -5,7 +5,7 @@ import lombok.NonNull;
 public final class IntegerConverter extends NumberConverter<Integer> {
 
   @Override
-  public Integer convert(@NonNull String value) {
+  public Integer stringToObject(@NonNull String value) {
     return Integer.valueOf(value);
   }
 

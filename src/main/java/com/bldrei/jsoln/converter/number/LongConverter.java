@@ -5,7 +5,7 @@ import lombok.NonNull;
 public final class LongConverter extends NumberConverter<Long> {
 
   @Override
-  public Long convert(@NonNull String value) {
+  public Long stringToObject(@NonNull String value) {
     return Long.valueOf(value);
   }
 

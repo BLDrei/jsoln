@@ -10,7 +10,7 @@ public final class JsonNumber implements JsonElement {
 
   public Object toObject(ClassTreeWithConverters classTree) {
     return ((NumberConverter<?>) classTree.getConverter())
-      .convert(numberAsString);
+      .stringToObject(numberAsString);
   }
 
   public StringBuffer appendToSB(StringBuffer sb) {
