@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public abstract class PlainTypeConverter<T> {
+public abstract class PlainTypeConverter<T> implements AbstractConverter {
 
   private final Class<T> type;
 

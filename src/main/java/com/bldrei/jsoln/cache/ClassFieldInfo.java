@@ -1,7 +1,7 @@
 package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.exception.BadDtoException;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public record ClassFieldInfo(
   String name,
   boolean isNullable,
-  ClassTree classTree,
+  ClassTreeWithConverters classTree,
   Optional<Method> getter,
   Optional<Method> setter,
   Class<?> dtoClass
@@ -31,7 +31,7 @@ public record ClassFieldInfo(
 
   public static ClassFieldInfo from(Class<?> dtoClass, Field field) {
     String name = field.getName();
-    ClassTree classTree = ClassTree.fromField(field);
+    ClassTreeWithConverters classTree = ClassTreeWithConverters.fromField(field);
     boolean isOptional = Optional.class.equals(classTree.rawType());
     if (isOptional) classTree = classTree.genericParameters()[0];
     return new ClassFieldInfo(

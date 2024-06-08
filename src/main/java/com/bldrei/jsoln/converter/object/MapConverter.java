@@ -2,7 +2,7 @@ package com.bldrei.jsoln.converter.object;
 
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.NonNull;
 
@@ -16,9 +16,9 @@ public final class MapConverter extends ObjectConverter<Map> {
   }
 
   @Override
-  public Map jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTree classTree) {
-    ClassTree keyType = classTree.genericParameters()[0];
-    ClassTree valueType = classTree.genericParameters()[1];
+  public Map jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
+    ClassTreeWithConverters keyType = classTree.genericParameters()[0];
+    ClassTreeWithConverters valueType = classTree.genericParameters()[1];
     if (!String.class.equals(keyType.rawType())) { //todo: move to dto validator
       throw new BadDtoException("According to json syntax, key for JsonObject may only be JsonText");
     }
@@ -31,7 +31,7 @@ public final class MapConverter extends ObjectConverter<Map> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map map, ClassTree classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map map, ClassTreeWithConverters classTree) {
     if (map.isEmpty()) {
       return Collections.emptyMap();
     }

@@ -2,7 +2,7 @@ package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.ConvertersCache;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 public final class JsonObject implements JsonElement {
   Map<String, JsonElement> kvMap;
 
-  public Object toObject(@NonNull ClassTree classTree) {
+  public Object toObject(@NonNull ClassTreeWithConverters classTree) {
     return ConvertersCache.getObjectConverter(classTree.rawType())
       .jsonElementsMapToObject(kvMap, classTree);
   }

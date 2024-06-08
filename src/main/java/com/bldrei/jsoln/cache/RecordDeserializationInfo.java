@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public final class RecordDeserializationInfo<T> {
   @NonNull
   private final Constructor<T> canonicalConstructor;
   @NonNull
-  private final ClassTree classTree;
+  private final ClassTreeWithConverters classTree;
   @NonNull
   private final List<RecordFieldInfo> fieldsInfo;
 
@@ -26,7 +26,7 @@ public final class RecordDeserializationInfo<T> {
 
     return new RecordDeserializationInfo<>(
       ReflectionUtil.findCanonicalConstructor(recordClass),
-      ClassTree.fromClass(recordClass),
+      ClassTreeWithConverters.fromClass(recordClass),
       Arrays.stream(recordClass.getRecordComponents())
         .map(RecordFieldInfo::from)
         .toList()

@@ -1,11 +1,11 @@
 package com.bldrei.jsoln.jsonmodel;
 
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 
 public sealed interface JsonElement
   permits JsonObject, JsonArray, JsonBoolean, JsonText, JsonNumber {
 
-  Object toObject(ClassTree classTree);
+  Object toObject(ClassTreeWithConverters classTree);
 
   StringBuffer appendToSB(StringBuffer sb);
 

@@ -7,7 +7,7 @@ import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import com.bldrei.jsoln.util.SerializeUtil;
 import lombok.NonNull;
@@ -23,7 +23,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public R jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTree classTree) {
+  public R jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
     var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.rawType());
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
       boolean isNullable = recordComponent.isNullable();
@@ -50,7 +50,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj, ClassTree classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj, ClassTreeWithConverters classTree) {
     var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.rawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 

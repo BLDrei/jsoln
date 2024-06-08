@@ -2,14 +2,14 @@ package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.ConvertersCache;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public final class JsonText implements JsonElement {
   private final String valueAsString;
 
-  public Object toObject(ClassTree classTree) {
+  public Object toObject(ClassTreeWithConverters classTree) {
     return ConvertersCache.getTextConverter(classTree.rawType())
       .stringToObject(valueAsString);
   }

@@ -8,7 +8,7 @@ import com.bldrei.jsoln.jsonmodel.JsonElement;
 public class SerializeUtil {
   private SerializeUtil() {}
 
-  public static <T> JsonElement convertObjectToJsonElement(T obj, ClassTree classTree) { //todo: pass converter
+  public static <T> JsonElement convertObjectToJsonElement(T obj, ClassTreeWithConverters classTree) { //todo: pass converter
     Class<?> clazz = classTree.rawType();
 
     if (AcceptedFieldTypes.isAcceptableTextTypeForField(clazz)) {

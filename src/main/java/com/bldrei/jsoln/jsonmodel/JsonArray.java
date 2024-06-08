@@ -2,7 +2,7 @@ package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.cache.ConvertersCache;
-import com.bldrei.jsoln.util.ClassTree;
+import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public final class JsonArray implements JsonElement {
 
   private final List<JsonElement> array;
 
-  public Object toObject(ClassTree classTree) {
+  public Object toObject(ClassTreeWithConverters classTree) {
     return ConvertersCache.getArrayConverter(classTree.rawType())
       .jsonElementsToObject(array, classTree);
   }

@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.converter.object.MapConverter;
 import com.bldrei.jsoln.converter.object.ObjectConverter;
@@ -21,6 +22,7 @@ import com.bldrei.jsoln.converter.text.LocalDateConverter;
 import com.bldrei.jsoln.converter.text.LocalDateTimeConverter;
 import com.bldrei.jsoln.converter.text.StringConverter;
 import com.bldrei.jsoln.converter.text.TextConverter;
+import com.bldrei.jsoln.jsonmodel.JsonElement;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -62,6 +64,16 @@ public class ConvertersCache {
   private static final Map<Class<?>, ObjectConverter<?>> objectConvertersCache = Map.of(
     Map.class, new MapConverter()
   );
+
+  public static AbstractConverter getConverter(Class<?> clazz, JsonElement.Type jsonDataType) {
+    return switch (jsonDataType) {
+      case ARRAY -> getArrayConverter(clazz);
+      case BOOLEAN -> getBooleanConverter();
+      case NUMBER -> getNumberConverter(clazz);
+      case OBJECT -> getObjectConverter(clazz);
+      case TEXT -> getTextConverter(clazz);
+    };
+  }
 
 
   @SuppressWarnings("unchecked")
