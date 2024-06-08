@@ -2,8 +2,6 @@ package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
-import com.bldrei.jsoln.converter.object.MapConverter;
-import com.bldrei.jsoln.converter.object.ObjectConverter;
 import com.bldrei.jsoln.converter.array.ListConverter;
 import com.bldrei.jsoln.converter.array.SetConverter;
 import com.bldrei.jsoln.converter.bool.BooleanConverter;
@@ -16,6 +14,8 @@ import com.bldrei.jsoln.converter.number.IntegerConverter;
 import com.bldrei.jsoln.converter.number.LongConverter;
 import com.bldrei.jsoln.converter.number.NumberConverter;
 import com.bldrei.jsoln.converter.number.ShortConverter;
+import com.bldrei.jsoln.converter.object.MapConverter;
+import com.bldrei.jsoln.converter.object.ObjectConverter;
 import com.bldrei.jsoln.converter.object.RecordConverter;
 import com.bldrei.jsoln.converter.text.EnumConverter;
 import com.bldrei.jsoln.converter.text.LocalDateConverter;
@@ -23,6 +23,7 @@ import com.bldrei.jsoln.converter.text.LocalDateTimeConverter;
 import com.bldrei.jsoln.converter.text.StringConverter;
 import com.bldrei.jsoln.converter.text.TextConverter;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -54,7 +55,7 @@ public class ConvertersCache {
     Short.class, new ShortConverter(),
     Byte.class, new ByteConverter()
   );
-  @Getter
+  @Getter(AccessLevel.PRIVATE)
   private static final BooleanConverter booleanConverter = new BooleanConverter();
   private static final Map<Class<?>, ArrayConverter<?>> arrayConvertersCache = Map.of(
     List.class, new ListConverter(),
