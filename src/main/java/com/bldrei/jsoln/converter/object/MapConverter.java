@@ -17,9 +17,9 @@ public final class MapConverter extends ObjectConverter<Map> {
 
   @Override
   public Map jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
-    ClassTreeWithConverters keyType = classTree.genericParameters()[0];
-    ClassTreeWithConverters valueType = classTree.genericParameters()[1];
-    if (!String.class.equals(keyType.rawType())) { //todo: move to dto validator
+    ClassTreeWithConverters keyType = classTree.getGenericParameters()[0];
+    ClassTreeWithConverters valueType = classTree.getGenericParameters()[1];
+    if (!String.class.equals(keyType.getRawType())) { //todo: move to dto validator
       throw new BadDtoException("According to json syntax, key for JsonObject may only be JsonText");
     }
     return kvMap.entrySet().stream()
@@ -36,7 +36,7 @@ public final class MapConverter extends ObjectConverter<Map> {
       return Collections.emptyMap();
     }
 
-    var valueType = classTree.genericParameters()[1];
+    var valueType = classTree.getGenericParameters()[1];
     return ((Map<?, ?>) map).entrySet().stream()
       .collect(Collectors.toUnmodifiableMap(
         e -> (String) e.getKey(), //hm, what?

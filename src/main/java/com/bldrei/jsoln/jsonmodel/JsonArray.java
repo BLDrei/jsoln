@@ -13,7 +13,7 @@ public final class JsonArray implements JsonElement {
   private final List<JsonElement> array;
 
   public Object toObject(ClassTreeWithConverters classTree) {
-    return ((ArrayConverter<?>) classTree.converter())
+    return ((ArrayConverter<?>) classTree.getConverter())
       .jsonElementsToObject(array, classTree);
   }
 

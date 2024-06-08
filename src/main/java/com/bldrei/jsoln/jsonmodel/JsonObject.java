@@ -13,7 +13,7 @@ public final class JsonObject implements JsonElement {
   Map<String, JsonElement> kvMap;
 
   public Object toObject(@NonNull ClassTreeWithConverters classTree) {
-    return ((ObjectConverter<?>) classTree.converter())
+    return ((ObjectConverter<?>) classTree.getConverter())
       .jsonElementsMapToObject(kvMap, classTree);
   }
 

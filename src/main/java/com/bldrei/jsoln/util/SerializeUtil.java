@@ -13,26 +13,26 @@ public class SerializeUtil {
   private SerializeUtil() {}
 
   public static <T> JsonElement convertObjectToJsonElement(T obj, ClassTreeWithConverters classTree) { //todo: pass converter
-    Class<?> clazz = classTree.rawType();
+    Class<?> clazz = classTree.getRawType();
 
     if (AcceptedFieldTypes.isAcceptableTextTypeForField(clazz)) {
-      return ((TextConverter<?>) classTree.converter())
+      return ((TextConverter<?>) classTree.getConverter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableNumberTypeForField(clazz)) {
-      return ((NumberConverter<?>) classTree.converter())
+      return ((NumberConverter<?>) classTree.getConverter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableBooleanTypeForField(clazz)) {
-      return ((BooleanConverter) classTree.converter())
+      return ((BooleanConverter) classTree.getConverter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableArrayTypeForField(clazz)) {
-      return ((ArrayConverter<?>) classTree.converter())
+      return ((ArrayConverter<?>) classTree.getConverter())
         .objectToJsonArray(obj, classTree);
     }
     else if (AcceptedFieldTypes.isAcceptableObjectTypeForField(clazz)) {
-      return ((ObjectConverter<?>) classTree.converter())
+      return ((ObjectConverter<?>) classTree.getConverter())
         .objectToJsonObject(obj, classTree);
     }
     throw new JsolnException("Unsupported type: " + classTree);

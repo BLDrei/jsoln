@@ -10,7 +10,7 @@ public final class JsonText implements JsonElement {
   private final String valueAsString;
 
   public Object toObject(ClassTreeWithConverters classTree) {
-    return ((TextConverter<?>) classTree.converter())
+    return ((TextConverter<?>) classTree.getConverter())
       .stringToObject(valueAsString);
   }
 

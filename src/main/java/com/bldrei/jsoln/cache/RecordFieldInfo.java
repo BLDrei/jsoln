@@ -5,10 +5,8 @@ import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.TypeUtil;
-import jdk.dynalink.linker.support.TypeUtilities;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.RecordComponent;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -29,7 +27,7 @@ public record RecordFieldInfo(
     Objects.requireNonNull(jsonType);
     Objects.requireNonNull(dtoClass);
 
-    if (Optional.class.equals(classTree.rawType())) {
+    if (Optional.class.equals(classTree.getRawType())) {
       throw BadDtoException.nestedOptional(dtoClass);
     }
   }
@@ -46,7 +44,7 @@ public record RecordFieldInfo(
       isNullable,
       tree,
       field.getAccessor(),
-      AcceptedFieldTypes.determineJsonDataType(tree.rawType()),
+      AcceptedFieldTypes.determineJsonDataType(tree.getRawType()),
       field.getDeclaringRecord()
     );
   }

@@ -3,21 +3,29 @@ package com.bldrei.jsoln.util;
 import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
 
-public record ClassTreeWithConverters(Class<?> rawType, AbstractConverter converter, ClassTreeWithConverters[] genericParameters) { //todo: rename, it's probably not a Tree
+@Getter
+public final class ClassTreeWithConverters { //todo: rename, it's probably not a Tree
 
-  public static final ClassTreeWithConverters[] EMPTY = new ClassTreeWithConverters[]{};
+  private static final ClassTreeWithConverters[] EMPTY = new ClassTreeWithConverters[]{};
+  private final Class<?> rawType;
+  private final AbstractConverter converter;
+  private final ClassTreeWithConverters[] genericParameters;
 
-  public ClassTreeWithConverters {
-    Objects.requireNonNull(rawType);
-    Objects.requireNonNull(genericParameters);
+
+  private ClassTreeWithConverters(@NonNull Class<?> rawType,
+                                  @NonNull AbstractConverter converter,
+                                  @NonNull ClassTreeWithConverters[] genericParameters) {
+    this.rawType = rawType;
+    this.converter = converter;
+    this.genericParameters = genericParameters;
   }
 
   public static ClassTreeWithConverters fromField(Field fld) {

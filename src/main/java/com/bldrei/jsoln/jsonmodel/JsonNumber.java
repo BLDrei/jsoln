@@ -9,7 +9,7 @@ public final class JsonNumber implements JsonElement {
   private final String numberAsString;
 
   public Object toObject(ClassTreeWithConverters classTree) {
-    return ((NumberConverter<?>) classTree.converter())
+    return ((NumberConverter<?>) classTree.getConverter())
       .convert(numberAsString);
   }
 

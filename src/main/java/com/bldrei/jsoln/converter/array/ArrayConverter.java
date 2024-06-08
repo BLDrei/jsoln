@@ -23,7 +23,7 @@ public abstract sealed class ArrayConverter<C>
   }
 
   public C jsonElementsToObject(List<JsonElement> array, @NonNull ClassTreeWithConverters classTree) {
-    ClassTreeWithConverters actualType = classTree.genericParameters()[0];
+    ClassTreeWithConverters actualType = classTree.getGenericParameters()[0];
     Stream<?> stream = array.stream()
       .map(jsonElement -> jsonElement.toObject(actualType));
     return streamToObject(stream);
@@ -31,7 +31,7 @@ public abstract sealed class ArrayConverter<C>
 
   @SuppressWarnings("unchecked")
   public JsonArray objectToJsonArray(@NonNull Object collection, @NonNull ClassTreeWithConverters classTree) {
-    ClassTreeWithConverters collectionOfWhat = classTree.genericParameters()[0];
+    ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
     var jsonElements = objectToStream((C) collection)
       .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
       .toList();

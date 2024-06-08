@@ -24,7 +24,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   @Override
   @SuppressWarnings("unchecked")
   public R jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
-    var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.rawType());
+    var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.getRawType());
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
       boolean isNullable = recordComponent.isNullable();
       var value = Optional.ofNullable(kvMap.get(recordComponent.name()));
@@ -51,7 +51,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
   @Override
   protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj, ClassTreeWithConverters classTree) {
-    var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.rawType());
+    var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.getRawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 
     for (RecordFieldInfo recordFieldInfo : recordDeserializationInfo.getFieldsInfo()) {
@@ -64,8 +64,8 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
       if (flatValue == null) continue;
 
-      if (!AcceptedFieldTypes.isActualObjectTypeMatchingWithFieldType(flatValue.getClass(), recordFieldInfo.classTree().rawType())) {
-        throw new JsolnException("Object type mismatch, expected: " + recordFieldInfo.classTree().rawType() + ", actual: " + flatValue.getClass());
+      if (!AcceptedFieldTypes.isActualObjectTypeMatchingWithFieldType(flatValue.getClass(), recordFieldInfo.classTree().getRawType())) {
+        throw new JsolnException("Object type mismatch, expected: " + recordFieldInfo.classTree().getRawType() + ", actual: " + flatValue.getClass());
       }
       kvMap.put(
         recordFieldInfo.name(),

@@ -24,7 +24,7 @@ public record ClassFieldInfo(
     Objects.requireNonNull(setter);
     Objects.requireNonNull(dtoClass);
 
-    if (Optional.class.equals(classTree.rawType())) {
+    if (Optional.class.equals(classTree.getRawType())) {
       throw BadDtoException.nestedOptional(dtoClass);
     }
   }
@@ -32,8 +32,8 @@ public record ClassFieldInfo(
   public static ClassFieldInfo from(Class<?> dtoClass, Field field) {
     String name = field.getName();
     ClassTreeWithConverters classTree = ClassTreeWithConverters.fromField(field);
-    boolean isOptional = Optional.class.equals(classTree.rawType());
-    if (isOptional) classTree = classTree.genericParameters()[0];
+    boolean isOptional = Optional.class.equals(classTree.getRawType());
+    if (isOptional) classTree = classTree.getGenericParameters()[0];
     return new ClassFieldInfo(
       name,
       isOptional,
