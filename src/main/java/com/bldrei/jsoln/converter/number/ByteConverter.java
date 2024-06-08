@@ -4,17 +4,13 @@ import lombok.NonNull;
 
 public final class ByteConverter extends NumberConverter<Byte> {
 
-  public ByteConverter() {
-    super(Byte.class);
-  }
-
   @Override
-  public Byte convert(String value) {
+  public Byte convert(@NonNull String value) {
     return Byte.valueOf(value);
   }
 
   @Override
-  protected String stringifyT(@NonNull Byte flatValue) {
+  protected String stringify(@NonNull Byte flatValue) {
     return Byte.toString(flatValue);
   }
 }

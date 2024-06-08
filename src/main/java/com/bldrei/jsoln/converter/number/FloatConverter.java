@@ -4,17 +4,13 @@ import lombok.NonNull;
 
 public final class FloatConverter extends NumberConverter<Float> {
 
-  public FloatConverter() {
-    super(Float.class);
-  }
-
   @Override
-  public Float convert(String value) {
+  public Float convert(@NonNull String value) {
     return Float.valueOf(value);
   }
 
   @Override
-  protected String stringifyT(@NonNull Float flatValue) {
+  protected String stringify(@NonNull Float flatValue) {
     return Float.toString(flatValue);
   }
 }

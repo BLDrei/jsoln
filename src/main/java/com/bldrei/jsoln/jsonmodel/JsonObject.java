@@ -10,7 +10,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 public final class JsonObject implements JsonElement {
-  Map<String, JsonElement> kvMap;
+  private final Map<String, JsonElement> kvMap;
 
   public Object toObject(@NonNull ClassTreeWithConverters classTree) {
     return ((ObjectConverter<?>) classTree.getConverter())

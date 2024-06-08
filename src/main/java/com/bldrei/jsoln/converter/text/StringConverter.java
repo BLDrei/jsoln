@@ -4,17 +4,13 @@ import lombok.NonNull;
 
 public final class StringConverter extends TextConverter<String> {
 
-  public StringConverter() {
-    super(String.class);
-  }
-
   @Override
-  public String stringToObject(String value) {
+  public String stringToObject(@NonNull String value) {
     return value;
   }
 
   @Override
-  public String stringifyT(@NonNull String s) {
+  public String stringify(@NonNull String s) {
     return s;
   }
 }

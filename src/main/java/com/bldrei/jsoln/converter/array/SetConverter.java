@@ -6,18 +6,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class SetConverter extends ArrayConverter<Set> {
-  public SetConverter() {
-    super(Set.class);
-  }
+public final class SetConverter extends ArrayConverter<Set<?>> {
 
   @Override
-  protected Set streamToObject(Stream<?> stream) {
+  protected Set<?> streamToObject(@NonNull Stream<?> stream) {
     return stream.collect(Collectors.toUnmodifiableSet());
   }
 
   @Override
-  protected Stream<?> objectToStream(@NonNull Set set) {
+  protected Stream<?> objectToStream(@NonNull Set<?> set) {
     return set.stream();
   }
 }

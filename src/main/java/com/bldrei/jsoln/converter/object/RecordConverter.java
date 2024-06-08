@@ -17,13 +17,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class RecordConverter<R> extends ObjectConverter<R> {
-  public RecordConverter(Class<R> type) {
-    super(type);
-  }
 
   @Override
   @SuppressWarnings("unchecked")
-  public R jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
+  public R jsonElementsMapToObject(@NonNull Map<String, JsonElement> kvMap,
+                                   @NonNull ClassTreeWithConverters classTree) {
     var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.getRawType());
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
       boolean isNullable = recordComponent.isNullable();
@@ -50,7 +48,8 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj, ClassTreeWithConverters classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull R obj,
+                                                             @NonNull ClassTreeWithConverters classTree) {
     var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.getRawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 

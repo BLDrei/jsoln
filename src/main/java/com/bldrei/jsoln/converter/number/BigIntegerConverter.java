@@ -6,17 +6,13 @@ import java.math.BigInteger;
 
 public final class BigIntegerConverter extends NumberConverter<BigInteger> {
 
-  public BigIntegerConverter() {
-    super(BigInteger.class);
-  }
-
   @Override
-  public BigInteger convert(String value) {
+  public BigInteger convert(@NonNull String value) {
     return new BigInteger(value);
   }
 
   @Override
-  protected String stringifyT(@NonNull BigInteger bi) {
+  protected String stringify(@NonNull BigInteger bi) {
     return bi.toString();
   }
 }

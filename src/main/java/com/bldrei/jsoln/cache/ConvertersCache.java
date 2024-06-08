@@ -118,7 +118,7 @@ public class ConvertersCache {
   @SuppressWarnings("unchecked")
   private static <O> ObjectConverter<O> getObjectConverter(Class<O> clazz) {
     var converter = clazz.isRecord()
-      ? recordConvertersCache.computeIfAbsent(clazz, RecordConverter::new)
+      ? recordConvertersCache.computeIfAbsent(clazz, it -> new RecordConverter<O>())
       : objectConvertersCache.get(clazz);
     if (converter == null) {
       throw new IllegalStateException("""

@@ -10,13 +10,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class MapConverter extends ObjectConverter<Map> {
-  public MapConverter() {
-    super(Map.class);
-  }
+public final class MapConverter extends ObjectConverter<Map<?, ?>> {
 
   @Override
-  public Map jsonElementsMapToObject(Map<String, JsonElement> kvMap, ClassTreeWithConverters classTree) {
+  public Map<?, ?> jsonElementsMapToObject(@NonNull Map<String, JsonElement> kvMap,
+                                           @NonNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters keyType = classTree.getGenericParameters()[0];
     ClassTreeWithConverters valueType = classTree.getGenericParameters()[1];
     if (!String.class.equals(keyType.getRawType())) { //todo: move to dto validator
@@ -31,13 +29,14 @@ public final class MapConverter extends ObjectConverter<Map> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map map, ClassTreeWithConverters classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map<?, ?> map,
+                                                             @NonNull ClassTreeWithConverters classTree) {
     if (map.isEmpty()) {
       return Collections.emptyMap();
     }
 
     var valueType = classTree.getGenericParameters()[1];
-    return ((Map<?, ?>) map).entrySet().stream()
+    return map.entrySet().stream()
       .collect(Collectors.toUnmodifiableMap(
         e -> (String) e.getKey(), //hm, what?
         e -> SerializeUtil.convertObjectToJsonElement(e.getValue(), valueType)

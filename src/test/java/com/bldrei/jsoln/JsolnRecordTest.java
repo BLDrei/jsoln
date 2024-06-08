@@ -65,4 +65,6 @@ class JsolnRecordTest extends AbstractTest {
     assertEquals(6, innerApplication.channelId());
     assertTrue(innerApplication.application().isEmpty());
   }
+
+
 }

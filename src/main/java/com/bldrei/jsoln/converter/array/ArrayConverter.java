@@ -5,24 +5,17 @@ import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
-import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-@Getter
 public abstract sealed class ArrayConverter<C>
   implements AbstractConverter
   permits ListConverter, SetConverter {
 
-  private final Class<C> type;
-
-  protected ArrayConverter(Class<C> type) {
-    this.type = type;
-  }
-
-  public C jsonElementsToObject(List<JsonElement> array, @NonNull ClassTreeWithConverters classTree) {
+  public C jsonElementsToObject(@NonNull List<JsonElement> array,
+                                @NonNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters actualType = classTree.getGenericParameters()[0];
     Stream<?> stream = array.stream()
       .map(jsonElement -> jsonElement.toObject(actualType));
@@ -30,7 +23,8 @@ public abstract sealed class ArrayConverter<C>
   }
 
   @SuppressWarnings("unchecked")
-  public JsonArray objectToJsonArray(@NonNull Object collection, @NonNull ClassTreeWithConverters classTree) {
+  public JsonArray objectToJsonArray(@NonNull Object collection,
+                                     @NonNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
     var jsonElements = objectToStream((C) collection)
       .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
@@ -38,7 +32,7 @@ public abstract sealed class ArrayConverter<C>
     return new JsonArray(jsonElements);
   }
 
-  protected abstract C streamToObject(Stream<?> stream);
+  protected abstract C streamToObject(@NonNull Stream<?> stream);
 
   protected abstract Stream<?> objectToStream(@NonNull C flatValue);
 

@@ -4,17 +4,13 @@ import lombok.NonNull;
 
 public final class ShortConverter extends NumberConverter<Short> {
 
-  public ShortConverter() {
-    super(Short.class);
-  }
-
   @Override
-  public Short convert(String value) {
+  public Short convert(@NonNull String value) {
     return Short.valueOf(value);
   }
 
   @Override
-  protected String stringifyT(@NonNull Short flatValue) {
+  protected String stringify(@NonNull Short flatValue) {
     return Short.toString(flatValue);
   }
 }

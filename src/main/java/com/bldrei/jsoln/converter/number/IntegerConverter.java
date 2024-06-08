@@ -4,17 +4,13 @@ import lombok.NonNull;
 
 public final class IntegerConverter extends NumberConverter<Integer> {
 
-  public IntegerConverter() {
-    super(Integer.class);
-  }
-
   @Override
-  public Integer convert(String value) {
+  public Integer convert(@NonNull String value) {
     return Integer.valueOf(value);
   }
 
   @Override
-  protected String stringifyT(@NonNull Integer flatValue) {
+  protected String stringify(@NonNull Integer flatValue) {
     return Integer.toString(flatValue);
   }
 }

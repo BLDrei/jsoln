@@ -5,14 +5,10 @@ import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import lombok.NonNull;
 
-public class BooleanConverter extends PlainTypeConverter<Boolean> {
-
-  public BooleanConverter() {
-    super(Boolean.class);
-  }
+public final class BooleanConverter extends PlainTypeConverter<Boolean> {
 
   @Override
-  protected String stringifyT(@NonNull Boolean flatValue) {
+  protected String stringify(@NonNull Boolean flatValue) {
     return flatValue.toString();
   }
 
