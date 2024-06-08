@@ -77,7 +77,7 @@ public class ConvertersCache {
 
 
   @SuppressWarnings("unchecked")
-  public static <T> TextConverter<T> getTextConverter(Class<T> clazz) {
+  private static <T> TextConverter<T> getTextConverter(Class<T> clazz) {
     var converter = clazz.isEnum()
       ? enumConvertersCache.computeIfAbsent(clazz, EnumConverter::new)
       : textConvertersCache.get(clazz);
@@ -91,7 +91,7 @@ public class ConvertersCache {
   }
 
   @SuppressWarnings("unchecked")
-  public static <N> NumberConverter<N> getNumberConverter(Class<N> clazz) {
+  private static <N> NumberConverter<N> getNumberConverter(Class<N> clazz) {
     var converter = (NumberConverter<N>) numberConvertersCache.get(clazz);
     if (converter == null) {
       throw new IllegalStateException("""
@@ -103,7 +103,7 @@ public class ConvertersCache {
   }
 
   @SuppressWarnings("unchecked")
-  public static <C> ArrayConverter<C> getArrayConverter(Class<C> clazz) {
+  private static <C> ArrayConverter<C> getArrayConverter(Class<C> clazz) {
     var converter = (ArrayConverter<C>) arrayConvertersCache.get(clazz);
     if (converter == null) {
       throw new IllegalStateException("""
@@ -115,7 +115,7 @@ public class ConvertersCache {
   }
 
   @SuppressWarnings("unchecked")
-  public static <O> ObjectConverter<O> getObjectConverter(Class<O> clazz) {
+  private static <O> ObjectConverter<O> getObjectConverter(Class<O> clazz) {
     var converter = clazz.isRecord()
       ? recordConvertersCache.computeIfAbsent(clazz, RecordConverter::new)
       : objectConvertersCache.get(clazz);

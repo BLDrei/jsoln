@@ -1,6 +1,10 @@
 package com.bldrei.jsoln.util;
 
-import com.bldrei.jsoln.cache.ConvertersCache;
+import com.bldrei.jsoln.converter.array.ArrayConverter;
+import com.bldrei.jsoln.converter.bool.BooleanConverter;
+import com.bldrei.jsoln.converter.number.NumberConverter;
+import com.bldrei.jsoln.converter.object.ObjectConverter;
+import com.bldrei.jsoln.converter.text.TextConverter;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
@@ -12,23 +16,23 @@ public class SerializeUtil {
     Class<?> clazz = classTree.rawType();
 
     if (AcceptedFieldTypes.isAcceptableTextTypeForField(clazz)) {
-      return ConvertersCache.getTextConverter(clazz)
+      return ((TextConverter<?>) classTree.converter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableNumberTypeForField(clazz)) {
-      return ConvertersCache.getNumberConverter(clazz)
+      return ((NumberConverter<?>) classTree.converter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableBooleanTypeForField(clazz)) {
-      return ConvertersCache.getBooleanConverter()
+      return ((BooleanConverter) classTree.converter())
         .objectToJsonElement(obj);
     }
     else if (AcceptedFieldTypes.isAcceptableArrayTypeForField(clazz)) {
-      return ConvertersCache.getArrayConverter(clazz)
+      return ((ArrayConverter<?>) classTree.converter())
         .objectToJsonArray(obj, classTree);
     }
     else if (AcceptedFieldTypes.isAcceptableObjectTypeForField(clazz)) {
-      return ConvertersCache.getObjectConverter(clazz)
+      return ((ObjectConverter<?>) classTree.converter())
         .objectToJsonObject(obj, classTree);
     }
     throw new JsolnException("Unsupported type: " + classTree);
