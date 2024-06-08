@@ -6,7 +6,6 @@ import com.bldrei.jsoln.util.ClassTree;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public final class JsonArray implements JsonElement {
@@ -18,10 +17,18 @@ public final class JsonArray implements JsonElement {
       .jsonElementsToObject(array, classTree);
   }
 
-  public String serialize() {
-    return array
-      .stream()
-      .map(JsonElement::serialize)
-      .collect(Collectors.joining(Const.ARRAY_MEMBERS_DELIMITER_STR, Const.OPENING_BRACKET_STR, Const.CLOSING_BRACKET_STR));
+  public StringBuffer appendToSB(StringBuffer sb) {
+    sb.append(Const.OPENING_BRACKET_STR);
+
+    var iterator = array.iterator();
+    iterator.forEachRemaining(el -> {
+      el.appendToSB(sb);
+      if (iterator.hasNext()) {
+        sb.append(Const.ARRAY_MEMBERS_DELIMITER_STR);
+      }
+    });
+
+    sb.append(Const.CLOSING_BRACKET_STR);
+    return sb;
   }
 }

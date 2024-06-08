@@ -14,7 +14,10 @@ public final class JsonText implements JsonElement {
       .stringToObject(valueAsString);
   }
 
-  public String serialize() {
-    return Const.DOUBLE_QUOTE_STR + valueAsString + Const.DOUBLE_QUOTE_STR;
+  public StringBuffer appendToSB(StringBuffer sb) {
+    return sb
+      .append(Const.DOUBLE_QUOTE_STR)
+      .append(valueAsString)
+      .append(Const.DOUBLE_QUOTE_STR);
   }
 }

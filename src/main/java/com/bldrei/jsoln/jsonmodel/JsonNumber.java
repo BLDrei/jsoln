@@ -13,7 +13,7 @@ public final class JsonNumber implements JsonElement {
       .convert(numberAsString);
   }
 
-  public String serialize() {
-    return numberAsString;
+  public StringBuffer appendToSB(StringBuffer sb) {
+    return sb.append(numberAsString);
   }
 }

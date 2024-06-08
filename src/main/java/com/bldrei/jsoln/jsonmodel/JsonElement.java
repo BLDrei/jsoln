@@ -7,7 +7,7 @@ public sealed interface JsonElement
 
   Object toObject(ClassTree classTree);
 
-  String serialize(); //todo: change to appendToSB
+  StringBuffer appendToSB(StringBuffer sb);
 
   enum Type {
     ARRAY, BOOLEAN, NUMBER, OBJECT, TEXT

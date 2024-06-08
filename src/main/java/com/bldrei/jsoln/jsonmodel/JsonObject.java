@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public final class JsonObject implements JsonElement {
@@ -18,11 +17,24 @@ public final class JsonObject implements JsonElement {
       .jsonElementsMapToObject(kvMap, classTree);
   }
 
-  public String serialize() {
-    return kvMap.entrySet()
-      .stream()
-      .map(e -> Const.DOUBLE_QUOTE_STR + e.getKey() + Const.DOUBLE_QUOTE_STR
-        + Const.KV_DELIMITER_STR + e.getValue().serialize())
-      .collect(Collectors.joining(Const.PARAMS_DELIMITER_STR, Const.OPENING_CURLY_BRACE_STR, Const.CLOSING_CURLY_BRACE_STR));
+  public StringBuffer appendToSB(StringBuffer sb) {
+    sb.append(Const.OPENING_CURLY_BRACE_STR);
+
+    var iterator = kvMap.entrySet().iterator();
+    iterator.forEachRemaining(e -> {
+      sb
+        .append(Const.DOUBLE_QUOTE_STR)
+        .append(e.getKey())
+        .append(Const.DOUBLE_QUOTE_STR)
+        .append(Const.KV_DELIMITER_STR);
+      e.getValue().appendToSB(sb);
+      if (iterator.hasNext()) {
+        sb.append(Const.PARAMS_DELIMITER_STR);
+      }
+    });
+
+    sb.append(Const.CLOSING_CURLY_BRACE_STR);
+
+    return sb;
   }
 }

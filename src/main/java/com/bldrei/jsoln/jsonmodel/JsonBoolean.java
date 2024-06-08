@@ -11,8 +11,8 @@ public record JsonBoolean(boolean value) implements JsonElement {
     return value;
   }
 
-  public String serialize() {
-    return Boolean.toString(value);
+  public StringBuffer appendToSB(StringBuffer sb) {
+    return sb.append(value);
   }
 }
 
