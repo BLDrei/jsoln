@@ -47,7 +47,7 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
   public static ClassTreeWithConverters fromType(Type type) {
     if (type instanceof ParameterizedType parameterizedType) {
       Class<?> clazz = (Class<?>) parameterizedType.getRawType();
-      JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz);
+      JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz); //todo: throw exceptions specifying dto and field name
       return new ClassTreeWithConverters(
         clazz,
         jsonDataType,

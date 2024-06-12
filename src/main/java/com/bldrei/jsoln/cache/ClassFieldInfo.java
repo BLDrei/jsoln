@@ -1,6 +1,5 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.ReflectionUtil;
 
@@ -23,10 +22,6 @@ public record ClassFieldInfo(
     Objects.requireNonNull(getter);
     Objects.requireNonNull(setter);
     Objects.requireNonNull(dtoClass);
-
-    if (Optional.class.equals(classTree.getRawType())) {
-      throw BadDtoException.nestedOptional(dtoClass);
-    }
   }
 
   public static ClassFieldInfo from(Class<?> dtoClass, Field field) {

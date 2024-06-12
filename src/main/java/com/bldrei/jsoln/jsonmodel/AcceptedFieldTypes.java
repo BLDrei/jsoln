@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.jsonmodel;
 
+import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.exception.JsolnException;
 import lombok.NonNull;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class AcceptedFieldTypes {
@@ -47,15 +49,17 @@ public class AcceptedFieldTypes {
     return BOOLEAN_FINAL_TYPES.contains(type);
   }
 
-  public static JsonElement.Type determineJsonDataType(@NonNull Class<?> type) {
-    return switch (type) {
-      case Class<?> cl when isAcceptableObjectTypeForField(cl) -> JsonElement.Type.OBJECT;
-      case Class<?> cl when isAcceptableArrayTypeForField(cl) -> JsonElement.Type.ARRAY;
-      case Class<?> cl when isAcceptableTextTypeForField(cl) -> JsonElement.Type.TEXT;
-      case Class<?> cl when isAcceptableNumberTypeForField(cl) -> JsonElement.Type.NUMBER;
-      case Class<?> cl when isAcceptableBooleanTypeForField(cl) -> JsonElement.Type.BOOLEAN;
-      default -> throw new JsolnException("Unsupported field type: " + type);
-    };
+  public static JsonElement.Type determineJsonDataType(@NonNull Class<?> clazz) {
+    if (isAcceptableObjectTypeForField(clazz)) return JsonElement.Type.OBJECT;
+    if (isAcceptableArrayTypeForField(clazz)) return JsonElement.Type.ARRAY;
+    if (isAcceptableTextTypeForField(clazz)) return JsonElement.Type.TEXT;
+    if (isAcceptableNumberTypeForField(clazz)) return JsonElement.Type.NUMBER;
+    if (isAcceptableBooleanTypeForField(clazz)) return JsonElement.Type.BOOLEAN;
+
+    if (Optional.class.equals(clazz)) {
+      throw new BadDtoException("Optional is only allowed as dto field type wrapping layer");
+    }
+    throw new JsolnException("Unsupported field type: " + clazz);
   }
 
   public static boolean isActualObjectTypeMatchingWithFieldType(@NonNull Class<?> actualType, @NonNull Class<?> fieldType) {

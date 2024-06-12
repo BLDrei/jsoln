@@ -7,9 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.RecordComponent;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -89,10 +87,5 @@ public class ReflectionUtil {
     catch (NoSuchMethodException e) {
       return Optional.empty();
     }
-  }
-
-  private static Type unwrapOptional(Type optional) {
-    ParameterizedType parameterizedType = (ParameterizedType) optional;
-    return parameterizedType.getActualTypeArguments()[0];
   }
 }

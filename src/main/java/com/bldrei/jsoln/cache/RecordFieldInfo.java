@@ -1,6 +1,5 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.TypeUtil;
@@ -9,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 import java.lang.reflect.Type;
 import java.util.Objects;
-import java.util.Optional;
 
 public record RecordFieldInfo(
   String name,
@@ -25,10 +23,6 @@ public record RecordFieldInfo(
     Objects.requireNonNull(accessor);
     Objects.requireNonNull(jsonType);
     Objects.requireNonNull(dtoClass);
-
-    if (Optional.class.equals(classTree.getRawType())) {
-      throw BadDtoException.nestedOptional(dtoClass);
-    }
   }
 
   public static RecordFieldInfo from(RecordComponent field) {
