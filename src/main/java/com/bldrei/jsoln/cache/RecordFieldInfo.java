@@ -1,7 +1,6 @@
 package com.bldrei.jsoln.cache;
 
 import com.bldrei.jsoln.exception.BadDtoException;
-import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.TypeUtil;
@@ -44,7 +43,7 @@ public record RecordFieldInfo(
       isNullable,
       tree,
       field.getAccessor(),
-      AcceptedFieldTypes.determineJsonDataType(tree.getRawType()),
+      tree.getJsonDataType(),
       field.getDeclaringRecord()
     );
   }

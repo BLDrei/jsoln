@@ -2,14 +2,18 @@ package com.bldrei.jsoln.util;
 
 import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.converter.AbstractConverter;
+import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 @Getter
@@ -54,13 +58,26 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
       );
     }
 
-    Class<?> clazz = (Class<?>) type;
-    JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz);
-    return new ClassTreeWithConverters(
-      clazz,
-      jsonDataType,
-      ConvertersCache.getConverter(clazz, jsonDataType),
-      EMPTY
-    );
+    if (type instanceof Class<?> clazz) {
+      JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz);
+      return new ClassTreeWithConverters(
+        clazz,
+        jsonDataType,
+        ConvertersCache.getConverter(clazz, jsonDataType),
+        EMPTY
+      );
+    }
+
+    if (type instanceof GenericArrayType) {
+      throw new BadDtoException("Arrays are not allowed as field types");
+    }
+    if (type instanceof TypeVariable<?>) {
+      throw new BadDtoException("Unexpected field type '%s'".formatted(type.getTypeName()));
+    }
+    if (type instanceof WildcardType) {
+      throw new IllegalStateException("Not possible to have WildcardType as class/record field type");
+    }
+
+    throw new IllegalStateException();
   }
 }
