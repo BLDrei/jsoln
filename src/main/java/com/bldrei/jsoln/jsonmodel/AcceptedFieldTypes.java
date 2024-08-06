@@ -2,7 +2,7 @@ package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.exception.JsolnException;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,43 +28,37 @@ public class AcceptedFieldTypes {
   private static final Class<?> OBJECT_TYPE_RECORD = Record.class;
   private static final Class<?> TEXT_TYPE_ENUM = Enum.class;
 
-  private static boolean isAcceptableObjectTypeForField(@NonNull Class<?> type) {
+  private static boolean isAcceptableObjectTypeForField(@NotNull Class<?> type) {
     return OBJECT_TYPE_RECORD.isAssignableFrom(type) || OBJECT_FINAL_TYPES.contains(type);
   }
 
-  private static boolean isAcceptableArrayTypeForField(@NonNull Class<?> type) {
+  private static boolean isAcceptableArrayTypeForField(@NotNull Class<?> type) {
     return ARRAY_FINAL_TYPES.contains(type);
   }
 
-  private static boolean isAcceptableTextTypeForField(@NonNull Class<?> type) {
+  private static boolean isAcceptableTextTypeForField(@NotNull Class<?> type) {
     return TEXT_FINAL_TYPES.contains(type)
       || TEXT_TYPE_ENUM.isAssignableFrom(type);
   }
 
-  private static boolean isAcceptableNumberTypeForField(@NonNull Class<?> type) {
+  private static boolean isAcceptableNumberTypeForField(@NotNull Class<?> type) {
     return NUMBER_FINAL_TYPES.contains(type);
   }
 
-  private static boolean isAcceptableBooleanTypeForField(@NonNull Class<?> type) {
+  private static boolean isAcceptableBooleanTypeForField(@NotNull Class<?> type) {
     return BOOLEAN_FINAL_TYPES.contains(type);
   }
 
-  public static JsonElement.Type determineJsonDataType(@NonNull Class<?> clazz) {
+  public static @NotNull JsonElement.Type determineJsonDataType(@NotNull Class<?> clazz) {
     if (isAcceptableObjectTypeForField(clazz)) return JsonElement.Type.OBJECT;
     if (isAcceptableArrayTypeForField(clazz)) return JsonElement.Type.ARRAY;
     if (isAcceptableTextTypeForField(clazz)) return JsonElement.Type.TEXT;
     if (isAcceptableNumberTypeForField(clazz)) return JsonElement.Type.NUMBER;
     if (isAcceptableBooleanTypeForField(clazz)) return JsonElement.Type.BOOLEAN;
 
-    if (Optional.class.equals(clazz)) {
+    if (Optional.class == clazz) {
       throw new BadDtoException("Optional is only allowed as dto field type wrapping layer");
     }
     throw new JsolnException("Unsupported field type: " + clazz);
-  }
-
-  public static boolean isActualObjectTypeMatchingWithFieldType(@NonNull Class<?> actualType, @NonNull Class<?> fieldType) {
-    return fieldType == actualType
-      || isAcceptableObjectTypeForField(fieldType)
-      || isAcceptableArrayTypeForField(fieldType);
   }
 }

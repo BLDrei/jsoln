@@ -5,10 +5,11 @@ import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -17,28 +18,15 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ClassTreeWithConverters { //todo: rename, it's probably not a Tree
 
   private static final ClassTreeWithConverters[] EMPTY = new ClassTreeWithConverters[]{};
-  private final Class<?> rawType;
-  private final JsonElement.Type jsonDataType;
-  private final AbstractConverter converter;
-  private final ClassTreeWithConverters[] genericParameters;
 
-
-  private ClassTreeWithConverters(@NonNull Class<?> rawType,
-                                  @NonNull JsonElement.Type jsonDataType,
-                                  @NonNull AbstractConverter converter,
-                                  @NonNull ClassTreeWithConverters[] genericParameters) {
-    this.rawType = rawType;
-    this.jsonDataType = jsonDataType;
-    this.converter = converter;
-    this.genericParameters = genericParameters;
-  }
-
-  public static ClassTreeWithConverters fromField(Field fld) {
-    return fromType(fld.getGenericType());
-  }
+  private final @NotNull Class<?> rawType;
+  private final @NotNull JsonElement.Type jsonDataType;
+  private final @NotNull AbstractConverter converter;
+  private final @NotNull ClassTreeWithConverters[] genericParameters;
 
   public static ClassTreeWithConverters fromClass(Class<?> clazz) {
     return fromType(clazz);

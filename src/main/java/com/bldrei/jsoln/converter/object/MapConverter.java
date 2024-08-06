@@ -5,7 +5,7 @@ import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public final class MapConverter extends ObjectConverter<Map<?, ?>> {
 
   @Override
-  public Map<?, ?> jsonElementsMapToObject(@NonNull Map<String, JsonElement> kvMap,
-                                           @NonNull ClassTreeWithConverters classTree) {
+  public Map<?, ?> jsonElementsMapToObject(@NotNull Map<String, JsonElement> kvMap,
+                                           @NotNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters keyType = classTree.getGenericParameters()[0];
     ClassTreeWithConverters valueType = classTree.getGenericParameters()[1];
     if (keyType.getJsonDataType() != JsonElement.Type.TEXT) { //todo: move to dto validator
@@ -30,8 +30,8 @@ public final class MapConverter extends ObjectConverter<Map<?, ?>> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NonNull Map<?, ?> map,
-                                                             @NonNull ClassTreeWithConverters classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMap(@NotNull Map<?, ?> map,
+                                                             @NotNull ClassTreeWithConverters classTree) {
     if (map.isEmpty()) {
       return Collections.emptyMap();
     }

@@ -1,15 +1,15 @@
 package com.bldrei.jsoln.converter.number;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class DoubleConverter extends NumberConverter<Double> {
 
   @Override
-  public Double stringToObject(@NonNull String value) {
+  public Double stringToObject(@NotNull String value) {
     return Double.valueOf(value);
   }
 
-  protected String stringify(@NonNull Double flatValue) {
+  protected String stringify(@NotNull Double flatValue) {
     return Double.toString(flatValue);
   }
 }

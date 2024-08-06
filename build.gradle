@@ -20,6 +20,8 @@ dependencies {
   testCompileOnly 'org.projectlombok:lombok:1.18.32'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 
+  compileOnly 'org.jetbrains:annotations:24.0.0'
+
   testImplementation platform('org.junit:junit-bom:5.10.2')
   testImplementation 'org.junit.jupiter:junit-jupiter'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

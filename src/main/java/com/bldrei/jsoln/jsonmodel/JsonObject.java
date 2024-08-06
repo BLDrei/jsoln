@@ -4,15 +4,15 @@ import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.converter.object.ObjectConverter;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 @AllArgsConstructor
 public final class JsonObject implements JsonElement {
-  private final Map<String, JsonElement> kvMap;
+  private final @NotNull Map<String, JsonElement> kvMap;
 
-  public Object toObject(@NonNull ClassTreeWithConverters classTree) {
+  public Object toObject(@NotNull ClassTreeWithConverters classTree) {
     return ((ObjectConverter<?>) classTree.getConverter())
       .jsonElementsMapToObject(kvMap, classTree);
   }

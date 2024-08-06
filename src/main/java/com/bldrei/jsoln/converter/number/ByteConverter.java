@@ -1,16 +1,16 @@
 package com.bldrei.jsoln.converter.number;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ByteConverter extends NumberConverter<Byte> {
 
   @Override
-  public Byte stringToObject(@NonNull String value) {
+  public Byte stringToObject(@NotNull String value) {
     return Byte.valueOf(value);
   }
 
   @Override
-  protected String stringify(@NonNull Byte flatValue) {
+  protected String stringify(@NotNull Byte flatValue) {
     return Byte.toString(flatValue);
   }
 }

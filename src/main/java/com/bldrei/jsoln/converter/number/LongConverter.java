@@ -1,16 +1,16 @@
 package com.bldrei.jsoln.converter.number;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class LongConverter extends NumberConverter<Long> {
 
   @Override
-  public Long stringToObject(@NonNull String value) {
+  public Long stringToObject(@NotNull String value) {
     return Long.valueOf(value);
   }
 
   @Override
-  protected String stringify(@NonNull Long flatValue) {
+  protected String stringify(@NotNull Long flatValue) {
     return Long.toString(flatValue);
   }
 }

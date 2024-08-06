@@ -5,7 +5,7 @@ import com.bldrei.jsoln.util.ReflectionUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public final class RecordDeserializationInfo<T> {
-  @NonNull
+  @NotNull
   private final Constructor<T> canonicalConstructor;
-  @NonNull
+  @NotNull
   private final ClassTreeWithConverters classTree;
-  @NonNull
+  @NotNull
   private final List<RecordFieldInfo> fieldsInfo;
 
   public static <R> RecordDeserializationInfo<R> from(Class<R> recordClass) {

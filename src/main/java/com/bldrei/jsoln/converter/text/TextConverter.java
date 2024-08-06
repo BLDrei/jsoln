@@ -3,18 +3,18 @@ package com.bldrei.jsoln.converter.text;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.jsonmodel.JsonText;
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract sealed class TextConverter<T>
   implements AbstractConverter
   permits LocalDateConverter, LocalDateTimeConverter, StringConverter, EnumConverter {
 
-  public abstract T stringToObject(@NonNull String value);
+  public abstract T stringToObject(@NotNull String value);
 
   @SuppressWarnings("unchecked")
-  public JsonElement objectToJsonElement(@NonNull Object flatValue) {
+  public JsonElement objectToJsonElement(@NotNull Object flatValue) {
     return new JsonText(stringify((T) flatValue));
   }
 
-  protected abstract String stringify(@NonNull T flatValue);
+  protected abstract String stringify(@NotNull T flatValue);
 }

@@ -1,16 +1,16 @@
 package com.bldrei.jsoln.converter.number;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class FloatConverter extends NumberConverter<Float> {
 
   @Override
-  public Float stringToObject(@NonNull String value) {
+  public Float stringToObject(@NotNull String value) {
     return Float.valueOf(value);
   }
 
   @Override
-  protected String stringify(@NonNull Float flatValue) {
+  protected String stringify(@NotNull Float flatValue) {
     return Float.toString(flatValue);
   }
 }
