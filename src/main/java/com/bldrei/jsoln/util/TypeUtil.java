@@ -1,13 +1,11 @@
 package com.bldrei.jsoln.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-@UtilityClass
 public class TypeUtil {
+  private TypeUtil() {}
 
   public static boolean isOptional(Type type) {
     return type instanceof ParameterizedType parameterizedType
