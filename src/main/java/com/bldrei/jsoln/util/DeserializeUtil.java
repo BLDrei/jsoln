@@ -9,6 +9,7 @@ import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.tokenizer.JsonArrayTokenizer;
 import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class DeserializeUtil {
   private static final Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
   //returns JsonArray or JsonObject
-  public static JsonElement toJsonTree(String fullJson) {
+  public static JsonElement toJsonTree(@NotNull String fullJson) {
     JsonElement jsonTree = parseToAnyJsonElement(fullJson.strip());
     return switch (jsonTree) {
       case JsonObject jo -> jo;
@@ -43,19 +44,19 @@ public class DeserializeUtil {
 
   //accepts text of any json type (array, object, text, number...)
   //can be used recursively
-  private static @Nullable JsonElement parseToAnyJsonElement(String json) {
+  private static @Nullable JsonElement parseToAnyJsonElement(@NotNull String json) {
     if (isWrapped(json, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
       Map<String, JsonElement> kvMap = new HashMap<>();
       var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json).strip());
 
       while (true) {
         var nextKvPair = tokenizer.getNextKvPairAsStrings();
-        if (nextKvPair.isEmpty()) {
+        if (nextKvPair == null) {
           return new JsonObject(kvMap);
         }
-        var jsonElem = parseToAnyJsonElement(nextKvPair.get().getValue());
+        var jsonElem = parseToAnyJsonElement(nextKvPair.getValue());
         if (jsonElem != null) {
-          kvMap.put(nextKvPair.get().getKey(), jsonElem);
+          kvMap.put(nextKvPair.getKey(), jsonElem);
         }
       }
     }
@@ -65,10 +66,10 @@ public class DeserializeUtil {
 
       while (true) {
         var nextArrayMember = tokenizer.getNextArrayMemberAsString();
-        if (nextArrayMember.isEmpty()) {
+        if (nextArrayMember == null) {
           return new JsonArray(array);
         }
-        array.add(parseToAnyJsonElement(nextArrayMember.get()));
+        array.add(parseToAnyJsonElement(nextArrayMember));
       }
     }
     else if (isWrapped(json, DOUBLE_QUOTE, DOUBLE_QUOTE)) {

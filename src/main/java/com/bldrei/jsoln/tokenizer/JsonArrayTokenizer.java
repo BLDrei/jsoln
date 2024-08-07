@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.tokenizer;
 
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Stack;
 
 import static com.bldrei.jsoln.Const.ARRAY_MEMBERS_DELIMITER;
@@ -15,7 +16,7 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
     super(txt);
   }
 
-  public Optional<String> getNextArrayMemberAsString() {
+  public @Nullable String getNextArrayMemberAsString() {
     char[] remainingChars = remainingTxt.strip().toCharArray();
     String arrayMember;
 
@@ -38,15 +39,15 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
       if (currentChar == ARRAY_MEMBERS_DELIMITER && openingBrackets.empty()) {
         arrayMember = remainingTxt.strip().substring(0, i);
         remainingTxt = remainingTxt.strip().substring(i + 1); //starting from next char after comma
-        return Optional.of(arrayMember.trim());
+        return arrayMember.strip();
       }
       if (i == remainingChars.length - 1 && openingBrackets.empty()) {
         arrayMember = remainingTxt;
         remainingTxt = "";
-        return Optional.of(arrayMember.strip());
+        return arrayMember.strip();
       }
     }
 
-    return Optional.empty();
+    return null;
   }
 }
