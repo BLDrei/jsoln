@@ -5,8 +5,8 @@ import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.newstructure.dto.primitive.PrimitiveBooleanDto;
-import com.bldrei.jsoln.newstructure.dto.wrapper.BoolDto;
+import com.bldrei.jsoln.newstructure.dto.singlefield.primitive.PrimitiveBooleanDto;
+import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.BoolDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 

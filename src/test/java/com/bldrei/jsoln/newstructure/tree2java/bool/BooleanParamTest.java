@@ -6,7 +6,7 @@ import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonBoolean;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
-import com.bldrei.jsoln.newstructure.dto.wrapper.BoolDto;
+import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.BoolDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

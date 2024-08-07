@@ -1,4 +1,4 @@
-package com.bldrei.jsoln.newstructure.dto;
+package com.bldrei.jsoln.newstructure.dto.singlefield;
 
 import java.math.BigInteger;
 
