@@ -9,13 +9,13 @@ import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.tokenizer.JsonArrayTokenizer;
 import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.bldrei.jsoln.Const.CLOSING_BRACKET;
 import static com.bldrei.jsoln.Const.CLOSING_CURLY_BRACE;
@@ -32,18 +32,18 @@ public class DeserializeUtil {
   private static final Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
   //returns JsonArray or JsonObject
-  public static JsonObject parseFullJson(String fullJson) {
-    if (isWrapped(fullJson, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
-      return (JsonObject) parseToJsonElement(fullJson);
-    }
-    //to do: if (isWrapped(json, [, ]))
-
-    throw new JsonSyntaxException("Valid json must be wrapped into {} or []");
+  public static JsonElement toJsonTree(String fullJson) {
+    JsonElement jsonTree = parseToAnyJsonElement(fullJson.strip());
+    return switch (jsonTree) {
+      case JsonObject jo -> jo;
+      case JsonArray ja -> ja;
+      case null, default -> throw new JsonSyntaxException("Valid json must be wrapped into {} or []");
+    };
   }
 
   //accepts text of any json type (array, object, text, number...)
   //can be used recursively
-  private static JsonElement parseToJsonElement(String json) {
+  private static @Nullable JsonElement parseToAnyJsonElement(String json) {
     if (isWrapped(json, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
       Map<String, JsonElement> kvMap = new HashMap<>();
       var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json));
@@ -53,7 +53,7 @@ public class DeserializeUtil {
         if (nextKvPair.isEmpty()) {
           return new JsonObject(kvMap);
         }
-        var jsonElem = parseToJsonElement(nextKvPair.get().getValue());
+        var jsonElem = parseToAnyJsonElement(nextKvPair.get().getValue());
         if (jsonElem != null) {
           kvMap.put(nextKvPair.get().getKey(), jsonElem);
         }
@@ -68,7 +68,7 @@ public class DeserializeUtil {
         if (nextArrayMember.isEmpty()) {
           return new JsonArray(array);
         }
-        array.add(parseToJsonElement(nextArrayMember.get()));
+        array.add(parseToAnyJsonElement(nextArrayMember.get()));
       }
     }
     else if (isWrapped(json, DOUBLE_QUOTE, DOUBLE_QUOTE)) {

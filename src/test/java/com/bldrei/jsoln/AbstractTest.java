@@ -19,6 +19,11 @@ public abstract class AbstractTest {
     assertEquals(errorMessage, ex.getMessage());
   }
 
+  @Deprecated(since = "is not checking error message")
+  public static void shouldThrow(Class<? extends RuntimeException> exception, Executable action) {
+    assertThrowsExactly(exception, action);
+  }
+
   public static void shouldThrow(RuntimeException exception, Executable action) {
     shouldThrow(exception.getClass(), action, exception.getMessage());
   }

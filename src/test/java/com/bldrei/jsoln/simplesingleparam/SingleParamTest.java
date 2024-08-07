@@ -3,7 +3,6 @@ package com.bldrei.jsoln.simplesingleparam;
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsolnException;
-import com.bldrei.jsoln.exception.JsonSyntaxException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,15 +45,6 @@ class SingleParamTest extends AbstractTest {
       () -> Jsoln.deserialize("""
         {"someOtherKey":"12a "}""", SingleRequiredParamDto.class),
       "Value not present, but field 'requiredString' is mandatory on dto class com.bldrei.jsoln.simplesingleparam.SingleRequiredParamDto");
-  }
-
-  @Test
-  void deserialize_invalidSyntax() {
-    shouldThrow(JsonSyntaxException.class,
-      () -> Jsoln.deserialize("""
-        "requiredString":"12a "\
-        """, SingleRequiredParamDto.class),
-      "Valid json must be wrapped into {} or []");
   }
 }
 

@@ -16,7 +16,7 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
   }
 
   public Optional<String> getNextArrayMemberAsString() {
-    char[] remainingChars = remainingTxt.toCharArray();
+    char[] remainingChars = remainingTxt.strip().toCharArray();
     String arrayMember;
 
     Stack<Character> openingBrackets = new Stack<>();
