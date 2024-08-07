@@ -1,12 +1,13 @@
 package com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes;
 
 import com.bldrei.jsoln.AbstractTest;
+import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.BigIntegerDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.PojoDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.BoolDto;
+import com.bldrei.jsoln.newstructure.dto.BigIntegerDto;
+import com.bldrei.jsoln.newstructure.dto.PojoDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.BoolDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -14,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ObjectTypesTest extends AbstractTest {
@@ -29,6 +31,10 @@ public class ObjectTypesTest extends AbstractTest {
       JsonElement.Type.OBJECT,
       AcceptedFieldTypes.determineJsonDataType(okType)
     );
+
+    if (okType.isRecord()) {
+      assertDoesNotThrow(() -> RecordDeserializationInfo.from(okType));
+    }
   }
 
   @ParameterizedTest

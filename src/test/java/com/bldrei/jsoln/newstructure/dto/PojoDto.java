@@ -1,4 +1,4 @@
-package com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto;
+package com.bldrei.jsoln.newstructure.dto;
 
 import lombok.Data;
 

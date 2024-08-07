@@ -4,14 +4,14 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.BigDecimalDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.BigIntegerDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.ByteDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.DoubleDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.FloatDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.IntegerDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.LongDto;
-import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.ShortDto;
+import com.bldrei.jsoln.newstructure.dto.BigDecimalDto;
+import com.bldrei.jsoln.newstructure.dto.BigIntegerDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.ByteDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.DoubleDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.FloatDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.IntegerDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.LongDto;
+import com.bldrei.jsoln.newstructure.dto.wrapper.ShortDto;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -20,10 +20,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NumberAsStringToNumberTest extends AbstractTest {
 
