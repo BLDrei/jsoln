@@ -14,17 +14,17 @@ public abstract class AbstractTest {
     Cache.clear();
   }
 
-  public static void shouldThrow(Class<? extends RuntimeException> exception, Executable action, String errorMessage) {
+  public void shouldThrow(Class<? extends RuntimeException> exception, Executable action, String errorMessage) {
     var ex = assertThrowsExactly(exception, action);
     assertEquals(errorMessage, ex.getMessage());
   }
 
   @Deprecated(since = "is not checking error message")
-  public static void shouldThrow(Class<? extends RuntimeException> exception, Executable action) {
+  public void shouldThrow(Class<? extends RuntimeException> exception, Executable action) {
     assertThrowsExactly(exception, action);
   }
 
-  public static void shouldThrow(RuntimeException exception, Executable action) {
+  public void shouldThrow(RuntimeException exception, Executable action) {
     shouldThrow(exception.getClass(), action, exception.getMessage());
   }
 }

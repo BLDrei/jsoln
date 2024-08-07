@@ -1,7 +1,6 @@
 package com.bldrei.jsoln.jsonmodel;
 
 import com.bldrei.jsoln.exception.BadDtoException;
-import com.bldrei.jsoln.exception.JsolnException;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -23,13 +22,14 @@ public class AcceptedFieldTypes {
     Short.class, Integer.class, Long.class, Double.class,
     Float.class, BigDecimal.class, BigInteger.class, Byte.class
   );
-  private static final Set<Class<?>> BOOLEAN_FINAL_TYPES = Set.of(Boolean.class, boolean.class);
+  private static final Class<?> BOOLEAN_FINAL_TYPE = Boolean.class;
 
   private static final Class<?> OBJECT_TYPE_RECORD = Record.class;
   private static final Class<?> TEXT_TYPE_ENUM = Enum.class;
 
   private static boolean isAcceptableObjectTypeForField(@NotNull Class<?> type) {
-    return OBJECT_TYPE_RECORD.isAssignableFrom(type) || OBJECT_FINAL_TYPES.contains(type);
+    return OBJECT_TYPE_RECORD == type.getSuperclass()
+      || OBJECT_FINAL_TYPES.contains(type);
   }
 
   private static boolean isAcceptableArrayTypeForField(@NotNull Class<?> type) {
@@ -38,7 +38,7 @@ public class AcceptedFieldTypes {
 
   private static boolean isAcceptableTextTypeForField(@NotNull Class<?> type) {
     return TEXT_FINAL_TYPES.contains(type)
-      || TEXT_TYPE_ENUM.isAssignableFrom(type);
+      || TEXT_TYPE_ENUM == type.getSuperclass();
   }
 
   private static boolean isAcceptableNumberTypeForField(@NotNull Class<?> type) {
@@ -46,7 +46,7 @@ public class AcceptedFieldTypes {
   }
 
   private static boolean isAcceptableBooleanTypeForField(@NotNull Class<?> type) {
-    return BOOLEAN_FINAL_TYPES.contains(type);
+    return BOOLEAN_FINAL_TYPE == type;
   }
 
   public static @NotNull JsonElement.Type determineJsonDataType(@NotNull Class<?> clazz) {
@@ -59,6 +59,6 @@ public class AcceptedFieldTypes {
     if (Optional.class == clazz) {
       throw new BadDtoException("Optional is only allowed as dto field type wrapping layer");
     }
-    throw new JsolnException("Unsupported field type: " + clazz);
+    throw new BadDtoException("Unsupported field type: " + clazz.getName());
   }
 }

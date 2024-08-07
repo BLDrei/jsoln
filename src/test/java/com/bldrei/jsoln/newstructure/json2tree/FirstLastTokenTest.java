@@ -1,4 +1,4 @@
-package com.bldrei.jsoln.syntax;
+package com.bldrei.jsoln.newstructure.json2tree;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.exception.JsonSyntaxException;

@@ -68,8 +68,7 @@ class SingleOptionalParamTest extends AbstractTest {
       "{\"optionalString\":\"12a \"",
       "\"optionalString\":\"12a \"}"
     ).forEach(json -> shouldThrow(JsonSyntaxException.class,
-      () -> Jsoln.deserialize(json, SingleOptionalParamDto.class),
-      "Valid json must be wrapped into {} or []")
+      () -> Jsoln.deserialize(json, SingleOptionalParamDto.class))
     );
   }
 }

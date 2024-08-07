@@ -22,17 +22,8 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
     Stack<Character> openingBrackets = new Stack<>();
     for (int i = 0; i < remainingChars.length; i++) {
       char currentChar = remainingChars[i];
-      if (currentChar == ARRAY_MEMBERS_DELIMITER && openingBrackets.empty()) {
-        arrayMember = remainingTxt.substring(0, i);
-        remainingTxt = remainingTxt.substring(i + 1); //starting from next char after comma
-        return Optional.of(arrayMember.trim());
-      }
-      if (i == remainingChars.length - 1 && openingBrackets.empty()) {
-        arrayMember = remainingTxt;
-        remainingTxt = "";
-        return Optional.of(arrayMember.strip());
-      }
-      else if (currentChar == OPENING_CURLY_BRACE || currentChar == OPENING_BRACKET) {
+
+      if (currentChar == OPENING_CURLY_BRACE || currentChar == OPENING_BRACKET) {
         openingBrackets.push(currentChar);
       }
       else if (currentChar == CLOSING_CURLY_BRACE) {
@@ -42,6 +33,17 @@ public final class JsonArrayTokenizer extends AbstractJsonTokenizer {
       else if (currentChar == CLOSING_BRACKET) {
         if (openingBrackets.peek() == OPENING_BRACKET) openingBrackets.pop();
         else throw new IllegalArgumentException("Brackets order fucked up");
+      }
+
+      if (currentChar == ARRAY_MEMBERS_DELIMITER && openingBrackets.empty()) {
+        arrayMember = remainingTxt.strip().substring(0, i);
+        remainingTxt = remainingTxt.strip().substring(i + 1); //starting from next char after comma
+        return Optional.of(arrayMember.trim());
+      }
+      if (i == remainingChars.length - 1 && openingBrackets.empty()) {
+        arrayMember = remainingTxt;
+        remainingTxt = "";
+        return Optional.of(arrayMember.strip());
       }
     }
 

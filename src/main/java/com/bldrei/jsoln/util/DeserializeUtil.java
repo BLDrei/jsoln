@@ -46,7 +46,7 @@ public class DeserializeUtil {
   private static @Nullable JsonElement parseToAnyJsonElement(String json) {
     if (isWrapped(json, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE)) {
       Map<String, JsonElement> kvMap = new HashMap<>();
-      var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json));
+      var tokenizer = new JsonObjectTokenizer(removeFirstLastChar(json).strip());
 
       while (true) {
         var nextKvPair = tokenizer.getNextKvPairAsStrings();

@@ -1,7 +1,9 @@
-package com.bldrei.jsoln.number;
+package com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.number;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
+import com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes.dto.wrapper.AcceptedNumericParamsDto;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -35,8 +37,8 @@ class AcceptedNumericParamsTest extends AbstractTest {
     assertEquals(new BigDecimal("1234567890.12345678901234567890"), dto._bigDecimal().get());
   }
 
-  @Test
-  void deserialize_decimalNumbersWrittenAsWholeNumbers_isAccepted() {
+  @Test //todo: move away
+  void deserialize_decimalNumbersWrittenAsIntegers_isAccepted() {
     AcceptedNumericParamsDto dto = Jsoln.deserialize("""
       {
         "_float": 1,
@@ -47,7 +49,7 @@ class AcceptedNumericParamsTest extends AbstractTest {
     assertEquals(-5, dto._double().get());
   }
 
-  @Test
+  @Test //todo: move to tree2java
   void deserializeNumericParams_decimalTextToWholeNumber_errorWhen() {
     shouldThrow(NumberFormatException.class,
       () -> Jsoln.deserialize("""
