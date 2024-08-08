@@ -2,8 +2,10 @@ package com.bldrei.jsoln.newstructure.tree2java.array;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
+import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonNumber;
 import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.newstructure.dto.singlefield.array.ListDto;
@@ -96,6 +98,28 @@ public class ListSetTest extends AbstractTest {
     assertEquals(1, set.size());
     assertTrue(set.contains(null));
     assertDoesNotThrow(() -> set.add("foo"));
+  }
+
+  @Test
+  void deserializeList_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
+    var jo = new JsonObject(Map.of("list", new JsonArray(List.of(
+      new JsonText("foo"),
+      new JsonNumber("12")
+    ))));
+    shouldThrow(JsolnException.class,
+      () -> Jsoln.deserialize(jo, ListDto.class),
+      "For type class java.lang.String, expected json model was TEXT, but received NUMBER.");
+  }
+
+  @Test
+  void deserializeSet_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
+    var jo = new JsonObject(Map.of("set", new JsonArray(List.of(
+      new JsonText("foo"),
+      new JsonNumber("12")
+    ))));
+    shouldThrow(JsolnException.class,
+      () -> Jsoln.deserialize(jo, SetDto.class),
+      "For type class java.lang.String, expected json model was TEXT, but received NUMBER.");
   }
 
   private void assertListIsUnmodifiable(List<String> list) {

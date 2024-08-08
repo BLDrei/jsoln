@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.converter.array;
 
+import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import org.jetbrains.annotations.NotNull;
@@ -17,10 +18,18 @@ public final class SetConverter extends ArrayConverter<Set<?>> {
   public Set<?> jsonElementsToObject(@NotNull List<@Nullable JsonElement> array, @NotNull ClassTreeWithConverters classTree) {
     boolean containsNull = array.stream().anyMatch(Objects::isNull);
 
-    var actualType = classTree.getGenericParameters()[0];
+    var collectionMemberType = classTree.getGenericParameters()[0];
     var stream = array
       .stream()
-      .map(jsonElement -> jsonElement == null ? null : jsonElement.toObject(actualType));
+      .map(jsonElement -> {
+        if (jsonElement == null) {
+          return null;
+        }
+        if (!jsonElement.canBeConvertedTo(collectionMemberType.getJsonDataType())) {
+          throw JsolnException.mmmismatch(collectionMemberType, jsonElement);
+        }
+        return jsonElement.toObject(collectionMemberType);
+      });
 
     return containsNull
       ? stream.collect(Collectors.toSet()) //no please

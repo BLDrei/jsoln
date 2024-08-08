@@ -23,4 +23,8 @@ public sealed interface JsonElement
       case JsonText jsonText -> Type.TEXT;
     };
   }
+
+  default boolean canBeConvertedTo(JsonElement.Type jsonType) {
+    return getJsonDataType() == jsonType;
+  }
 }
