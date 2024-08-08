@@ -9,47 +9,86 @@ import com.bldrei.jsoln.newstructure.dto.singlefield.array.ListDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.array.SetDto;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ListSetTest extends AbstractTest {
 
-  JsonArray oneMember = new JsonArray(List.of(
-    new JsonText("foo")
+  private static final JsonArray fooBar = new JsonArray(List.of(
+    new JsonText("foo"), new JsonText("bar")
   ));
+  private static final JsonArray empty = new JsonArray(new ArrayList<>());
 
   @Test
   void deserializedListIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("list", oneMember));
+    var jo = new JsonObject(Map.of("list", fooBar));
     var list = Jsoln.deserialize(jo, ListDto.class).list();
 
-    assertTrue(list.getClass().getName().startsWith("java.util.ImmutableCollections$List"));
-    assertEquals(1, list.size());
+    assertEquals(2, list.size());
     assertEquals("foo", list.getFirst());
+    assertEquals("bar", list.getLast());
+
+    assertListIsUnmodifiable(list);
+  }
+
+  @Test
+  void deserializedSetIsUnmodifiable() {
+    var jo = new JsonObject(Map.of("set", fooBar));
+    var set = Jsoln.deserialize(jo, SetDto.class).set();
+
+    assertEquals(2, set.size());
+    assertTrue(set.contains("foo"));
+    assertTrue(set.contains("bar"));
+
+    assertSetIsUnmodifiable(set);
+  }
+
+  @Test
+  void deserializedEmptyListIsUnmodifiable() {
+    var jo = new JsonObject(Map.of("list", empty));
+    var list = Jsoln.deserialize(jo, ListDto.class).list();
+
+    assertEquals(0, list.size());
+    assertListIsUnmodifiable(list);
+//    assertSame(Collections.emptyList(), list); //Collections.emptyXXX is not as unmodifiable as XXX.of() (some attempts to modify don't throw exception)
+  }
+
+  @Test
+  void deserializedEmptySetIsUnmodifiable() {
+    var jo = new JsonObject(Map.of("set", empty));
+    var set = Jsoln.deserialize(jo, SetDto.class).set();
+
+    assertEquals(0, set.size());
+    assertSetIsUnmodifiable(set);
+//    assertSame(Collections.emptySet(), set); //Collections.emptyXXX is not as unmodifiable as XXX.of() (some attempts to modify don't throw exception)
+  }
+
+  private void assertListIsUnmodifiable(List<String> list) {
     shouldThrow(UnsupportedOperationException.class,
-      () -> list.add("bar"),
+      () -> list.add("bar2"),
       null);
     shouldThrow(UnsupportedOperationException.class,
-      list::removeFirst,
+      () -> list.remove("I am not even in this collection"),
       null);
     shouldThrow(UnsupportedOperationException.class,
       list::clear,
       null);
   }
 
-  @Test
-  void deserializedSetIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("set", oneMember));
-    var set = Jsoln.deserialize(jo, SetDto.class).set();
-
-    assertTrue(set.getClass().getName().startsWith("java.util.ImmutableCollections$Set"));
-    assertEquals(1, set.size());
-    assertTrue(set.contains("foo"));
+  private void assertSetIsUnmodifiable(Set<String> set) {
     shouldThrow(UnsupportedOperationException.class,
-      () -> set.add("bar"),
+      () -> set.add("bar2"),
+      null);
+    shouldThrow(UnsupportedOperationException.class,
+      () -> set.remove("bar"),
+      null);
+    shouldThrow(UnsupportedOperationException.class,
+      () -> set.remove("I am not even in this collection"),
       null);
     shouldThrow(UnsupportedOperationException.class,
       set::clear,
