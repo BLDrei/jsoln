@@ -12,8 +12,8 @@ import com.bldrei.jsoln.tokenizer.JsonObjectTokenizer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -61,7 +61,7 @@ public class DeserializeUtil {
       }
     }
     else if (isWrapped(json, OPENING_BRACKET, CLOSING_BRACKET)) {
-      List<JsonElement> array = new LinkedList<>(); //come up with more optimal solution
+      List<@Nullable JsonElement> array = new ArrayList<>();
       var tokenizer = new JsonArrayTokenizer(removeFirstLastChar(json));
 
       while (true) {

@@ -6,6 +6,7 @@ import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -14,25 +15,20 @@ public abstract sealed class ArrayConverter<C>
   implements AbstractConverter
   permits ListConverter, SetConverter {
 
-  public C jsonElementsToObject(@NotNull List<JsonElement> array,
-                                @NotNull ClassTreeWithConverters classTree) {
-    ClassTreeWithConverters actualType = classTree.getGenericParameters()[0];
-    Stream<?> stream = array.stream()
-      .map(jsonElement -> jsonElement.toObject(actualType));
-    return streamToObject(stream);
-  }
+  public abstract C jsonElementsToObject(@NotNull List<@Nullable JsonElement> array,
+                                         @NotNull ClassTreeWithConverters classTree);
 
   @SuppressWarnings("unchecked")
   public JsonArray objectToJsonArray(@NotNull Object collection,
                                      @NotNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
-    var jsonElements = objectToStream((C) collection)
+    List<JsonElement> jsonElements = objectToStream((C) collection)
       .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
       .toList();
     return new JsonArray(jsonElements);
   }
 
-  protected abstract C streamToObject(@NotNull Stream<?> stream);
+//  protected abstract C streamToObject(@NotNull Stream<?> stream);
 
   protected abstract Stream<?> objectToStream(@NotNull C flatValue);
 

@@ -4,13 +4,14 @@ import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @AllArgsConstructor
 public final class JsonArray implements JsonElement {
 
-  private final List<JsonElement> array;
+  private final List<@Nullable JsonElement> array;
 
   public Object toObject(ClassTreeWithConverters classTree) {
     return ((ArrayConverter<?>) classTree.getConverter())
@@ -22,7 +23,12 @@ public final class JsonArray implements JsonElement {
 
     var iterator = array.iterator();
     iterator.forEachRemaining(el -> {
-      el.appendToSB(sb);
+      if (el == null) {
+        sb.append("null");
+      }
+      else {
+        el.appendToSB(sb);
+      }
       if (iterator.hasNext()) {
         sb.append(Const.ARRAY_MEMBERS_DELIMITER_STR);
       }
