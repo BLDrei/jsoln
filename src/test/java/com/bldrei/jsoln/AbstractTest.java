@@ -20,7 +20,6 @@ public abstract class AbstractTest {
     return ex;
   }
 
-  @Deprecated
   protected <E extends RuntimeException> E shouldThrow(Class<E> exception, Executable action) {
     return assertThrowsExactly(exception, action);
   }
