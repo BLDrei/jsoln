@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.util;
 
-import lombok.SneakyThrows;
+import com.bldrei.jsoln.exception.JsolnReflectionException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class ReflectionUtil {
   private ReflectionUtil() {}
 
-  public static Method findEnumValueOfMethod(@NotNull Class<?> clazz) {
+  public static @NotNull Method findEnumValueOfMethod(@NotNull Class<?> clazz) {
     if (!clazz.isEnum()) throw new IllegalStateException();
 
     try {
@@ -22,22 +22,33 @@ public class ReflectionUtil {
     }
   }
 
-  @SneakyThrows
   public static Object invokeStaticMethod(@NotNull Method method, Object... args) {
-    return method.invoke(null, args);
+    return invokeMethod(null, method, args);
   }
 
-  @SneakyThrows
   public static Object invokeInstanceMethod(@NotNull Object obj, @NotNull Method method, Object... args) {
-    return method.invoke(obj, args);
+    return invokeMethod(obj, method, args);
   }
 
-  @SneakyThrows
-  public static <T> T invokeConstructor(@NotNull Constructor<T> constructor, Object... args) {
-    return constructor.newInstance(args);
+  private static Object invokeMethod(Object obj, @NotNull Method method, Object... args) {
+    try {
+      return method.invoke(obj, args);
+    }
+    catch (ReflectiveOperationException e) {
+      throw new JsolnReflectionException(e);
+    }
   }
 
-  public static <R> Constructor<R> findCanonicalConstructor(@NotNull Class<R> recordClass) {
+  public static <R> R invokeCanonicalConstructor(@NotNull Constructor<R> constructor, Object... args) {
+    try {
+      return constructor.newInstance(args);
+    }
+    catch (ReflectiveOperationException e) {
+      throw new JsolnReflectionException(e);
+    }
+  }
+
+  public static <R> @NotNull Constructor<R> findCanonicalConstructor(@NotNull Class<R> recordClass) {
     if (!recordClass.isRecord()) throw new IllegalStateException();
 
     Class<?>[] types = Arrays.stream(recordClass.getRecordComponents())

@@ -43,7 +43,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
       }
     }).toArray();
 
-    return ReflectionUtil.invokeConstructor(recordDeserializationInfo.getCanonicalConstructor(), params);
+    return ReflectionUtil.invokeCanonicalConstructor(recordDeserializationInfo.getCanonicalConstructor(), params);
   }
 
   @Override

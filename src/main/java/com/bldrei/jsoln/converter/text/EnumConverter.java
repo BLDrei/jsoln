@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 public final class EnumConverter<E> extends TextConverter<E> {
 
-  private final Method valueOf;
+  private final @NotNull Method valueOf;
 
   public EnumConverter(@NotNull Class<E> enumType) {
     //todo: @Jsoln.EnumValue

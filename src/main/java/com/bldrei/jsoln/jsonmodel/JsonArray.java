@@ -4,6 +4,7 @@ import com.bldrei.jsoln.Const;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public final class JsonArray implements JsonElement {
 
-  private final List<@Nullable JsonElement> array;
+  private final @NotNull List<@Nullable JsonElement> array;
 
   public Object toObject(ClassTreeWithConverters classTree) {
     return ((ArrayConverter<?>) classTree.getConverter())
