@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.converter.array;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
+import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonArray;
 import com.bldrei.jsoln.jsonmodel.JsonElement;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
@@ -15,8 +16,22 @@ public abstract sealed class ArrayConverter<C>
   implements AbstractConverter
   permits ListConverter, SetConverter {
 
-  public abstract C jsonElementsToObject(@NotNull List<@Nullable JsonElement> array,
-                                         @NotNull ClassTreeWithConverters classTree);
+  public C jsonElementsToObject(@NotNull List<@Nullable JsonElement> array,
+                                @NotNull ClassTreeWithConverters classTree) {
+    var collectionMemberType = classTree.getGenericParameters()[0];
+    var stream = array
+      .stream()
+      .map(jsonElement -> {
+        if (jsonElement == null) {
+          return null;
+        }
+        if (!jsonElement.canBeConvertedTo(collectionMemberType.getJsonDataType())) {
+          throw JsolnException.mmmismatch(collectionMemberType, jsonElement);
+        }
+        return jsonElement.toObject(collectionMemberType);
+      });
+    return streamToObject(stream, array);
+  }
 
   @SuppressWarnings("unchecked")
   public JsonArray objectToJsonArray(@NotNull Object collection,
@@ -28,7 +43,7 @@ public abstract sealed class ArrayConverter<C>
     return new JsonArray(jsonElements);
   }
 
-//  protected abstract C streamToObject(@NotNull Stream<?> stream);
+  protected abstract C streamToObject(@NotNull Stream<?> stream, @NotNull List<@Nullable JsonElement> originalJsonArray);
 
   protected abstract Stream<?> objectToStream(@NotNull C flatValue);
 
