@@ -108,7 +108,7 @@ public class ListSetTest extends AbstractTest {
     ))));
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, ListDto.class),
-      "For type class java.lang.String, expected json model was TEXT, but received NUMBER.");
+      "Cannot convert JsonNumber to TEXT (java.lang.String)");
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ListSetTest extends AbstractTest {
     ))));
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, SetDto.class),
-      "For type class java.lang.String, expected json model was TEXT, but received NUMBER.");
+      "Cannot convert JsonNumber to TEXT (java.lang.String)");
   }
 
   private void assertListIsUnmodifiable(List<String> list) {

@@ -26,7 +26,7 @@ public abstract sealed class ArrayConverter<C>
           return null;
         }
         if (!jsonElement.canBeConvertedTo(collectionMemberType.getJsonDataType())) {
-          throw JsolnException.mmmismatch(collectionMemberType, jsonElement);
+          throw JsolnException.cannotCovertJsonElementToType(collectionMemberType, jsonElement);
         }
         return jsonElement.toObject(collectionMemberType);
       });

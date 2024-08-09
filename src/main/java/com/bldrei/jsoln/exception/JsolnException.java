@@ -8,8 +8,8 @@ public class JsolnException extends RuntimeException {
     super(message);
   }
 
-  public static JsolnException mmmismatch(ClassTreeWithConverters expectedFieldType, JsonElement actual) {
-    return new JsolnException("For type %s, expected json model was %s, but received %s."
-      .formatted(expectedFieldType.getRawType(), expectedFieldType.getJsonDataType(), actual.getJsonDataType()));
+  public static JsolnException cannotCovertJsonElementToType(ClassTreeWithConverters expectedFieldType, JsonElement actual) {
+    return new JsolnException("Cannot convert %s to %s (%s)"
+      .formatted(actual.getClass().getSimpleName(), expectedFieldType.getJsonDataType(), expectedFieldType.getRawType().getName()));
   }
 }
