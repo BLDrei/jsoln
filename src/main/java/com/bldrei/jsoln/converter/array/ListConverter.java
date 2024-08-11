@@ -1,8 +1,6 @@
 package com.bldrei.jsoln.converter.array;
 
-import com.bldrei.jsoln.jsonmodel.JsonElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -10,7 +8,7 @@ import java.util.stream.Stream;
 public final class ListConverter extends ArrayConverter<List<?>> {
 
   @Override
-  protected List<?> streamToObject(@NotNull Stream<?> stream, @NotNull List<@Nullable JsonElement> originalJsonArray) {
+  protected List<?> streamToObject(@NotNull Stream<?> stream) {
     return stream.toList();
   }
 

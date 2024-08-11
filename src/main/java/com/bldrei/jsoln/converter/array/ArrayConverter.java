@@ -25,12 +25,12 @@ public abstract sealed class ArrayConverter<C>
         if (jsonElement == null) {
           return null;
         }
-        if (!jsonElement.canBeConvertedTo(collectionMemberType.getJsonDataType())) {
+        if (!jsonElement.canBeConvertedTo(collectionMemberType.getJsonDataType())) { //todo: move to JsonElement
           throw JsolnException.cannotCovertJsonElementToType(collectionMemberType, jsonElement);
         }
         return jsonElement.toObject(collectionMemberType);
       });
-    return streamToObject(stream, array);
+    return streamToObject(stream);
   }
 
   @SuppressWarnings("unchecked")
@@ -43,7 +43,7 @@ public abstract sealed class ArrayConverter<C>
     return new JsonArray(jsonElements);
   }
 
-  protected abstract C streamToObject(@NotNull Stream<?> stream, @NotNull List<@Nullable JsonElement> originalJsonArray);
+  protected abstract C streamToObject(@NotNull Stream<?> stream);
 
   protected abstract Stream<?> objectToStream(@NotNull C flatValue);
 

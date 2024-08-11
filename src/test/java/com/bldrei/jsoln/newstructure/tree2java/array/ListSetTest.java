@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -81,7 +80,7 @@ public class ListSetTest extends AbstractTest {
   }
 
   @Test
-  void deserializedList_nullsStayInPlace() {
+  void deserializedList_containsNull_collectionIsStillUnmodifiable() {
     var jo = new JsonObject(Map.of("list", withNull));
     var list = Jsoln.deserialize(jo, ListDto.class).list();
 
@@ -91,13 +90,13 @@ public class ListSetTest extends AbstractTest {
   }
 
   @Test
-  void deserializedSet_containsNull_setIsModifiable() {
+  void deserializedSet_containsNull_collectionIsStillUnmodifiable() {
     var jo = new JsonObject(Map.of("set", withNull));
     var set = Jsoln.deserialize(jo, SetDto.class).set();
 
     assertEquals(1, set.size());
     assertTrue(set.contains(null));
-    assertDoesNotThrow(() -> set.add("foo"));
+    assertSetIsUnmodifiable(set);
   }
 
   @Test
