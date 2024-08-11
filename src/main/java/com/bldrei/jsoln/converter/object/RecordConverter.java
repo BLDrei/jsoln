@@ -29,7 +29,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
       if (valuePresent) {
         if (value.get().getJsonDataType() != recordComponent.jsonType()) {
-          throw new JsolnException("For field '" + recordComponent.name() + "', expected json type is " + recordComponent.jsonType() + ", but received " + value.get().getJsonDataType());
+          throw JsolnException.cannotCovertJsonElementToType(recordComponent.classTree(), value.get());
         }
         Object valueOfActualType = value.get().toObject(recordComponent.classTree());
         return isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType;

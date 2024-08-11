@@ -7,7 +7,6 @@ import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,13 +31,9 @@ public final class MapConverter extends ObjectConverter<Map<?, ?>> {
   @Override
   protected Map<String, JsonElement> objectToJsonElementsMap(@NotNull Map<?, ?> map,
                                                              @NotNull ClassTreeWithConverters classTree) {
-    if (map.isEmpty()) {
-      return Collections.emptyMap();
-    }
-
     var valueType = classTree.getGenericParameters()[1];
     return map.entrySet().stream()
-      .collect(Collectors.toUnmodifiableMap(
+      .collect(Collectors.toUnmodifiableMap( //todo: allow nulls?
         e -> (String) e.getKey(), //hm, what?
         e -> SerializeUtil.convertObjectToJsonElement(e.getValue(), valueType)
       ));

@@ -28,6 +28,6 @@ class BooleanParamTest extends AbstractTest {
 
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, BoolDto.class),
-      "For field 'bool', expected json type is BOOLEAN, but received TEXT");
+      "Cannot convert JsonText to BOOLEAN (java.lang.Boolean)");
   }
 }
