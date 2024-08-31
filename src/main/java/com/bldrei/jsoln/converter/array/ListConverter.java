@@ -1,19 +1,23 @@
 package com.bldrei.jsoln.converter.array;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class ListConverter extends ArrayConverter<List<?>> {
 
   @Override
-  protected List<?> streamToObject(@NotNull Stream<?> stream) {
-    return stream.toList();
+  @UnmodifiableView
+  protected List<?> streamToUnmodifiableCollection(@NotNull Stream<?> stream) {
+    return Collections.unmodifiableList(stream.collect(Collectors.toList()));
   }
 
   @Override
-  protected Stream<?> objectToStream(@NotNull List<?> list) {
+  protected Stream<?> collectionToStream(@NotNull List<?> list) {
     return list.stream();
   }
 }

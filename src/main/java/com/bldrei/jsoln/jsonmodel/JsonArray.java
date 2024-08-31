@@ -16,7 +16,7 @@ public final class JsonArray implements JsonElement {
 
   public Object toObject(ClassTreeWithConverters classTree) {
     return ((ArrayConverter<?>) classTree.getConverter())
-      .jsonElementsToObject(array, classTree);
+      .jsonArrayToUnmodifiableCollection(array, classTree);
   }
 
   public StringBuffer appendToSB(StringBuffer sb) {

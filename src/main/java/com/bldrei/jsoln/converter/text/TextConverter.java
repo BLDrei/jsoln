@@ -12,7 +12,7 @@ public abstract sealed class TextConverter<T>
   public abstract T stringToObject(@NotNull String value);
 
   @SuppressWarnings("unchecked")
-  public JsonElement objectToJsonElement(@NotNull Object flatValue) {
+  public JsonElement textTypeToJsonText(@NotNull Object flatValue) {
     return new JsonText(stringify((T) flatValue));
   }
 

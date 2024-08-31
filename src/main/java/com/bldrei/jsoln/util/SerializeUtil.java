@@ -12,11 +12,11 @@ public class SerializeUtil {
 
   public static JsonElement convertObjectToJsonElement(Object obj, ClassTreeWithConverters classTree) {
     return switch (classTree.getConverter()) {
-      case TextConverter<?> tc -> tc.objectToJsonElement(obj);
-      case NumberConverter<?> nc -> nc.objectToJsonElement(obj);
-      case BooleanConverter bc -> bc.objectToJsonElement(obj);
-      case ArrayConverter<?> ac -> ac.objectToJsonArray(obj, classTree);
-      case ObjectConverter<?> oc -> oc.objectToJsonObject(obj, classTree);
+      case TextConverter<?> tc -> tc.textTypeToJsonText(obj);
+      case NumberConverter<?> nc -> nc.numberTypeToJsonNumber(obj);
+      case BooleanConverter bc -> bc.booleanTypeToJsonBoolean(obj);
+      case ArrayConverter<?> ac -> ac.collectionToJsonArray(obj, classTree);
+      case ObjectConverter<?> oc -> oc.objectTypeToJsonObject(obj, classTree);
       default -> throw new IllegalStateException();
     };
   }

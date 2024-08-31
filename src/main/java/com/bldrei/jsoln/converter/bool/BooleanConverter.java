@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BooleanConverter implements AbstractConverter {
 
-  public JsonElement objectToJsonElement(@NotNull Object flatValue) {
+  public JsonElement booleanTypeToJsonBoolean(@NotNull Object flatValue) {
     return switch (flatValue) {
       case Boolean b -> b ? JsonBoolean.TRUE : JsonBoolean.FALSE;
       default -> throw new IllegalStateException();

@@ -47,13 +47,13 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   }
 
   @Override
-  protected Map<String, JsonElement> objectToJsonElementsMap(@NotNull R obj,
-                                                             @NotNull ClassTreeWithConverters classTree) {
+  protected Map<String, JsonElement> objectToJsonElementsMutableMap(@NotNull R obj,
+                                                                    @NotNull ClassTreeWithConverters classTree) {
     var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.getRawType());
     Map<String, JsonElement> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 
-    for (RecordFieldInfo recordFieldInfo : recordDeserializationInfo.getFieldsInfo()) {
-      Object actualValue = ReflectionUtil.invokeInstanceMethod(obj, recordFieldInfo.accessor());
+    for (RecordFieldInfo rc : recordDeserializationInfo.getFieldsInfo()) {
+      Object actualValue = ReflectionUtil.invokeInstanceMethod(obj, rc.accessor());
       Object flatValue = switch (actualValue) {
         case null -> null;
         case Optional<?> o -> o.orElse(null);
@@ -63,8 +63,8 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
       if (flatValue == null) continue;
 
       kvMap.put(
-        recordFieldInfo.name(),
-        SerializeUtil.convertObjectToJsonElement(flatValue, recordFieldInfo.classTree())
+        rc.name(),
+        SerializeUtil.convertObjectToJsonElement(flatValue, rc.classTree())
       );
     }
     return kvMap;

@@ -12,7 +12,7 @@ public abstract sealed class NumberConverter<N>
   public abstract N stringToObject(@NotNull String value);
 
   @SuppressWarnings("unchecked")
-  public JsonElement objectToJsonElement(@NotNull Object flatValue) {
+  public JsonElement numberTypeToJsonNumber(@NotNull Object flatValue) {
     return new JsonNumber(stringify((N) flatValue));
   }
 

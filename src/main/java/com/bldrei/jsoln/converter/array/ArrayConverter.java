@@ -8,6 +8,7 @@ import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.SerializeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,8 +17,8 @@ public abstract sealed class ArrayConverter<C>
   implements AbstractConverter
   permits ListConverter, SetConverter {
 
-  public C jsonElementsToObject(@NotNull List<@Nullable JsonElement> array,
-                                @NotNull ClassTreeWithConverters classTree) {
+  public @UnmodifiableView C jsonArrayToUnmodifiableCollection(@NotNull List<@Nullable JsonElement> array,
+                                                               @NotNull ClassTreeWithConverters classTree) {
     var collectionMemberType = classTree.getGenericParameters()[0];
     var stream = array
       .stream()
@@ -30,21 +31,21 @@ public abstract sealed class ArrayConverter<C>
         }
         return jsonElement.toObject(collectionMemberType);
       });
-    return streamToObject(stream);
+    return streamToUnmodifiableCollection(stream);
   }
 
   @SuppressWarnings("unchecked")
-  public JsonArray objectToJsonArray(@NotNull Object collection,
-                                     @NotNull ClassTreeWithConverters classTree) {
+  public JsonArray collectionToJsonArray(@NotNull Object collection,
+                                         @NotNull ClassTreeWithConverters classTree) {
     ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
-    List<JsonElement> jsonElements = objectToStream((C) collection)
+    List<JsonElement> jsonElements = collectionToStream((C) collection)
       .map(it -> SerializeUtil.convertObjectToJsonElement(it, collectionOfWhat))
       .toList();
     return new JsonArray(jsonElements);
   }
 
-  protected abstract C streamToObject(@NotNull Stream<?> stream);
+  protected abstract @UnmodifiableView C streamToUnmodifiableCollection(@NotNull Stream<?> stream);
 
-  protected abstract Stream<?> objectToStream(@NotNull C flatValue);
+  protected abstract Stream<?> collectionToStream(@NotNull C flatValue);
 
 }
