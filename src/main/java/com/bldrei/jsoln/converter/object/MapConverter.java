@@ -8,6 +8,7 @@ import com.bldrei.jsoln.util.SerializeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -21,12 +22,15 @@ public final class MapConverter extends ObjectConverter<Map<?, ?>> {
     if (keyType.getJsonDataType() != JsonElement.Type.TEXT) { //todo: move to dto validator
       throw new BadDtoException("According to json syntax, key for JsonObject may only be JsonText");
     }
-    var map = kvMap.entrySet().stream()
-      .collect(Collectors.toMap(
-        e -> ((TextConverter<?>) keyType.getConverter()).stringToObject(e.getKey()),
-        e -> e.getValue().toObject(valueType),
-        (k1, k2) -> new IllegalStateException("Duplicate keys %s and %s".formatted(k1, k2))
-      ));
+
+    Map<Object, Object> map = new HashMap<>();
+    for (var e : kvMap.entrySet()) {
+      var je = e.getValue();
+      map.put(
+        ((TextConverter<?>) keyType.getConverter()).stringToObject(e.getKey()),
+        je == null ? null : je.toObject(valueType)
+      );
+    }
     return Collections.unmodifiableMap(map);
   }
 

@@ -26,6 +26,7 @@ class EnumAsKeyMapDtoTest extends AbstractTest {
       }
       """, EnumAsKeyMapDto.class);
 
+    //this part moved to new structure
     var localLanguages = dtoMap.localLanguages();
     assertEquals(3, localLanguages.size());
 
