@@ -1,15 +1,12 @@
-package com.bldrei.jsoln.newstructure.tree2java.text;
+package com.bldrei.jsoln.newstructure.json2java.text;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
-import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.newstructure.dto.singlefield.LocalDateDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.format.DateTimeParseException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,9 +21,13 @@ class LocalDateTest extends AbstractTest {
     "2020-02-29"
   })
   void deserializeStandardDatePattern_OK(String value) {
-    var jo = new JsonObject(Map.of("localDate", new JsonText(value)));
+    var json = """
+      {
+        "localDate": "%s"
+      }
+      """.formatted(value);
 
-    assertEquals(value, Jsoln.deserialize(jo, LocalDateDto.class).localDate().toString());
+    assertEquals(value, Jsoln.deserialize(json, LocalDateDto.class).localDate().toString());
   }
 
   @ParameterizedTest
@@ -38,10 +39,14 @@ class LocalDateTest extends AbstractTest {
     "1999-13-01",
   })
   void deserializeStandardDatePattern_impossibleDates_NOK(String value) {
-    var jo = new JsonObject(Map.of("localDate", new JsonText(value)));
+    var json = """
+      {
+        "localDate": "%s"
+      }
+      """.formatted(value);
 
     shouldThrow(DateTimeParseException.class,
-      () -> Jsoln.deserialize(jo, LocalDateDto.class));
+      () -> Jsoln.deserialize(json, LocalDateDto.class));
   }
 
   @ParameterizedTest
@@ -49,10 +54,14 @@ class LocalDateTest extends AbstractTest {
     "10.05.2003"
   })
   void deserializeDate_notStandardFormat_notImplementedYet(String value) {
-    var jo = new JsonObject(Map.of("localDate", new JsonText(value)));
+    var json = """
+      {
+        "localDate": "%s"
+      }
+      """.formatted(value);
 
     shouldThrow(DateTimeParseException.class,
-      () -> Jsoln.deserialize(jo, LocalDateDto.class));
+      () -> Jsoln.deserialize(json, LocalDateDto.class));
   }
 
 }

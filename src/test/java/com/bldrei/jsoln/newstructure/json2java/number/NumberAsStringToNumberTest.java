@@ -1,9 +1,7 @@
-package com.bldrei.jsoln.newstructure.tree2java.number;
+package com.bldrei.jsoln.newstructure.json2java.number;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.jsonmodel.JsonNumber;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.newstructure.dto.singlefield.BigDecimalDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.BigIntegerDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.ByteDto;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,17 +25,28 @@ public class NumberAsStringToNumberTest extends AbstractTest {
 
   @Test
   void happyFlowMaxValues() {
-    var jo = new JsonObject(Map.of(
-      "_float", new JsonNumber(String.valueOf(Float.MAX_VALUE)),
-      "_double", new JsonNumber(String.valueOf(Double.MAX_VALUE)),
-      "_bigDecimal", new JsonNumber("12345123451234512345.99999999999999999999"),
+    var jo = """
+       {
+         "_float": %s,
+         "_double": %s,
+         "_bigDecimal": %s,
 
-      "_byte", new JsonNumber(String.valueOf(Byte.MAX_VALUE)),
-      "_short", new JsonNumber(String.valueOf(Short.MAX_VALUE)),
-      "_int", new JsonNumber(String.valueOf(Integer.MAX_VALUE)),
-      "_long", new JsonNumber(String.valueOf(Long.MAX_VALUE)),
-      "_bigInteger", new JsonNumber("12345123451234512345")
-    ));
+         "_byte": %s
+         "_short": %s
+         "_int": %s,
+         "_long": %s,
+         "_bigInteger": %s
+       }
+      """.formatted(
+      String.valueOf(Float.MAX_VALUE),
+      String.valueOf(Double.MAX_VALUE),
+      "12345123451234512345.99999999999999999999",
+      String.valueOf(Byte.MAX_VALUE),
+      String.valueOf(Short.MAX_VALUE),
+      String.valueOf(Integer.MAX_VALUE),
+      String.valueOf(Long.MAX_VALUE),
+      "12345123451234512345"
+    );
 
     assertEquals("3.4028235E38", Jsoln.deserialize(jo, FloatDto.class)._float().toString());
     assertEquals("1.7976931348623157E308", Jsoln.deserialize(jo, DoubleDto.class)._double().toString());
@@ -53,17 +61,27 @@ public class NumberAsStringToNumberTest extends AbstractTest {
 
   @Test
   void happyFlowMinValues() {
-    var jo = new JsonObject(Map.of(
-      "_float", new JsonNumber(String.valueOf(Float.MIN_VALUE)),
-      "_double", new JsonNumber(String.valueOf(Double.MIN_VALUE)),
-      "_bigDecimal", new JsonNumber("-12345123451234512345.99999999999999999999"),
+    var jo = """
+      {
+        "_float": %s,
+        "_double": %s,
+        "_bigDecimal": %s,
 
-      "_byte", new JsonNumber(String.valueOf(Byte.MIN_VALUE)),
-      "_short", new JsonNumber(String.valueOf(Short.MIN_VALUE)),
-      "_int", new JsonNumber(String.valueOf(Integer.MIN_VALUE)),
-      "_long", new JsonNumber(String.valueOf(Long.MIN_VALUE)),
-      "_bigInteger", new JsonNumber("-12345123451234512345")
-    ));
+        "_byte": %s,
+        "_short": %s,
+        "_int": %s,
+        "_long": %s,
+        "_bigInteger": %s
+      }""".formatted(
+      String.valueOf(Float.MIN_VALUE),
+      String.valueOf(Double.MIN_VALUE),
+      "-12345123451234512345.99999999999999999999",
+      String.valueOf(Byte.MIN_VALUE),
+      String.valueOf(Short.MIN_VALUE),
+      String.valueOf(Integer.MIN_VALUE),
+      String.valueOf(Long.MIN_VALUE),
+      "-12345123451234512345"
+    );
 
     assertEquals("1.4E-45", Jsoln.deserialize(jo, FloatDto.class)._float().toString());
     assertEquals("4.9E-324", Jsoln.deserialize(jo, DoubleDto.class)._double().toString());
@@ -78,11 +96,13 @@ public class NumberAsStringToNumberTest extends AbstractTest {
 
   @Test
   void decimalNumbersWrittenAsIntegers_ok() {
-    var jo = new JsonObject(Map.of(
-      "_float", new JsonNumber("1"),
-      "_double", new JsonNumber("-5"),
-      "_bigDecimal", new JsonNumber("1234")
-    ));
+    var jo = """
+      {
+        "_float": 1,
+        "_double": -5,
+        "_bigDecimal": 1234
+      }
+      """;
 
     assertEquals(1f, Jsoln.deserialize(jo, FloatDto.class)._float());
     assertEquals(-5, Jsoln.deserialize(jo, DoubleDto.class)._double());
@@ -91,13 +111,14 @@ public class NumberAsStringToNumberTest extends AbstractTest {
 
   @Test
   void deserializeNumericParams_decimalValueToNonDecimalType_error() {
-    var jo = new JsonObject(Map.of(
-      "_byte", new JsonNumber("0.1"),
-      "_short", new JsonNumber("0.1"),
-      "_int", new JsonNumber("0.1"),
-      "_long", new JsonNumber("0.0"), //todo: should 0.0 be treated as 0?
-      "_bigInteger", new JsonNumber("0.0")
-    ));
+    var jo = """
+      {
+        "_byte": 0.1,
+        "_short": 0.1,
+        "_int": 0.1,
+        "_long": 0.0,
+        "_bigInteger": 0.0
+      }""";
 
     shouldThrow(NumberFormatException.class,
       () -> Jsoln.deserialize(jo, ByteDto.class),
@@ -122,9 +143,10 @@ public class NumberAsStringToNumberTest extends AbstractTest {
 
   @Test
   void bigDecimalShouldAlwaysPreserveScale() {
-    var jo = new JsonObject(Map.of(
-      "_bigDecimal", new JsonNumber("1234.000")
-    ));
+    var jo = """
+      {
+        "_bigDecimal": 1234.000
+      }""";
 
     BigDecimal actualBigDecimal = Jsoln.deserialize(jo, BigDecimalDto.class)._bigDecimal();
 

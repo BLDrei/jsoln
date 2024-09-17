@@ -1,20 +1,13 @@
-package com.bldrei.jsoln.newstructure.tree2java.array;
+package com.bldrei.jsoln.newstructure.json2java.array;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsolnException;
-import com.bldrei.jsoln.jsonmodel.JsonArray;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonNumber;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
-import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.newstructure.dto.singlefield.array.ListDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.array.SetDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,21 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ListSetTest extends AbstractTest {
 
-  private static final JsonArray fooBar = new JsonArray(List.of(
-    new JsonText("foo"), new JsonText("bar")
-  ));
-  private static final JsonArray empty = new JsonArray(new ArrayList<>());
-  private static final JsonArray withNull;
-
-  static {
-    List<JsonElement> withNullList = new ArrayList<>();
-    withNullList.add(null);
-    withNull = new JsonArray(withNullList);
-  }
-
   @Test
   void deserializedListIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("list", fooBar));
+    var jo = """
+      {"list": ["foo", "bar"]}
+      """;
     var list = Jsoln.deserialize(jo, ListDto.class).list();
 
     assertEquals(2, list.size());
@@ -49,7 +32,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializedSetIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("set", fooBar));
+    var jo = """
+      {"set": ["foo", "bar"]}
+      """;
     var set = Jsoln.deserialize(jo, SetDto.class).set();
 
     assertEquals(2, set.size());
@@ -61,7 +46,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializedEmptyListIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("list", empty));
+    var jo = """
+      {"list": []}
+      """;
     var list = Jsoln.deserialize(jo, ListDto.class).list();
 
     assertEquals(0, list.size());
@@ -71,7 +58,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializedEmptySetIsUnmodifiable() {
-    var jo = new JsonObject(Map.of("set", empty));
+    var jo = """
+      {"set": []}
+      """;
     var set = Jsoln.deserialize(jo, SetDto.class).set();
 
     assertEquals(0, set.size());
@@ -81,7 +70,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializedList_containsNull_collectionIsStillUnmodifiable() {
-    var jo = new JsonObject(Map.of("list", withNull));
+    var jo = """
+      {"list": [null]}
+      """;
     var list = Jsoln.deserialize(jo, ListDto.class).list();
 
     assertEquals(1, list.size());
@@ -91,7 +82,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializedSet_containsNull_collectionIsStillUnmodifiable() {
-    var jo = new JsonObject(Map.of("set", withNull));
+    var jo = """
+      {"set": [null]}
+      """;
     var set = Jsoln.deserialize(jo, SetDto.class).set();
 
     assertEquals(1, set.size());
@@ -101,10 +94,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializeList_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
-    var jo = new JsonObject(Map.of("list", new JsonArray(List.of(
-      new JsonText("foo"),
-      new JsonNumber("12")
-    ))));
+    var jo = """
+      {"list": ["foo", 12]}
+      """;
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, ListDto.class),
       "Cannot convert JsonNumber to TEXT (java.lang.String)");
@@ -112,10 +104,9 @@ public class ListSetTest extends AbstractTest {
 
   @Test
   void deserializeSet_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
-    var jo = new JsonObject(Map.of("set", new JsonArray(List.of(
-      new JsonText("foo"),
-      new JsonNumber("12")
-    ))));
+    var jo = """
+      {"set": ["foo", 12]}
+      """;
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, SetDto.class),
       "Cannot convert JsonNumber to TEXT (java.lang.String)");

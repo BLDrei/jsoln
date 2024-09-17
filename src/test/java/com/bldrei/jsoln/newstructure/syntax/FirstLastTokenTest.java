@@ -1,10 +1,12 @@
-package com.bldrei.jsoln.newstructure.json2tree;
+package com.bldrei.jsoln.newstructure.syntax;
 
 import com.bldrei.jsoln.AbstractTest;
+import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsonSyntaxException;
-import com.bldrei.jsoln.util.DeserializeUtil;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 class FirstLastTokenTest extends AbstractTest {
 
@@ -25,7 +27,7 @@ class FirstLastTokenTest extends AbstractTest {
   })
   void jsonIsNotWrappedIntoBracketsOrCurlyBraces_shouldThrowException(String json) {
     shouldThrow(JsonSyntaxException.class,
-      () -> DeserializeUtil.toJsonTree(json));
+      () -> Jsoln.deserialize(json, DummyDTO.class));
   }
 
   @ParameterizedTest
@@ -42,7 +44,8 @@ class FirstLastTokenTest extends AbstractTest {
       """
   })
   void jsonIsWrappedIntoBracketsOrCurlyBraces_ok(String json) {
-    DeserializeUtil.toJsonTree(json);
+    Jsoln.deserialize(json, List.class);
   }
 
+  public record DummyDTO() {}
 }

@@ -1,14 +1,10 @@
-package com.bldrei.jsoln.newstructure.tree2java.object;
+package com.bldrei.jsoln.newstructure.json2java.object;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
-import com.bldrei.jsoln.jsonmodel.JsonText;
 import com.bldrei.jsoln.map.EnumAsKeyMapDto;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.bldrei.jsoln.map.Country.EE;
@@ -23,12 +19,16 @@ class MapTest extends AbstractTest {
 
   @Test
   public void deserializeMapWithEnumKey_allEnumKeysPresent_ok() {
-    var map = new JsonObject(Map.of("localLanguages", new JsonObject(Map.of(
-      "EE", new JsonText("EST"),
-      "LV", new JsonText("LAT"),
-      "LT", new JsonText("LIT")
-    ))));
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(map, EnumAsKeyMapDto.class);
+    var json = """
+      {
+        "localLanguages": {
+          "EE": "EST",
+          "LV": "LAT",
+          "LT": "LIT"
+        }
+      }
+      """;
+    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(3, localLanguages.size());
@@ -42,11 +42,15 @@ class MapTest extends AbstractTest {
 
   @Test
   public void deserializeMapWithEnumKey_oneKeyMissing_ok() {
-    var map = new JsonObject(Map.of("localLanguages", new JsonObject(Map.of(
-      "EE", new JsonText("EST"),
-      "LV", new JsonText("LAT")
-    ))));
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(map, EnumAsKeyMapDto.class);
+    var json = """
+      {
+        "localLanguages": {
+          "EE": "EST",
+          "LV": "LAT"
+        }
+      }
+      """;
+    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(2, localLanguages.size());
@@ -59,9 +63,12 @@ class MapTest extends AbstractTest {
 
   @Test
   public void deserializeMapWithEnumKey_empty_ok() {
-    var map = new JsonObject(Map.of("localLanguages", new JsonObject(Map.of(
-    ))));
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(map, EnumAsKeyMapDto.class);
+    var json = """
+      {
+        "localLanguages": {}
+      }
+      """;
+    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(0, localLanguages.size());
@@ -71,12 +78,16 @@ class MapTest extends AbstractTest {
 
   @Test
   public void deserializeMapWithEnumKey_nullValues_preserved() {
-    var map = new HashMap<String, JsonElement>();
-    map.put("EE", null);
-    map.put("LV", null);
-    map.put("LT", new JsonText("LIT"));
-    var jo = new JsonObject(Map.of("localLanguages", new JsonObject(map)));
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(jo, EnumAsKeyMapDto.class);
+    var json = """
+      {
+        "localLanguages": {
+          "EE": null,
+          "LV": null,
+          "LT": "LIT"
+        }
+      }
+      """;
+    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(3, localLanguages.size());
