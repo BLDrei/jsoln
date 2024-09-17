@@ -4,7 +4,7 @@ import com.bldrei.jsoln.cache.ConvertersCache;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
   private static final ClassTreeWithConverters[] EMPTY = new ClassTreeWithConverters[]{};
 
   private final @NotNull Class<?> rawType;
-  private final @NotNull JsonElement.Type jsonDataType;
+  private final @NotNull JsonModelType jsonDataType;
   private final @NotNull AbstractConverter converter;
   private final @NotNull ClassTreeWithConverters[] genericParameters;
 
@@ -35,7 +35,7 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
   public static ClassTreeWithConverters fromType(Type type) {
     if (type instanceof ParameterizedType parameterizedType) {
       Class<?> clazz = (Class<?>) parameterizedType.getRawType();
-      JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz); //todo: throw exceptions specifying dto and field name
+      JsonModelType jsonDataType = AcceptedFieldTypes.determineFieldJsonDataType(clazz); //todo: throw exceptions specifying dto and field name
       return new ClassTreeWithConverters(
         clazz,
         jsonDataType,
@@ -47,7 +47,7 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
     }
 
     if (type instanceof Class<?> clazz) {
-      JsonElement.Type jsonDataType = AcceptedFieldTypes.determineJsonDataType(clazz);
+      JsonModelType jsonDataType = AcceptedFieldTypes.determineFieldJsonDataType(clazz);
       return new ClassTreeWithConverters(
         clazz,
         jsonDataType,

@@ -16,7 +16,7 @@ public final class EnumConverter<E> extends TextConverter<E> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public E stringToObject(@NotNull String value) {
+  public E javaify(@NotNull String value) {
     return (E) ReflectionUtil.invokeStaticMethod(this.valueOf, value);
   }
 

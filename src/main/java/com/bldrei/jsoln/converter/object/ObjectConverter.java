@@ -1,8 +1,6 @@
 package com.bldrei.jsoln.converter.object;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
-import com.bldrei.jsoln.jsonmodel.JsonObject;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,16 +11,16 @@ public abstract sealed class ObjectConverter<T>
   implements AbstractConverter
   permits RecordConverter, MapConverter {
 
-  public abstract T jsonElementsMapToObject(@NotNull Map<String, JsonElement> kvMap,
-                                            @NotNull ClassTreeWithConverters classTree);
+  public abstract T javaify(@NotNull Map<String, Object> kvMap,
+                            @NotNull ClassTreeWithConverters classTree);
 
   @SuppressWarnings("unchecked")
-  public JsonObject objectTypeToJsonObject(@NotNull Object obj,
-                                           @NotNull ClassTreeWithConverters classTree) {
-    return new JsonObject(Collections.unmodifiableMap(objectToJsonElementsMutableMap((T) obj, classTree)));
+  public Map<String, Object> toJsonModel(@NotNull Object obj,
+                                         @NotNull ClassTreeWithConverters classTree) {
+    return Collections.unmodifiableMap(toJsonModelMutableMap((T) obj, classTree));
   }
 
-  protected abstract Map<String, JsonElement> objectToJsonElementsMutableMap(@NotNull T flatValue,
-                                                                             @NotNull ClassTreeWithConverters classTree);
+  protected abstract Map<String, Object> toJsonModelMutableMap(@NotNull T flatValue,
+                                                               @NotNull ClassTreeWithConverters classTree);
 }
 

@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.TypeUtil;
 
@@ -14,14 +14,14 @@ public record RecordFieldInfo(
   boolean isNullable,
   ClassTreeWithConverters classTree,
   Method accessor,
-  JsonElement.Type jsonType,
+  JsonModelType jsonModelType,
   Class<?> dtoClass
 ) {
   public RecordFieldInfo {
     Objects.requireNonNull(name);
     Objects.requireNonNull(classTree);
     Objects.requireNonNull(accessor);
-    Objects.requireNonNull(jsonType);
+    Objects.requireNonNull(jsonModelType);
     Objects.requireNonNull(dtoClass);
   }
 

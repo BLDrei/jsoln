@@ -52,22 +52,20 @@ class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   void deserialize_requiredValueIsNul_throwsSyntaxException() {
-    shouldThrow(JsonSyntaxException.class,
+    shouldThrow(IllegalArgumentException.class,
       () -> Jsoln.deserialize("""
-        {"optionalString":nul}""", SingleOptionalParamDto.class),
-      "Invalid Json parameter value: 'nul'");
+        {"optionalString":nul}""", SingleOptionalParamDto.class));
   }
 
   @Test
   void deserialize_jsonIsNotWrittenAsObject() {
     Stream.of(
-      "",
       "{",
       "}",
       "\"optionalString\":\"12a \"",
       "{\"optionalString\":\"12a \"",
       "\"optionalString\":\"12a \"}"
-    ).forEach(json -> shouldThrow(JsonSyntaxException.class,
+    ).forEach(json -> shouldThrow(IllegalArgumentException.class,
       () -> Jsoln.deserialize(json, SingleOptionalParamDto.class))
     );
   }

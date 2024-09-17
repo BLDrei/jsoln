@@ -22,7 +22,7 @@ import com.bldrei.jsoln.converter.text.LocalDateConverter;
 import com.bldrei.jsoln.converter.text.LocalDateTimeConverter;
 import com.bldrei.jsoln.converter.text.StringConverter;
 import com.bldrei.jsoln.converter.text.TextConverter;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -66,7 +66,7 @@ public class ConvertersCache {
     Map.class, new MapConverter()
   );
 
-  public static AbstractConverter getConverter(Class<?> clazz, JsonElement.Type jsonDataType) {
+  public static AbstractConverter getConverter(Class<?> clazz, JsonModelType jsonDataType) {
     return switch (jsonDataType) {
       case ARRAY -> getArrayConverter(clazz);
       case BOOLEAN -> getBooleanConverter();

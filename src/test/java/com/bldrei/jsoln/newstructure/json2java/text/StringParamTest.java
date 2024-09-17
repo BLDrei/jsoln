@@ -3,6 +3,7 @@ package com.bldrei.jsoln.newstructure.json2java.text;
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.newstructure.dto.singlefield.StringDto;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -17,8 +18,6 @@ class StringParamTest extends AbstractTest {
     "\t\n",
     "foo",
     " foo ",
-    "\\u034",
-    "\"",
     "A very long sentence."
   })
   void deserializeString(String value) {
@@ -27,6 +26,24 @@ class StringParamTest extends AbstractTest {
       """.formatted(value);
 
     assertEquals(value, Jsoln.deserialize(json, StringDto.class).string());
+  }
+
+  @Test
+  void deserializeUnicodeCharacter() {
+    var json = """
+      {"string":"\u0344"}
+      """;
+
+    assertEquals("̈́", Jsoln.deserialize(json, StringDto.class).string());
+  }
+
+  @Test
+  void deserializeQuote() {
+    var json = """
+      {"string":"\\""}
+      """;
+
+    assertEquals("\"", Jsoln.deserialize(json, StringDto.class).string());
   }
 
 }

@@ -49,12 +49,12 @@ public class AcceptedFieldTypes {
     return BOOLEAN_FINAL_TYPE == type;
   }
 
-  public static @NotNull JsonElement.Type determineJsonDataType(@NotNull Class<?> clazz) {
-    if (isAcceptableObjectTypeForField(clazz)) return JsonElement.Type.OBJECT;
-    if (isAcceptableArrayTypeForField(clazz)) return JsonElement.Type.ARRAY;
-    if (isAcceptableTextTypeForField(clazz)) return JsonElement.Type.TEXT;
-    if (isAcceptableNumberTypeForField(clazz)) return JsonElement.Type.NUMBER;
-    if (isAcceptableBooleanTypeForField(clazz)) return JsonElement.Type.BOOLEAN;
+  public static @NotNull JsonModelType determineFieldJsonDataType(@NotNull Class<?> clazz) {
+    if (isAcceptableObjectTypeForField(clazz)) return JsonModelType.OBJECT;
+    if (isAcceptableArrayTypeForField(clazz)) return JsonModelType.ARRAY;
+    if (isAcceptableTextTypeForField(clazz)) return JsonModelType.TEXT;
+    if (isAcceptableNumberTypeForField(clazz)) return JsonModelType.NUMBER;
+    if (isAcceptableBooleanTypeForField(clazz)) return JsonModelType.BOOLEAN;
 
     if (Optional.class == clazz) {
       throw new BadDtoException("Optional is only allowed as dto field type wrapping layer");

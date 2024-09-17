@@ -4,7 +4,7 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.newstructure.dto.singlefield.primitive.PrimitiveBooleanDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.BoolDto;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,8 +23,8 @@ public class BooleanTypesTest extends AbstractTest {
   })
   void testOkTypes(Class<?> okType) {
     assertEquals(
-      JsonElement.Type.BOOLEAN,
-      AcceptedFieldTypes.determineJsonDataType(okType)
+      JsonModelType.BOOLEAN,
+      AcceptedFieldTypes.determineFieldJsonDataType(okType)
     );
   }
 
@@ -43,7 +43,7 @@ public class BooleanTypesTest extends AbstractTest {
   })
   void testNOKTypes(Class<?> nokType) {
     shouldThrow(BadDtoException.class,
-      () -> AcceptedFieldTypes.determineJsonDataType(nokType),
+      () -> AcceptedFieldTypes.determineFieldJsonDataType(nokType),
       "Unsupported field type: " + nokType.getName()
     );
   }

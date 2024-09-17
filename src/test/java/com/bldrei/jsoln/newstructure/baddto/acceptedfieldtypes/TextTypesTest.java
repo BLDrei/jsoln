@@ -4,7 +4,7 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.dto.enums.Status;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import jdk.jshell.Snippet;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,8 +27,8 @@ public class TextTypesTest extends AbstractTest {
   })
   void testOkTypes(Class<?> okType) {
     assertEquals(
-      JsonElement.Type.TEXT,
-      AcceptedFieldTypes.determineJsonDataType(okType)
+      JsonModelType.TEXT,
+      AcceptedFieldTypes.determineFieldJsonDataType(okType)
     );
   }
 
@@ -40,7 +40,7 @@ public class TextTypesTest extends AbstractTest {
   })
   void testNOKTypes(Class<?> nokType) {
     shouldThrow(BadDtoException.class,
-      () -> AcceptedFieldTypes.determineJsonDataType(nokType),
+      () -> AcceptedFieldTypes.determineFieldJsonDataType(nokType),
       "Unsupported field type: " + nokType.getName()
     );
   }

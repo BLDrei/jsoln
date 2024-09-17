@@ -99,7 +99,7 @@ public class ListSetTest extends AbstractTest {
       """;
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, ListDto.class),
-      "Cannot convert JsonNumber to TEXT (java.lang.String)");
+      "Cannot convert Long to TEXT (java.lang.String)");
   }
 
   @Test
@@ -109,7 +109,7 @@ public class ListSetTest extends AbstractTest {
       """;
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, SetDto.class),
-      "Cannot convert JsonNumber to TEXT (java.lang.String)");
+      "Cannot convert Long to TEXT (java.lang.String)"); //todo: this is bullshit informative message
   }
 
   private void assertListIsUnmodifiable(List<String> list) {

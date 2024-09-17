@@ -31,8 +31,8 @@ public class NumberAsStringToNumberTest extends AbstractTest {
          "_double": %s,
          "_bigDecimal": %s,
 
-         "_byte": %s
-         "_short": %s
+         "_byte": %s,
+         "_short": %s,
          "_int": %s,
          "_long": %s,
          "_bigInteger": %s

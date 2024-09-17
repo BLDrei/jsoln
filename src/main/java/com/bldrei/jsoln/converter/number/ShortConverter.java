@@ -5,12 +5,12 @@ import org.jetbrains.annotations.NotNull;
 public final class ShortConverter extends NumberConverter<Short> {
 
   @Override
-  public Short stringToObject(@NotNull String value) {
-    return Short.valueOf(value);
+  public Short javaify(@NotNull Number value) {
+    return Short.valueOf(String.valueOf(value));
   }
 
   @Override
-  protected String stringify(@NotNull Short flatValue) {
-    return Short.toString(flatValue);
+  protected Number nToLongOrBigIntOrDoubleOrBigDecimal(@NotNull Short value) {
+    return (long) value;
   }
 }

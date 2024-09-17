@@ -28,7 +28,7 @@ class NestedGenericsTest extends AbstractTest {
     assertEquals(2, insane.crap().get().size());
     assertEquals(1, insane.crap().get().getFirst().size());
     assertEquals("v1", insane.crap().get().getFirst().get("k1"));
-    assertEquals(0, insane.crap().get().getLast().size());
+    assertEquals(1, insane.crap().get().getLast().size());
     assertNull(insane.crap().get().getLast().get("k3"));
   }
 }

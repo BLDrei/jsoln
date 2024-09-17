@@ -18,10 +18,10 @@ class NestedMapDtoTest extends AbstractTest {
       {
         "translationsByLanguage": {
           "EST": {
-            "age": "Vanus",
+            "age": "Vanus"
           },
           "ENG": {
-            "age": "Age",
+            "age": "Age"
           }
         }
       }

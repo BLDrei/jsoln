@@ -3,11 +3,18 @@ package com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes;
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,8 +27,8 @@ public class ArrayTypesTest extends AbstractTest {
   })
   void testOkTypes(Class<?> okType) {
     assertEquals(
-      JsonElement.Type.ARRAY,
-      AcceptedFieldTypes.determineJsonDataType(okType)
+      JsonModelType.ARRAY,
+      AcceptedFieldTypes.determineFieldJsonDataType(okType)
     );
   }
 
@@ -39,7 +46,7 @@ public class ArrayTypesTest extends AbstractTest {
   })
   void testNOKTypes(Class<?> nokType) {
     shouldThrow(BadDtoException.class,
-      () -> AcceptedFieldTypes.determineJsonDataType(nokType),
+      () -> AcceptedFieldTypes.determineFieldJsonDataType(nokType),
       "Unsupported field type: " + nokType.getName()
     );
   }

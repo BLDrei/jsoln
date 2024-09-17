@@ -4,7 +4,7 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
-import com.bldrei.jsoln.jsonmodel.JsonElement;
+import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.newstructure.dto.singlefield.BigIntegerDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.PojoDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.BoolDto;
@@ -28,8 +28,8 @@ public class ObjectTypesTest extends AbstractTest {
   })
   void testOkTypes(Class<?> okType) {
     assertEquals(
-      JsonElement.Type.OBJECT,
-      AcceptedFieldTypes.determineJsonDataType(okType)
+      JsonModelType.OBJECT,
+      AcceptedFieldTypes.determineFieldJsonDataType(okType)
     );
 
     if (okType.isRecord()) {
@@ -47,7 +47,7 @@ public class ObjectTypesTest extends AbstractTest {
   })
   void testNOKTypes(Class<?> nokType) {
     shouldThrow(BadDtoException.class,
-      () -> AcceptedFieldTypes.determineJsonDataType(nokType),
+      () -> AcceptedFieldTypes.determineFieldJsonDataType(nokType),
       "Unsupported field type: " + nokType.getName()
     );
   }

@@ -34,6 +34,6 @@ class BooleanParamTest extends AbstractTest {
 
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, BoolDto.class),
-      "Cannot convert JsonText to BOOLEAN (java.lang.Boolean)");
+      "Cannot convert String to BOOLEAN (java.lang.Boolean)");
   }
 }

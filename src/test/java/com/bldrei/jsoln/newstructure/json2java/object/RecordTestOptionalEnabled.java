@@ -41,6 +41,6 @@ public class RecordTestOptionalEnabled extends AbstractTest {
   void requiredPropertyHasWrongJsonModelType_NOK() {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize("{\"string\": true}", StringDto.class),
-      "Cannot convert JsonBoolean to TEXT (java.lang.String)");
+      "Cannot convert Boolean to TEXT (java.lang.String)");
   }
 }

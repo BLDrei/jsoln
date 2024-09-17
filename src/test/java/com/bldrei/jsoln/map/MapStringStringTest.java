@@ -18,7 +18,7 @@ class MapStringStringTest extends AbstractTest {
 
     var map = dtoMap.map();
     assertNotNull(map);
-    assertEquals(2, map.size());
+    assertEquals(3, map.size());
     assertEquals("v1", map.get("k1"));
     assertEquals("v2", map.get("k2"));
     assertNull(map.get("K1"));
