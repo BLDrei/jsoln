@@ -5,15 +5,14 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class ListConverter extends ArrayConverter<List<?>> {
 
   @Override
   @UnmodifiableView
-  protected List<?> streamToUnmodifiableCollection(@NotNull Stream<?> stream) {
-    return Collections.unmodifiableList(stream.collect(Collectors.toList()));
+  protected List<?> arrayToUnmodifiableCollection(@NotNull List<?> array) {
+    return Collections.unmodifiableList(array);
   }
 
   @Override

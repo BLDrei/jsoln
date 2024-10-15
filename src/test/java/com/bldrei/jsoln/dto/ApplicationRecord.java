@@ -12,7 +12,7 @@ public record ApplicationRecord(
   Integer channelId,
   Optional<String> country,
   List<String> accountsList,
-  Optional<Set<String>> accountsSet,
+  Optional<List<String>> accountsSet,
   Optional<LocalDate> expirationDate,
   Optional<String> emptyval,
   BigDecimal income,

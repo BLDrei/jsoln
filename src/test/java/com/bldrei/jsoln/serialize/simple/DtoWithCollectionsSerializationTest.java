@@ -25,21 +25,21 @@ class DtoWithCollectionsSerializationTest extends AbstractTest {
   @Test
   public void testListSetMapSerialization_emptyCollection_differentCollectionImplementations() {
     Stream.of(
-      new CollectionDto(List.of(), Set.of(), Map.of()),
-      new CollectionDto(new ArrayList<>(), new HashSet<>(), new HashMap<>()),
-      new CollectionDto(Arrays.asList(), new TreeSet<>(), new LinkedHashMap<>()),
-      new CollectionDto(Stream.of(-333).skip(1).toList(), Stream.of("").skip(1).collect(Collectors.toSet()), new ConcurrentHashMap<>())
+      new CollectionDto(List.of(), Map.of()),
+      new CollectionDto(new ArrayList<>(), new HashMap<>()),
+      new CollectionDto(Arrays.asList(), new LinkedHashMap<>()),
+      new CollectionDto(Stream.of(-333).skip(1).toList(), new ConcurrentHashMap<>())
     ).map(Jsoln::serialize).forEach(it -> assertEquals("""
-      {"ages":[],"names":[],"childNames":{}}\
+      {"ages":[],"childNames":{}}\
       """, it));
 
   }
 
   @Test
   public void testListSerialization() {
-    String serialized = Jsoln.serialize(new CollectionDto(List.of(2, 4, 17), Set.of("ira"), Map.of("ira", List.of("nona", "mima"))));
+    String serialized = Jsoln.serialize(new CollectionDto(List.of(2, 4, 17), Map.of("ira", List.of("nona", "mima"))));
     assertEquals("""
-      {"ages":[2,4,17],"names":["ira"],"childNames":{"ira":["nona","mima"]}}\
+      {"ages":[2,4,17],"childNames":{"ira":["nona","mima"]}}\
       """, serialized);
   }
 }

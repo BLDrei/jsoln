@@ -10,8 +10,8 @@ public abstract sealed class TextConverter<T>
   public abstract T javaify(@NotNull String value);
 
   @SuppressWarnings("unchecked")
-  public String toJsonModel(@NotNull Object flatValue) {
-    return stringify((T) flatValue);
+  public String stringify(@NotNull Object flatValue, StringBuilder sb) {
+    return "\"" + (stringify((T) flatValue)) + "\"";
   }
 
   protected abstract String stringify(@NotNull T flatValue);

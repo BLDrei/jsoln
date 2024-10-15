@@ -9,13 +9,13 @@ import com.bldrei.jsoln.converter.text.TextConverter;
 public class SerializeUtil {
   private SerializeUtil() {}
 
-  public static Object javaObjectToJsonModel(Object obj, ClassTreeWithConverters classTree) {
+  public static String stringify(Object obj, ClassTreeWithConverters classTree, StringBuilder sb) {
     return switch (classTree.getConverter()) {
-      case TextConverter<?> tc -> tc.toJsonModel(obj);
-      case NumberConverter<?> nc -> nc.toJsonModel(obj);
-      case BooleanConverter bc -> bc.toJsonModel(obj);
-      case ArrayConverter<?> ac -> ac.toJsonModel(obj, classTree);
-      case ObjectConverter<?> oc -> oc.toJsonModel(obj, classTree);
+      case TextConverter<?> tc -> tc.stringify(obj, sb);
+      case NumberConverter<?> nc -> nc.stringify(obj, sb);
+      case BooleanConverter bc -> bc.stringify(obj, sb);
+      case ArrayConverter<?> ac -> ac.stringify(obj, classTree, sb);
+      case ObjectConverter<?> oc -> oc.stringify(obj, classTree, sb);
       default -> throw new IllegalStateException();
     };
   }

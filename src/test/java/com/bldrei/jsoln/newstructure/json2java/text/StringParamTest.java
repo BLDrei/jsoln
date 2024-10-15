@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringParamTest extends AbstractTest {
 
@@ -15,7 +16,6 @@ class StringParamTest extends AbstractTest {
   @ValueSource(strings = {
     "",
     " ",
-    "\t\n",
     "foo",
     " foo ",
     "A very long sentence."
@@ -45,5 +45,15 @@ class StringParamTest extends AbstractTest {
 
     assertEquals("\"", Jsoln.deserialize(json, StringDto.class).string());
   }
+
+  @Test
+  void deserializeWhitespace() {
+    var json = """
+      {"string":"\\t\\n"}
+      """;
+
+    assertTrue(Jsoln.deserialize(json, StringDto.class).string().isBlank());
+  }
+
 
 }

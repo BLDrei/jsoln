@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.jsonmodel;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,10 +27,12 @@ public enum JsonModelType {
     this(Collections.singleton(clazz));
   }
 
-  public static JsonModelType determineJsonModelTypeFromStringTreeModel(Class<?> clazz) {
-    return Arrays.stream(JsonModelType.values())
-      .filter(jmt -> jmt.getStringTreeRepresentation().contains(clazz))
-      .findFirst()
-      .orElseThrow();
+  public static JsonModelType determineJsonModelTypeFromJsonNode(JsonNode jsonNode) {
+    if (jsonNode.isObject()) return OBJECT;
+    if (jsonNode.isArray()) return ARRAY;
+    if (jsonNode.isBoolean()) return BOOLEAN;
+    if (jsonNode.isTextual()) return TEXT;
+    if (jsonNode.isNumber()) return NUMBER;
+    throw new IllegalArgumentException(jsonNode.getNodeType().name());
   }
 }

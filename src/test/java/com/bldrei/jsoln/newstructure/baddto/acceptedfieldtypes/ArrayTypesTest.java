@@ -22,8 +22,7 @@ public class ArrayTypesTest extends AbstractTest {
 
   @ParameterizedTest
   @ValueSource(classes = {
-    List.class,
-    Set.class
+    List.class
   })
   void testOkTypes(Class<?> okType) {
     assertEquals(
@@ -40,6 +39,7 @@ public class ArrayTypesTest extends AbstractTest {
     LinkedList.class,
     Collection.class,
     Iterable.class,
+    Set.class,
     HashSet.class,
     LinkedHashSet.class,
     TreeSet.class

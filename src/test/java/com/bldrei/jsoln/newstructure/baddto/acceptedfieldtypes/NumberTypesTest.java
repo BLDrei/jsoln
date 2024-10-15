@@ -38,9 +38,6 @@ public class NumberTypesTest extends AbstractTest {
     Integer.class,
     Long.class,
     Double.class,
-    Float.class,
-    Byte.class,
-    Short.class,
     BigInteger.class,
     BigDecimal.class
   })
@@ -53,12 +50,9 @@ public class NumberTypesTest extends AbstractTest {
 
   @ParameterizedTest
   @ValueSource(classes = {
-    ShortDto.class,
-    ByteDto.class,
     DoubleDto.class,
     IntegerDto.class,
     LongDto.class,
-    FloatDto.class,
     BigIntegerDto.class,
     BigDecimalDto.class
   })
@@ -76,6 +70,10 @@ public class NumberTypesTest extends AbstractTest {
     double.class,
     byte.class,
     short.class,
+
+    Float.class,
+    Byte.class,
+    Short.class,
   })
   void testNOKTypes(Class<?> nokType) {
     shouldThrow(BadDtoException.class,
@@ -92,9 +90,13 @@ public class NumberTypesTest extends AbstractTest {
     PrimitiveIntDto.class,
     PrimitiveLongDto.class,
     PrimitiveFloatDto.class,
-    NumberDto.class
+    NumberDto.class,
+
+    ShortDto.class,
+    ByteDto.class,
+    FloatDto.class
   })
-  void dtoWithPrimitiveType_NOK(Class<?> dtoClazz) {
+  void dtoWithNOKTypes(Class<?> dtoClazz) {
     shouldThrow(BadDtoException.class,
       () -> RecordDeserializationInfo.from(dtoClazz),
       "Unsupported field type: " + dtoClazz.getRecordComponents()[0].getType().getName());

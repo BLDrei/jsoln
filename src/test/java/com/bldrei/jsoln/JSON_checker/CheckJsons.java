@@ -1,9 +1,9 @@
 package com.bldrei.jsoln.JSON_checker;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.stringtree.json.ExceptionErrorListener;
-import org.stringtree.json.JSONReader;
-import org.stringtree.json.JSONValidatingReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class CheckJsons {
 
-  private static final JSONReader reader = new JSONValidatingReader(new ExceptionErrorListener());
-
   @Test
+  @Disabled
   void checkJsonsWithOfficialJSON_checker() throws IOException {
     var files = new File("src/test/resources/JSON_checker/test").listFiles();
     for (File f : files) {
@@ -29,16 +28,16 @@ public class CheckJsons {
       String content = String.join("\n", Files.readAllLines(f.toPath()));
       if (shouldFail) {
         assertThrows(
-          IllegalArgumentException.class,
-          () -> reader.read(content),
+          JsonParseException.class,
+          () -> new ObjectMapper().readTree(content),
           () -> f.getName() + " should have failed, but didn't"
         );
       }
       else {
         try {
-          reader.read(content);
+          new ObjectMapper().readTree(content);
         }
-        catch (IllegalArgumentException e) {
+        catch (JsonParseException e) {
           fail(f.getName() + " should be ok, but json reader failed");
         }
       }

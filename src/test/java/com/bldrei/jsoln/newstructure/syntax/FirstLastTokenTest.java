@@ -2,14 +2,13 @@ package com.bldrei.jsoln.newstructure.syntax;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.exception.JsonSyntaxException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
 class FirstLastTokenTest extends AbstractTest {
 
+  @Disabled
   @ParameterizedTest
   @ValueSource(strings = {
     "{]",

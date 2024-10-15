@@ -2,49 +2,53 @@ package com.bldrei.jsoln.converter.array;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.exception.JsolnException;
-import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.DeserializeUtil;
 import com.bldrei.jsoln.util.SerializeUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract sealed class ArrayConverter<C>
   implements AbstractConverter
-  permits ListConverter, SetConverter {
+  permits ListConverter {
 
-  public @UnmodifiableView C javaify(@NotNull List<@Nullable Object> array,
+  public @UnmodifiableView C javaify(@NotNull JsonNode jsonNode,
                                      @NotNull ClassTreeWithConverters classTree) {
     var collectionMemberType = classTree.getGenericParameters()[0];
-    var stream = array
-      .stream()
-      .map(jsonElement -> {
-        if (jsonElement == null) {
-          return null;
+    var newArrayList = new ArrayList<>();
+    jsonNode.iterator()
+      .forEachRemaining(jsonElement -> {
+        if (jsonElement.isNull()) {
+          newArrayList.add(null);
         }
-        if (collectionMemberType.getJsonDataType() != JsonModelType.determineJsonModelTypeFromStringTreeModel(jsonElement.getClass())) { //todo: move to JsonElement
+        else if (collectionMemberType.getJsonDataType() != JsonModelType.determineJsonModelTypeFromJsonNode(jsonElement)) { //todo: move to JsonElement
           throw JsolnException.cannotCovertJsonElementToType(collectionMemberType, jsonElement.getClass());
         }
-        return DeserializeUtil.javaifyJsonModel(jsonElement, collectionMemberType);
+        else {
+          newArrayList.add(DeserializeUtil.javaifyJsonModel(jsonElement, collectionMemberType));
+        }
       });
-    return streamToUnmodifiableCollection(stream);
+    return arrayToUnmodifiableCollection(newArrayList);
   }
 
   @SuppressWarnings("unchecked")
-  public List<@Nullable Object> toJsonModel(@NotNull Object collection,
-                                            @NotNull ClassTreeWithConverters classTree) {
+  public String stringify(@NotNull Object collection,
+                          @NotNull ClassTreeWithConverters classTree,
+                          StringBuilder sb) {
     ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
     return collectionToStream((C) collection)
-      .map(it -> SerializeUtil.javaObjectToJsonModel(it, collectionOfWhat))
-      .toList();
+      .map(it -> SerializeUtil.stringify(it, collectionOfWhat, sb))
+      .collect(Collectors.joining(",", "[", "]"));
   }
 
-  protected abstract @UnmodifiableView C streamToUnmodifiableCollection(@NotNull Stream<?> stream);
+  protected abstract @UnmodifiableView C arrayToUnmodifiableCollection(@NotNull List<?> stream);
 
   protected abstract Stream<?> collectionToStream(@NotNull C flatValue);
 

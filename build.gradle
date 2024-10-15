@@ -15,7 +15,8 @@ repositories {
 }
 
 dependencies {
-  implementation files('lib/stringtree-json-2.0.9.jar')
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+  implementation 'jakarta.json:jakarta.json-api:2.1.3'
 
   compileOnly 'org.projectlombok:lombok:1.18.34'
   annotationProcessor 'org.projectlombok:lombok:1.18.34'

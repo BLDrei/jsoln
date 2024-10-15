@@ -4,17 +4,14 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.newstructure.dto.singlefield.array.ListDto;
-import com.bldrei.jsoln.newstructure.dto.singlefield.array.SetDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ListSetTest extends AbstractTest {
+public class ListTest extends AbstractTest {
 
   @Test
   void deserializedListIsUnmodifiable() {
@@ -31,20 +28,6 @@ public class ListSetTest extends AbstractTest {
   }
 
   @Test
-  void deserializedSetIsUnmodifiable() {
-    var jo = """
-      {"set": ["foo", "bar"]}
-      """;
-    var set = Jsoln.deserialize(jo, SetDto.class).set();
-
-    assertEquals(2, set.size());
-    assertTrue(set.contains("foo"));
-    assertTrue(set.contains("bar"));
-
-    assertSetIsUnmodifiable(set);
-  }
-
-  @Test
   void deserializedEmptyListIsUnmodifiable() {
     var jo = """
       {"list": []}
@@ -54,18 +37,6 @@ public class ListSetTest extends AbstractTest {
     assertEquals(0, list.size());
     assertListIsUnmodifiable(list);
 //    assertSame(Collections.emptyList(), list); //Collections.emptyXXX is not as unmodifiable as XXX.of() (some attempts to modify don't throw exception)
-  }
-
-  @Test
-  void deserializedEmptySetIsUnmodifiable() {
-    var jo = """
-      {"set": []}
-      """;
-    var set = Jsoln.deserialize(jo, SetDto.class).set();
-
-    assertEquals(0, set.size());
-    assertSetIsUnmodifiable(set);
-//    assertSame(Collections.emptySet(), set); //Collections.emptyXXX is not as unmodifiable as XXX.of() (some attempts to modify don't throw exception)
   }
 
   @Test
@@ -81,18 +52,6 @@ public class ListSetTest extends AbstractTest {
   }
 
   @Test
-  void deserializedSet_containsNull_collectionIsStillUnmodifiable() {
-    var jo = """
-      {"set": [null]}
-      """;
-    var set = Jsoln.deserialize(jo, SetDto.class).set();
-
-    assertEquals(1, set.size());
-    assertTrue(set.contains(null));
-    assertSetIsUnmodifiable(set);
-  }
-
-  @Test
   void deserializeList_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
     var jo = """
       {"list": ["foo", 12]}
@@ -100,16 +59,6 @@ public class ListSetTest extends AbstractTest {
     shouldThrow(JsolnException.class,
       () -> Jsoln.deserialize(jo, ListDto.class),
       "Cannot convert Long to TEXT (java.lang.String)");
-  }
-
-  @Test
-  void deserializeSet_jsonArrayContainsDifferentTypesOfJsonElement_NOK() {
-    var jo = """
-      {"set": ["foo", 12]}
-      """;
-    shouldThrow(JsolnException.class,
-      () -> Jsoln.deserialize(jo, SetDto.class),
-      "Cannot convert Long to TEXT (java.lang.String)"); //todo: this is bullshit informative message
   }
 
   private void assertListIsUnmodifiable(List<String> list) {
@@ -121,21 +70,6 @@ public class ListSetTest extends AbstractTest {
       null);
     shouldThrow(UnsupportedOperationException.class,
       list::clear,
-      null);
-  }
-
-  private void assertSetIsUnmodifiable(Set<String> set) {
-    shouldThrow(UnsupportedOperationException.class,
-      () -> set.add("bar2"),
-      null);
-    shouldThrow(UnsupportedOperationException.class,
-      () -> set.remove("bar"),
-      null);
-    shouldThrow(UnsupportedOperationException.class,
-      () -> set.remove("I am not even in this collection"),
-      null);
-    shouldThrow(UnsupportedOperationException.class,
-      set::clear,
       null);
   }
 }

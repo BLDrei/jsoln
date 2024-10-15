@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BooleanConverter implements AbstractConverter {
 
-  public Boolean toJsonModel(@NotNull Object flatValue) {
+  public String stringify(@NotNull Object flatValue, StringBuilder sb) {
     return switch (flatValue) {
-      case Boolean b -> b;
+      case Boolean b -> String.valueOf(b);
       default -> throw new IllegalStateException();
     };
   }

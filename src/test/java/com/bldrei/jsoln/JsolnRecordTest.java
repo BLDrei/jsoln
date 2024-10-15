@@ -18,9 +18,8 @@ class JsolnRecordTest extends AbstractTest {
   @Test
   void deserializeSimpleObjectNoPrettyFormatting() {
     ApplicationRecord application = Jsoln.deserialize("""
-      {"country":"EE","channelId":6,"accountsList":["EE02"],"accountsSet":["EE03s"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS","application":null}""", ApplicationRecord.class);
+      {"country":"EE","channelId":6,"accountsList":["EE02"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS","application":null}""", ApplicationRecord.class);
     var accountsList = application.accountsList();
-    var accountsSet = application.accountsSet().orElseThrow();
 
     assertNotNull(application);
     assertEquals(6, application.channelId());
@@ -29,10 +28,6 @@ class JsolnRecordTest extends AbstractTest {
     assertEquals("EE02", accountsList.getFirst());
     assertThrows(RuntimeException.class, () -> accountsList.add(""));
     assertThrows(RuntimeException.class, () -> accountsList.remove(""));
-    assertEquals(1, accountsSet.size());
-    assertTrue(accountsSet.contains("EE03s"));
-    assertThrows(RuntimeException.class, () -> accountsSet.add(""));
-    assertThrows(RuntimeException.class, () -> accountsSet.remove(""));
     assertEquals(LocalDate.of(2024, Month.MARCH, 31), application.expirationDate().get());
     assertTrue(application.emptyval().isEmpty());
     assertTrue(application.application().isEmpty());
