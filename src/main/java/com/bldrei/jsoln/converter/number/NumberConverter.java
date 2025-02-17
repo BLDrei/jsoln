@@ -1,10 +1,7 @@
 package com.bldrei.jsoln.converter.number;
 
 import com.bldrei.jsoln.converter.AbstractConverter;
-import jakarta.json.JsonNumber;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public abstract sealed class NumberConverter<N>
   implements AbstractConverter

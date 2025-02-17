@@ -16,4 +16,9 @@ public class TypeUtil {
     ParameterizedType parameterizedType = (ParameterizedType) optional;
     return parameterizedType.getActualTypeArguments()[0];
   }
+
+  public static boolean canBeDeserializedFromArrayNode(Type type) {
+    return type instanceof ParameterizedType parameterizedType
+      && parameterizedType.getActualTypeArguments().length == 1;
+  }
 }
