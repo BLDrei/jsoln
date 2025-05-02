@@ -12,23 +12,23 @@ class NestedGenericsTest extends AbstractTest {
 
   @Test
   public void nestedGenericsDto_empty() {
-    NestedGenericsDto insane = Jsoln.deserialize("""
-      {"crap": null}
+    NestedGenericsDto insane = new Jsoln().deserialize("""
+      {"nonsense": null}
       """, NestedGenericsDto.class);
 
-    assertTrue(insane.crap().isEmpty());
+    assertTrue(insane.nonsense().isEmpty());
   }
 
   @Test
   public void nestedGenerics() {
-    NestedGenericsDto insane = Jsoln.deserialize("""
-      {"crap": [ {"k1": "v1"}, {"k3": null} ] }
+    NestedGenericsDto insane = new Jsoln().deserialize("""
+      {"nonsense": [ {"k1": "v1"}, {"k3": null} ] }
       """, NestedGenericsDto.class);
 
-    assertEquals(2, insane.crap().get().size());
-    assertEquals(1, insane.crap().get().getFirst().size());
-    assertEquals("v1", insane.crap().get().getFirst().get("k1"));
-    assertEquals(1, insane.crap().get().getLast().size());
-    assertNull(insane.crap().get().getLast().get("k3"));
+    assertEquals(2, insane.nonsense().get().size());
+    assertEquals(1, insane.nonsense().get().getFirst().size());
+    assertEquals("v1", insane.nonsense().get().getFirst().get("k1"));
+    assertEquals(1, insane.nonsense().get().getLast().size());
+    assertNull(insane.nonsense().get().getLast().get("k3"));
   }
 }

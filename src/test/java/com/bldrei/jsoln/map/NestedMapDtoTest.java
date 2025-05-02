@@ -4,17 +4,13 @@ import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class NestedMapDtoTest extends AbstractTest {
 
   @Test
   void deserializeSimpleMap() {
-    NestedMapDto dtoMap = Jsoln.deserialize("""
+    NestedMapDto dtoMap = new Jsoln().deserialize("""
       {
         "translationsByLanguage": {
           "EST": {

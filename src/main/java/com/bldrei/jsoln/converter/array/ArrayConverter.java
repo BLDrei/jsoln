@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.converter.array;
 
+import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;
@@ -20,7 +21,8 @@ public abstract sealed class ArrayConverter<C>
   permits ListConverter {
 
   public @UnmodifiableView C javaify(@NotNull JsonNode jsonNode,
-                                     @NotNull ClassTreeWithConverters classTree) {
+                                     @NotNull ClassTreeWithConverters classTree,
+                                     @NotNull Configuration conf) {
     var collectionMemberType = classTree.getGenericParameters()[0];
     var newArrayList = new ArrayList<>();
     jsonNode.iterator()
@@ -28,11 +30,11 @@ public abstract sealed class ArrayConverter<C>
         if (jsonElement.isNull()) {
           newArrayList.add(null);
         }
-        else if (collectionMemberType.getJsonDataType() != JsonModelType.determineJsonModelTypeFromJsonNode(jsonElement)) { //todo: move to JsonElement
+        else if (collectionMemberType.getJsonDataType() != JsonModelType.determineJsonModelTypeFromJsonNode(jsonElement)) {
           throw JsolnException.cannotCovertJsonElementToType(collectionMemberType, jsonElement.getClass());
         }
         else {
-          newArrayList.add(DeserializeUtil.javaifyJsonModel(jsonElement, collectionMemberType));
+          newArrayList.add(DeserializeUtil.javaifyJsonModel(jsonElement, collectionMemberType, conf));
         }
       });
     return arrayToUnmodifiableCollection(newArrayList);
@@ -41,10 +43,11 @@ public abstract sealed class ArrayConverter<C>
   @SuppressWarnings("unchecked")
   public String stringify(@NotNull Object collection,
                           @NotNull ClassTreeWithConverters classTree,
-                          StringBuilder sb) {
+                          StringBuilder sb,
+                          @NotNull Configuration conf) {
     ClassTreeWithConverters collectionOfWhat = classTree.getGenericParameters()[0];
     return collectionToStream((C) collection)
-      .map(it -> SerializeUtil.stringify(it, collectionOfWhat, sb))
+      .map(it -> SerializeUtil.stringify(it, collectionOfWhat, sb, conf))
       .collect(Collectors.joining(",", "[", "]"));
   }
 

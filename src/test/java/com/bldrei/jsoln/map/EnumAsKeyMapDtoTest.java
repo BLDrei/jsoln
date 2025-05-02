@@ -16,7 +16,7 @@ class EnumAsKeyMapDtoTest extends AbstractTest {
 
   @Test
   void deserializeSimpleMap() {
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize("""
+    EnumAsKeyMapDto dtoMap = new Jsoln().deserialize("""
       {
         "localLanguages": {
           "EE": "EST",

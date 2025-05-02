@@ -1,5 +1,7 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.TypeUtil;
@@ -11,7 +13,7 @@ import java.util.Objects;
 
 public record RecordFieldInfo(
   String name,
-  boolean isNullable,
+  boolean isRequired,
   ClassTreeWithConverters classTree,
   Method accessor,
   JsonModelType jsonModelType,
@@ -25,20 +27,32 @@ public record RecordFieldInfo(
     Objects.requireNonNull(dtoClass);
   }
 
-  public static RecordFieldInfo from(RecordComponent field) {
+  public static RecordFieldInfo from(RecordComponent field, Configuration conf) {
     Type originalType = field.getGenericType();
-    boolean isNullable = TypeUtil.isOptional(originalType);
+    boolean isWrappedWithOptional = TypeUtil.isOptional(originalType);
+
+    boolean isRequired = switch (conf.getRequiredFieldsDefinitionMode()) {
+      case ALLOW_OPTIONAL_FOR_FIELDS -> !isWrappedWithOptional;
+      case ALL_FIELDS_NULLABLE -> {
+        if (isWrappedWithOptional) {
+          throw new BadDtoException("Field '%s' in '%s' is of Optional type, but required fields definition mode is %s, so Optional is not supported");
+        }
+        yield false;
+      }
+    };
 
     ClassTreeWithConverters tree = ClassTreeWithConverters.fromType(
-      isNullable ? TypeUtil.unwrapOptional(originalType) : originalType
+      isWrappedWithOptional ? TypeUtil.unwrapOptional(originalType) : originalType
     );
     return new RecordFieldInfo(
       field.getName(),
-      isNullable,
+      isRequired,
       tree,
       field.getAccessor(),
       tree.getJsonDataType(),
       field.getDeclaringRecord()
     );
   }
+
+
 }

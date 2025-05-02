@@ -18,7 +18,7 @@ public class ListTest extends AbstractTest {
     var jo = """
       {"list": ["foo", "bar"]}
       """;
-    var list = Jsoln.deserialize(jo, ListDto.class).list();
+    var list = new Jsoln().deserialize(jo, ListDto.class).list();
 
     assertEquals(2, list.size());
     assertEquals("foo", list.getFirst());
@@ -32,7 +32,7 @@ public class ListTest extends AbstractTest {
     var jo = """
       {"list": []}
       """;
-    var list = Jsoln.deserialize(jo, ListDto.class).list();
+    var list = new Jsoln().deserialize(jo, ListDto.class).list();
 
     assertEquals(0, list.size());
     assertListIsUnmodifiable(list);
@@ -44,7 +44,7 @@ public class ListTest extends AbstractTest {
     var jo = """
       {"list": [null]}
       """;
-    var list = Jsoln.deserialize(jo, ListDto.class).list();
+    var list = new Jsoln().deserialize(jo, ListDto.class).list();
 
     assertEquals(1, list.size());
     assertNull(list.getFirst());
@@ -57,7 +57,7 @@ public class ListTest extends AbstractTest {
       {"list": ["foo", 12]}
       """;
     shouldThrow(JsolnException.class,
-      () -> Jsoln.deserialize(jo, ListDto.class),
+      () -> new Jsoln().deserialize(jo, ListDto.class),
       "Cannot convert Long to TEXT (java.lang.String)");
   }
 

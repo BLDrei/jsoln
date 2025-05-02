@@ -17,7 +17,7 @@ class JsolnRecordTest extends AbstractTest {
 
   @Test
   void deserializeSimpleObjectNoPrettyFormatting() {
-    ApplicationRecord application = Jsoln.deserialize("""
+    ApplicationRecord application = new Jsoln().deserialize("""
       {"country":"EE","channelId":6,"accountsList":["EE02"],"expirationDate":"2024-03-31","income":1300.12,"initialStatus":"ERROR","currentStatus":"IN_PROGRESS","application":null}""", ApplicationRecord.class);
     var accountsList = application.accountsList();
 
@@ -35,7 +35,7 @@ class JsolnRecordTest extends AbstractTest {
 
   @Test
   void deserializeSimpleObjectWhitespaceFormatting() {
-    ApplicationRecord application = Jsoln.deserialize("""
+    ApplicationRecord application = new Jsoln().deserialize("""
       {   \t    "country": "EE", \n "channelId": 6  , "accountsList" :[ "EE02" ,"empty"], "income" :1300.12 , "currentStatus" :"ERROR" }""", ApplicationRecord.class);
 
     assertNotNull(application);
@@ -47,7 +47,7 @@ class JsolnRecordTest extends AbstractTest {
 
   @Test
   void deserializeRecursiveObject() {
-    ApplicationRecord application = Jsoln.deserialize("""
+    ApplicationRecord application = new Jsoln().deserialize("""
       {"country":"EE","accountsList":["EE02","empty"],"channelId":6,"income":1300.12,"application":{"income":12.3456,"channelId":6,"accountsList":[],"currentStatus":"ERROR"},"currentStatus":"OK"}""", ApplicationRecord.class);
 
     assertNotNull(application);

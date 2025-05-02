@@ -1,25 +1,20 @@
 package com.bldrei.jsoln.cache;
 
+import com.bldrei.jsoln.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cache {
-  private Cache() {}
+  public Cache() {}
 
-  private static final Map<Class<?>, RecordDeserializationInfo<?>> recordDeserializationCache = new HashMap<>();
-
-  public static void clear() {
-    recordDeserializationCache.clear();
-  }
-
-  //todo: validate dto as well
+  private final Map<Class<?>, RecordDeserializationInfo<?>> recordDeserializationCache = new HashMap<>();
 
   @SuppressWarnings("unchecked")
-  public static <R> @NotNull RecordDeserializationInfo<R> getRecordDeserializationInfo(Class<R> clazz) {
+  public <R> @NotNull RecordDeserializationInfo<R> getRecordDeserializationInfo(Class<R> clazz, Configuration conf) {
     if (!clazz.isRecord()) throw new IllegalStateException();
-    return (RecordDeserializationInfo<R>) recordDeserializationCache.computeIfAbsent(clazz, RecordDeserializationInfo::from);
+    return (RecordDeserializationInfo<R>) recordDeserializationCache.computeIfAbsent(clazz, it -> RecordDeserializationInfo.from(it, conf));
   }
 
 }

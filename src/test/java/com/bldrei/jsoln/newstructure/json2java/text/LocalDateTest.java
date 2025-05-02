@@ -27,7 +27,7 @@ class LocalDateTest extends AbstractTest {
       }
       """.formatted(value);
 
-    assertEquals(value, Jsoln.deserialize(json, LocalDateDto.class).localDate().toString());
+    assertEquals(value, new Jsoln().deserialize(json, LocalDateDto.class).localDate().toString());
   }
 
   @ParameterizedTest
@@ -46,7 +46,7 @@ class LocalDateTest extends AbstractTest {
       """.formatted(value);
 
     shouldThrow(DateTimeParseException.class,
-      () -> Jsoln.deserialize(json, LocalDateDto.class));
+      () -> new Jsoln().deserialize(json, LocalDateDto.class));
   }
 
   @ParameterizedTest
@@ -61,7 +61,7 @@ class LocalDateTest extends AbstractTest {
       """.formatted(value);
 
     shouldThrow(DateTimeParseException.class,
-      () -> Jsoln.deserialize(json, LocalDateDto.class));
+      () -> new Jsoln().deserialize(json, LocalDateDto.class));
   }
 
 }

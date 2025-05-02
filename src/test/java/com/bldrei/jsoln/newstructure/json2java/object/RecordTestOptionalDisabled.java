@@ -1,34 +1,43 @@
 package com.bldrei.jsoln.newstructure.json2java.object;
 
 import com.bldrei.jsoln.AbstractTest;
+import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.Jsoln;
+import com.bldrei.jsoln.RequiredFieldsDefinitionMode;
+import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.exception.JsolnException;
-import com.bldrei.jsoln.exception.MissingValueException;
 import com.bldrei.jsoln.newstructure.dto.singlefield.StringDto;
+import com.bldrei.jsoln.simplesingleparam.SingleOptionalParamDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class RecordTestOptionalEnabled extends AbstractTest {
+public class RecordTestOptionalDisabled extends AbstractTest {
 
   private static final String empty = "{}";
   private static final String withStringNull = "{\"string\": null}";
   private static final String withStringFoo = "{\"string\": \"foo\"}";
 
+  private final Jsoln jsoln = new Jsoln(new Configuration(RequiredFieldsDefinitionMode.ALL_FIELDS_NULLABLE));
+
   @Test
-  void requiredPropertyIsNotPresent_shouldThrowMissingValueException() {
-    shouldThrow(MissingValueException.class,
-      () -> new Jsoln().deserialize(empty, StringDto.class)
-      //, todo: missing value msg
+  void fieldTypeIsOptional_shouldNotBeAllowed() {
+    shouldThrow(BadDtoException.class,
+      () -> jsoln.deserialize("{}", SingleOptionalParamDto.class)
     );
   }
 
   @Test
+  void propertyIsNotPresent_shouldBeOk() {
+    var dto = jsoln.deserialize(empty, StringDto.class);
+    assertNull(dto.string());
+  }
+
+  @Test
   void requiredPropertyIsNull_shouldThrowMissingValueException() {
-    shouldThrow(MissingValueException.class,
-      () -> new Jsoln().deserialize(withStringNull, StringDto.class)
-      //, todo: missing value msg
-    );
+    var dto = jsoln.deserialize(withStringNull, StringDto.class);
+    assertNull(dto.string());
   }
 
   @Test

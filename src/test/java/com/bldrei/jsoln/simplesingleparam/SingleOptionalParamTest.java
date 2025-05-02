@@ -3,7 +3,6 @@ package com.bldrei.jsoln.simplesingleparam;
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.io.JsonEOFException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   void deserialize_happyCase_success() {
-    SingleOptionalParamDto dto = Jsoln.deserialize("""
+    SingleOptionalParamDto dto = new Jsoln().deserialize("""
       {"optionalString":"12a "}""", SingleOptionalParamDto.class);
 
     assertNotNull(dto);
@@ -26,7 +25,7 @@ class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   void deserialize_spacesBetween_success() {
-    SingleOptionalParamDto dto = Jsoln.deserialize("""
+    SingleOptionalParamDto dto = new Jsoln().deserialize("""
       { \t "optionalString" \n:  "12a " \n\t  }""", SingleOptionalParamDto.class);
 
     assertNotNull(dto);
@@ -35,7 +34,7 @@ class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   void deserialize_prettyPrinted_success() {
-    SingleOptionalParamDto dto = Jsoln.deserialize("""
+    SingleOptionalParamDto dto = new Jsoln().deserialize("""
       {
         "optionalString": ""
       }""", SingleOptionalParamDto.class);
@@ -46,7 +45,7 @@ class SingleOptionalParamTest extends AbstractTest {
 
   @Test
   void deserialize_requiredValueNotPresent_isOk() {
-    SingleOptionalParamDto dto = Jsoln.deserialize("""
+    SingleOptionalParamDto dto = new Jsoln().deserialize("""
       {}""", SingleOptionalParamDto.class);
 
     assertTrue(dto.optionalString().isEmpty());
@@ -55,7 +54,7 @@ class SingleOptionalParamTest extends AbstractTest {
   @Test
   void deserialize_requiredValueIsNul_throwsSyntaxException() {
     shouldThrow(JsonParseException.class,
-      () -> Jsoln.deserialize("""
+      () -> new Jsoln().deserialize("""
         {"optionalString":nul}""", SingleOptionalParamDto.class));
   }
 
@@ -69,7 +68,7 @@ class SingleOptionalParamTest extends AbstractTest {
       "{\"optionalString\":\"12a \"",
       "\"optionalString\":\"12a \"}"
     ).forEach(json -> shouldThrow(IllegalArgumentException.class,
-      () -> Jsoln.deserialize(json, SingleOptionalParamDto.class))
+      () -> new Jsoln().deserialize(json, SingleOptionalParamDto.class))
     );
   }
 }

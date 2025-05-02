@@ -9,16 +9,16 @@ import java.util.Optional;
 public final class LocalDateTimeConverter extends TextConverter<LocalDateTime> {
 
   @Override
-  public LocalDateTime javaify(@NotNull String value) {
-    return Optional.ofNullable(Configuration.dateTimeFormatter)
+  public LocalDateTime javaify(@NotNull String value, @NotNull Configuration conf) {
+    return Optional.ofNullable(conf.getDateTimeFormatter())
       .map(formatter -> LocalDateTime.parse(value, formatter))
-      .orElse(LocalDateTime.parse(value));
+      .orElseGet(() -> LocalDateTime.parse(value));
   }
 
   @Override
-  public String stringify(@NotNull LocalDateTime ldt) {
-    var formatter = Configuration.dateTimeFormatter;
-    if (formatter == null) return ldt.toString();
-    return formatter.format(ldt);
+  public String stringify(@NotNull LocalDateTime ldt, @NotNull Configuration conf) {
+    return Optional.ofNullable(conf.getDateTimeFormatter())
+      .map(formatter -> formatter.format(ldt))
+      .orElseGet(ldt::toString);
   }
 }

@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ClassTreeWithConverters { //todo: rename, it's probably not a Tree
+public final class ClassTreeWithConverters {
 
   private static final ClassTreeWithConverters[] EMPTY = new ClassTreeWithConverters[]{};
 
@@ -35,7 +35,7 @@ public final class ClassTreeWithConverters { //todo: rename, it's probably not a
   public static ClassTreeWithConverters fromType(Type type) {
     if (type instanceof ParameterizedType parameterizedType) {
       Class<?> clazz = (Class<?>) parameterizedType.getRawType();
-      JsonModelType jsonDataType = AcceptedFieldTypes.determineFieldJsonDataType(clazz); //todo: throw exceptions specifying dto and field name
+      JsonModelType jsonDataType = AcceptedFieldTypes.determineFieldJsonDataType(clazz);
       return new ClassTreeWithConverters(
         clazz,
         jsonDataType,

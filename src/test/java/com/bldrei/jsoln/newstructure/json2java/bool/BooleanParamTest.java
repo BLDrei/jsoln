@@ -21,7 +21,7 @@ class BooleanParamTest extends AbstractTest {
       }
       """.formatted(bool);
 
-    assertEquals(bool, Jsoln.deserialize(jo, BoolDto.class).bool());
+    assertEquals(bool, new Jsoln().deserialize(jo, BoolDto.class).bool());
   }
 
   @Test
@@ -33,7 +33,7 @@ class BooleanParamTest extends AbstractTest {
       """;
 
     shouldThrow(JsolnException.class,
-      () -> Jsoln.deserialize(jo, BoolDto.class),
+      () -> new Jsoln().deserialize(jo, BoolDto.class),
       "Cannot convert String to BOOLEAN (java.lang.Boolean)");
   }
 }

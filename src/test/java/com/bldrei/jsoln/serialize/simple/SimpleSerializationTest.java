@@ -10,7 +10,7 @@ class SimpleSerializationTest extends AbstractTest {
 
   @Test
   public void testSimpleSerialization() {
-    String serialized = Jsoln.serialize(new SimpleDto("string", 1, true, null));
+    String serialized = new Jsoln().serialize(new SimpleDto("string", 1, true, null));
     assertEquals("""
       {"s":"string","i":1,"b":true}\
       """, serialized);

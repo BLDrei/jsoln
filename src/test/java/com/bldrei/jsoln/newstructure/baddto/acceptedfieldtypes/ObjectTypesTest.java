@@ -1,6 +1,7 @@
 package com.bldrei.jsoln.newstructure.baddto.acceptedfieldtypes;
 
 import com.bldrei.jsoln.AbstractTest;
+import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.AcceptedFieldTypes;
@@ -33,7 +34,7 @@ public class ObjectTypesTest extends AbstractTest {
     );
 
     if (okType.isRecord()) {
-      assertDoesNotThrow(() -> RecordDeserializationInfo.from(okType));
+      assertDoesNotThrow(() -> RecordDeserializationInfo.from(okType, Configuration.defaultConf()));
     }
   }
 

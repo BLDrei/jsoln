@@ -28,7 +28,7 @@ class MapTest extends AbstractTest {
         }
       }
       """;
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
+    EnumAsKeyMapDto dtoMap = new Jsoln().deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(3, localLanguages.size());
@@ -50,7 +50,7 @@ class MapTest extends AbstractTest {
         }
       }
       """;
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
+    EnumAsKeyMapDto dtoMap = new Jsoln().deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(2, localLanguages.size());
@@ -68,7 +68,7 @@ class MapTest extends AbstractTest {
         "localLanguages": {}
       }
       """;
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
+    EnumAsKeyMapDto dtoMap = new Jsoln().deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(0, localLanguages.size());
@@ -87,7 +87,7 @@ class MapTest extends AbstractTest {
         }
       }
       """;
-    EnumAsKeyMapDto dtoMap = Jsoln.deserialize(json, EnumAsKeyMapDto.class);
+    EnumAsKeyMapDto dtoMap = new Jsoln().deserialize(json, EnumAsKeyMapDto.class);
 
     var localLanguages = dtoMap.localLanguages();
     assertEquals(3, localLanguages.size());

@@ -25,7 +25,7 @@ class StringParamTest extends AbstractTest {
       {"string":"%s"}
       """.formatted(value);
 
-    assertEquals(value, Jsoln.deserialize(json, StringDto.class).string());
+    assertEquals(value, new Jsoln().deserialize(json, StringDto.class).string());
   }
 
   @Test
@@ -34,7 +34,7 @@ class StringParamTest extends AbstractTest {
       {"string":"\u0344"}
       """;
 
-    assertEquals("̈́", Jsoln.deserialize(json, StringDto.class).string());
+    assertEquals("̈́", new Jsoln().deserialize(json, StringDto.class).string());
   }
 
   @Test
@@ -43,7 +43,7 @@ class StringParamTest extends AbstractTest {
       {"string":"\\""}
       """;
 
-    assertEquals("\"", Jsoln.deserialize(json, StringDto.class).string());
+    assertEquals("\"", new Jsoln().deserialize(json, StringDto.class).string());
   }
 
   @Test
@@ -52,7 +52,7 @@ class StringParamTest extends AbstractTest {
       {"string":"\\t\\n"}
       """;
 
-    assertTrue(Jsoln.deserialize(json, StringDto.class).string().isBlank());
+    assertTrue(new Jsoln().deserialize(json, StringDto.class).string().isBlank());
   }
 
 

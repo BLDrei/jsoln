@@ -7,7 +7,6 @@ import com.bldrei.jsoln.newstructure.dto.singlefield.BigIntegerDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.DoubleDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.IntegerDto;
 import com.bldrei.jsoln.newstructure.dto.singlefield.wrapper.LongDto;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -38,12 +37,12 @@ public class NumberAsStringToNumberTest extends AbstractTest {
       "12345123451234512345"
     );
 
-    assertEquals("1.7976931348623157E308", Jsoln.deserialize(jo, DoubleDto.class)._double().toString());
-    assertEquals(new BigDecimal("12345123451234512345.99999999999999999999"), Jsoln.deserialize(jo, BigDecimalDto.class)._bigDecimal());
+    assertEquals("1.7976931348623157E308", new Jsoln().deserialize(jo, DoubleDto.class)._double().toString());
+    assertEquals(new BigDecimal("12345123451234512345.99999999999999999999"), new Jsoln().deserialize(jo, BigDecimalDto.class)._bigDecimal());
 
-    assertEquals(Integer.MAX_VALUE, Jsoln.deserialize(jo, IntegerDto.class)._int());
-    assertEquals(Long.MAX_VALUE, Jsoln.deserialize(jo, LongDto.class)._long());
-    assertEquals(new BigInteger("12345123451234512345"), Jsoln.deserialize(jo, BigIntegerDto.class)._bigInteger());
+    assertEquals(Integer.MAX_VALUE, new Jsoln().deserialize(jo, IntegerDto.class)._int());
+    assertEquals(Long.MAX_VALUE, new Jsoln().deserialize(jo, LongDto.class)._long());
+    assertEquals(new BigInteger("12345123451234512345"), new Jsoln().deserialize(jo, BigIntegerDto.class)._bigInteger());
   }
 
   @Test
@@ -64,12 +63,12 @@ public class NumberAsStringToNumberTest extends AbstractTest {
       "-12345123451234512345"
     );
 
-    assertEquals("4.9E-324", Jsoln.deserialize(jo, DoubleDto.class)._double().toString());
-    assertEquals(new BigDecimal("-12345123451234512345.99999999999999999999"), Jsoln.deserialize(jo, BigDecimalDto.class)._bigDecimal());
+    assertEquals("4.9E-324", new Jsoln().deserialize(jo, DoubleDto.class)._double().toString());
+    assertEquals(new BigDecimal("-12345123451234512345.99999999999999999999"), new Jsoln().deserialize(jo, BigDecimalDto.class)._bigDecimal());
 
-    assertEquals(Integer.MIN_VALUE, Jsoln.deserialize(jo, IntegerDto.class)._int());
-    assertEquals(Long.MIN_VALUE, Jsoln.deserialize(jo, LongDto.class)._long());
-    assertEquals(new BigInteger("-12345123451234512345"), Jsoln.deserialize(jo, BigIntegerDto.class)._bigInteger());
+    assertEquals(Integer.MIN_VALUE, new Jsoln().deserialize(jo, IntegerDto.class)._int());
+    assertEquals(Long.MIN_VALUE, new Jsoln().deserialize(jo, LongDto.class)._long());
+    assertEquals(new BigInteger("-12345123451234512345"), new Jsoln().deserialize(jo, BigIntegerDto.class)._bigInteger());
   }
 
   @Test
@@ -81,8 +80,8 @@ public class NumberAsStringToNumberTest extends AbstractTest {
       }
       """;
 
-    assertEquals(-5, Jsoln.deserialize(jo, DoubleDto.class)._double());
-    assertEquals(new BigDecimal(1234), Jsoln.deserialize(jo, BigDecimalDto.class)._bigDecimal());
+    assertEquals(-5, new Jsoln().deserialize(jo, DoubleDto.class)._double());
+    assertEquals(new BigDecimal(1234), new Jsoln().deserialize(jo, BigDecimalDto.class)._bigDecimal());
   }
 
   @Test
@@ -95,15 +94,15 @@ public class NumberAsStringToNumberTest extends AbstractTest {
       }""";
 
     shouldThrow(NumberFormatException.class,
-      () -> Jsoln.deserialize(jo, IntegerDto.class),
+      () -> new Jsoln().deserialize(jo, IntegerDto.class),
       "For input string: \"0.1\"");
 
     shouldThrow(NumberFormatException.class,
-      () -> Jsoln.deserialize(jo, LongDto.class),
+      () -> new Jsoln().deserialize(jo, LongDto.class),
       "For input string: \"0.0\"");
 
     shouldThrow(NumberFormatException.class,
-      () -> Jsoln.deserialize(jo, BigIntegerDto.class),
+      () -> new Jsoln().deserialize(jo, BigIntegerDto.class),
       "For input string: \".0\""); //omitted zero is native Java weirdness
   }
 
@@ -114,7 +113,7 @@ public class NumberAsStringToNumberTest extends AbstractTest {
         "_bigDecimal": 1234.000
       }""";
 
-    BigDecimal actualBigDecimal = Jsoln.deserialize(jo, BigDecimalDto.class)._bigDecimal();
+    BigDecimal actualBigDecimal = new Jsoln().deserialize(jo, BigDecimalDto.class)._bigDecimal();
 
     Stream.of(
       new BigDecimal("1234.000"),

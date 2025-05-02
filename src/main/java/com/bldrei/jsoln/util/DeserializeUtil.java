@@ -1,5 +1,6 @@
 package com.bldrei.jsoln.util;
 
+import com.bldrei.jsoln.Configuration;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.converter.bool.BooleanConverter;
 import com.bldrei.jsoln.converter.number.NumberConverter;
@@ -13,20 +14,20 @@ public class DeserializeUtil {
 
   private DeserializeUtil() {}
 
-  public static Object javaifyJsonModel(@NotNull JsonNode jsonNode, @NotNull ClassTreeWithConverters classTree) {
+  public static Object javaifyJsonModel(@NotNull JsonNode jsonNode, @NotNull ClassTreeWithConverters classTree, @NotNull Configuration conf) {
     if (jsonNode.isNull()) return null;
 
     return switch (classTree.getConverter()) {
       case TextConverter<?> tc
-        when jsonNode.isTextual() -> tc.javaify(jsonNode.textValue());
+        when jsonNode.isTextual() -> tc.javaify(jsonNode.textValue(), conf);
       case NumberConverter<?> nc
-        when jsonNode.isNumber() -> nc.javaify(jsonNode.numberValue().toString());
+        when jsonNode.isNumber() -> nc.javaify(jsonNode.numberValue().toString(), conf);
       case BooleanConverter bc
         when jsonNode.isBoolean() -> jsonNode.asBoolean();
       case ArrayConverter<?> ac
-        when jsonNode.isArray() -> ac.javaify(jsonNode, classTree);
+        when jsonNode.isArray() -> ac.javaify(jsonNode, classTree, conf);
       case ObjectConverter<?> oc
-        when jsonNode.isObject() -> oc.javaify(jsonNode, classTree);
+        when jsonNode.isObject() -> oc.javaify(jsonNode, classTree, conf);
       default -> throw JsolnException.cannotCovertJsonElementToType(classTree, jsonNode.getClass());
     };
   }

@@ -12,7 +12,7 @@ class MapStringStringTest extends AbstractTest {
 
   @Test
   void deserializeSimpleMap() {
-    DtoWithStringStringMap dtoMap = Jsoln.deserialize("""
+    DtoWithStringStringMap dtoMap = new Jsoln().deserialize("""
       {"map": {"k1": "v1", "k2": "v2", "k3": null} }
       """, DtoWithStringStringMap.class);
 

@@ -57,8 +57,8 @@ public class ReflectionUtil {
     try {
       return recordClass.getDeclaredConstructor(types);
     }
-    catch (NoSuchMethodException wtf) {
-      throw new IllegalStateException("No canonical constructor for a record? Java, what's wrong with you?", wtf);
+    catch (NoSuchMethodException unreachable) {
+      throw new IllegalStateException("No canonical constructor for a record? Java, what's wrong with you?", unreachable);
     }
   }
 

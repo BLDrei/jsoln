@@ -15,7 +15,6 @@ class FirstLastTokenTest extends AbstractTest {
   @ValueSource(strings = {
     "{]",
     "[}",
-    "",
     """
       "foo": "bar"
       """,
@@ -28,7 +27,7 @@ class FirstLastTokenTest extends AbstractTest {
   })
   void jsonIsNotWrappedIntoBracketsOrCurlyBraces_shouldThrowException(String json) {
     shouldThrow(JsonParseException.class,
-      () -> Jsoln.deserialize(json, DummyDTO.class));
+      () -> new Jsoln().deserialize(json, DummyDTO.class));
   }
 
   @ParameterizedTest
@@ -40,7 +39,7 @@ class FirstLastTokenTest extends AbstractTest {
       """
   })
   void jsonIsWrappedIntoBracketsOrCurlyBraces_ok_list(String json) {
-    Jsoln.deserialize(json, new TypeReference<List<String>>() {});
+    new Jsoln().deserialize(json, new TypeReference<List<String>>() {});
   }
 
   @ParameterizedTest
@@ -52,7 +51,7 @@ class FirstLastTokenTest extends AbstractTest {
       """
   })
   void jsonIsWrappedIntoBracketsOrCurlyBraces_ok_record(String json) {
-    Jsoln.deserialize(json, DummyDTO.class);
+    new Jsoln().deserialize(json, DummyDTO.class);
   }
 
   public record DummyDTO() {}

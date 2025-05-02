@@ -1,10 +1,11 @@
 package com.bldrei.jsoln.converter.object;
 
 import com.bldrei.jsoln.Configuration;
-import com.bldrei.jsoln.cache.Cache;
+import com.bldrei.jsoln.RequiredFieldsDefinitionMode;
 import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;
+import com.bldrei.jsoln.exception.MissingValueException;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.bldrei.jsoln.util.DeserializeUtil;
@@ -23,31 +24,37 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
   @Override
   @SuppressWarnings("unchecked")
   public R javaify(@NotNull JsonNode jsonNode,
-                   @NotNull ClassTreeWithConverters classTree) {
-    var recordDeserializationInfo = (RecordDeserializationInfo<R>) Cache.getRecordDeserializationInfo(classTree.getRawType());
+                   @NotNull ClassTreeWithConverters classTree,
+                   @NotNull Configuration conf) {
+    var recordDeserializationInfo = (RecordDeserializationInfo<R>) conf.getCache().getRecordDeserializationInfo(classTree.getRawType(), conf);
     var kvMap = jsonNode.properties()
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+    boolean areOptionalsAllowed = conf.getRequiredFieldsDefinitionMode() == RequiredFieldsDefinitionMode.ALLOW_OPTIONAL_FOR_FIELDS;
+
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
-      boolean isNullable = recordComponent.isNullable();
+      boolean isRequired = recordComponent.isRequired();
       var value = Optional.ofNullable(kvMap.get(recordComponent.name()));
-      boolean valuePresent = value.isPresent() && !value.get().isNull();
+      boolean valuePresent = value.filter(it -> !it.isNull()).isPresent();
 
       if (valuePresent) {
-        if (JsonModelType.determineJsonModelTypeFromJsonNode(value.get()) != recordComponent.jsonModelType()) { //todo: move to JsonElement conversion logic
+        if (JsonModelType.determineJsonModelTypeFromJsonNode(value.get()) != recordComponent.jsonModelType()) {
           throw JsolnException.cannotCovertJsonElementToType(recordComponent.classTree(), value.get().getClass());
         }
-        Object valueOfActualType = DeserializeUtil.javaifyJsonModel(value.get(), recordComponent.classTree());
-        return isNullable ? Optional.ofNullable(valueOfActualType) : valueOfActualType;
+        Object valueOfActualType = DeserializeUtil.javaifyJsonModel(value.get(), recordComponent.classTree(), conf);
+        return !isRequired && areOptionalsAllowed ? Optional.ofNullable(valueOfActualType) : valueOfActualType;
       }
-      else if (isNullable) {
-        return Optional.empty();
-      }
-      else {
-        Configuration.missingRequiredValueHandler.accept(recordComponent.name(), recordComponent.dtoClass());
+
+      if (isRequired) {
+        if (areOptionalsAllowed) {
+          throw new MissingValueException("Value not present, but field '%s' is mandatory on dto class %s".formatted(recordComponent.name(), recordComponent.dtoClass()));
+        }
         return null;
       }
+
+      return areOptionalsAllowed ? Optional.empty() : null;
+
     }).toArray();
 
     return ReflectionUtil.invokeCanonicalConstructor(recordDeserializationInfo.getCanonicalConstructor(), params);
@@ -55,8 +62,9 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
   @Override
   protected Map<String, String> toJsonModelMutableMap(@NotNull R obj,
-                                                      @NotNull ClassTreeWithConverters classTree) {
-    var recordDeserializationInfo = Cache.getRecordDeserializationInfo(classTree.getRawType());
+                                                      @NotNull ClassTreeWithConverters classTree,
+                                                      @NotNull Configuration conf) {
+    var recordDeserializationInfo = conf.getCache().getRecordDeserializationInfo(classTree.getRawType(), conf);
     Map<String, String> kvMap = new LinkedHashMap<>(recordDeserializationInfo.getFieldsInfo().size());
 
     for (RecordFieldInfo rc : recordDeserializationInfo.getFieldsInfo()) {
@@ -71,7 +79,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
 
       kvMap.put(
         rc.name(),
-        SerializeUtil.stringify(flatValue, rc.classTree(), null)
+        SerializeUtil.stringify(flatValue, rc.classTree(), null, conf)
       );
     }
     return kvMap;

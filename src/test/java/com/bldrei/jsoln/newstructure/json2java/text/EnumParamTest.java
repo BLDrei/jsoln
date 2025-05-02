@@ -2,8 +2,8 @@ package com.bldrei.jsoln.newstructure.json2java.text;
 
 import com.bldrei.jsoln.AbstractTest;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.exception.JsolnReflectionException;
+import com.bldrei.jsoln.exception.MissingValueException;
 import com.bldrei.jsoln.newstructure.dto.singlefield.enums.EnumDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +25,7 @@ class EnumParamTest extends AbstractTest {
       }
       """.formatted(value);
 
-    assertEquals(value, Jsoln.deserialize(json, EnumDto.class).gender().name());
+    assertEquals(value, new Jsoln().deserialize(json, EnumDto.class).gender().name());
   }
 
   @ParameterizedTest
@@ -43,7 +43,7 @@ class EnumParamTest extends AbstractTest {
       """.formatted(value);
 
     var ex = shouldThrow(JsolnReflectionException.class,
-      () -> Jsoln.deserialize(json, EnumDto.class),
+      () -> new Jsoln().deserialize(json, EnumDto.class),
       "java.lang.IllegalArgumentException: No enum constant com.bldrei.jsoln.newstructure.dto.singlefield.enums.Gender." + value);
     assertEquals(IllegalArgumentException.class, ex.getCause().getClass());
   }
@@ -56,8 +56,8 @@ class EnumParamTest extends AbstractTest {
       }
       """;
 
-    shouldThrow(JsolnException.class,
-      () -> Jsoln.deserialize(json, EnumDto.class),
+    shouldThrow(MissingValueException.class,
+      () -> new Jsoln().deserialize(json, EnumDto.class),
       "Value not present, but field 'gender' is mandatory on dto class com.bldrei.jsoln.newstructure.dto.singlefield.enums.EnumDto");
   }
 
