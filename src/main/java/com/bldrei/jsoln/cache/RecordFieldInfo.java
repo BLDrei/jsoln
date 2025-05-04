@@ -32,8 +32,8 @@ public record RecordFieldInfo(
     boolean isWrappedWithOptional = TypeUtil.isOptional(originalType);
 
     boolean isRequired = switch (conf.getRequiredFieldsDefinitionMode()) {
-      case ALLOW_OPTIONAL_FOR_FIELDS -> !isWrappedWithOptional;
-      case ALL_FIELDS_NULLABLE -> {
+      case STRICT -> !isWrappedWithOptional;
+      case LENIENT -> {
         if (isWrappedWithOptional) {
           throw new BadDtoException("Field '%s' in '%s' is of Optional type, but required fields definition mode is %s, so Optional is not supported");
         }

@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class RecordTestOptionalDisabled extends AbstractTest {
+public class RecordTestLenientMode extends AbstractTest {
 
   private static final String empty = "{}";
   private static final String withStringNull = "{\"string\": null}";
   private static final String withStringFoo = "{\"string\": \"foo\"}";
 
-  private final Jsoln jsoln = new Jsoln(new Configuration(RequiredFieldsDefinitionMode.ALL_FIELDS_NULLABLE));
+  private final Jsoln jsoln = new Jsoln(new Configuration(RequiredFieldsDefinitionMode.LENIENT));
 
   @Test
   void fieldTypeIsOptional_shouldNotBeAllowed() {

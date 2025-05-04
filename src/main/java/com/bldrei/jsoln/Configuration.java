@@ -14,7 +14,7 @@ public final class Configuration {
   private final Cache cache;
 
   public static Configuration defaultConf() {
-    return new Configuration(null, RequiredFieldsDefinitionMode.ALLOW_OPTIONAL_FOR_FIELDS, new Cache());
+    return new Configuration(null, RequiredFieldsDefinitionMode.STRICT, new Cache());
   }
 
   public Configuration(RequiredFieldsDefinitionMode requiredFieldsDefinitionMode) {

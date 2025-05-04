@@ -31,7 +31,7 @@ public final class RecordConverter<R> extends ObjectConverter<R> {
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    boolean areOptionalsAllowed = conf.getRequiredFieldsDefinitionMode() == RequiredFieldsDefinitionMode.ALLOW_OPTIONAL_FOR_FIELDS;
+    boolean areOptionalsAllowed = conf.getRequiredFieldsDefinitionMode() == RequiredFieldsDefinitionMode.STRICT;
 
     Object[] params = recordDeserializationInfo.getFieldsInfo().stream().map(recordComponent -> {
       boolean isRequired = recordComponent.isRequired();

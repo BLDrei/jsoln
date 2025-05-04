@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RecordTestOptionalEnabled extends AbstractTest {
+public class RecordTestStrictMode extends AbstractTest {
 
   private static final String empty = "{}";
   private static final String withStringNull = "{\"string\": null}";
