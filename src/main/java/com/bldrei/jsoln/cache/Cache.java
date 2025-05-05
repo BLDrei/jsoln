@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.cache;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

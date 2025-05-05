@@ -1,4 +1,4 @@
-package com.bldrei.jsoln;
+package com.bldrei.jsoln.configuration;
 
 import com.bldrei.jsoln.cache.Cache;
 import lombok.AllArgsConstructor;

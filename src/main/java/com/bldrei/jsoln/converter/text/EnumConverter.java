@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.text;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.number;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 public final class LongConverter extends NumberConverter<Long> {

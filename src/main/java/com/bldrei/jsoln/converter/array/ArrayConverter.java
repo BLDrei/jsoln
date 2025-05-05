@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.array;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;

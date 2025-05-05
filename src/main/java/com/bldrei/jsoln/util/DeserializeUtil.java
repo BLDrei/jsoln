@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.util;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.converter.array.ArrayConverter;
 import com.bldrei.jsoln.converter.bool.BooleanConverter;
 import com.bldrei.jsoln.converter.number.NumberConverter;

@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.number;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import org.jetbrains.annotations.NotNull;
 

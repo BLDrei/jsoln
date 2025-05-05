@@ -1,7 +1,7 @@
 package com.bldrei.jsoln.converter.object;
 
-import com.bldrei.jsoln.Configuration;
-import com.bldrei.jsoln.RequiredFieldsDefinitionMode;
+import com.bldrei.jsoln.configuration.Configuration;
+import com.bldrei.jsoln.configuration.RequiredFieldsDefinitionMode;
 import com.bldrei.jsoln.cache.RecordDeserializationInfo;
 import com.bldrei.jsoln.cache.RecordFieldInfo;
 import com.bldrei.jsoln.exception.JsolnException;

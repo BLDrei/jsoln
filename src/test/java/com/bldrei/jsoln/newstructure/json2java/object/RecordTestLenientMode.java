@@ -1,9 +1,9 @@
 package com.bldrei.jsoln.newstructure.json2java.object;
 
 import com.bldrei.jsoln.AbstractTest;
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.Jsoln;
-import com.bldrei.jsoln.RequiredFieldsDefinitionMode;
+import com.bldrei.jsoln.configuration.RequiredFieldsDefinitionMode;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.exception.JsolnException;
 import com.bldrei.jsoln.newstructure.dto.singlefield.StringDto;

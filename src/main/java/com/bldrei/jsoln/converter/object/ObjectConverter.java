@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.object;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.converter.AbstractConverter;
 import com.bldrei.jsoln.util.ClassTreeWithConverters;
 import com.fasterxml.jackson.databind.JsonNode;

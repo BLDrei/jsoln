@@ -1,6 +1,6 @@
 package com.bldrei.jsoln.converter.object;
 
-import com.bldrei.jsoln.Configuration;
+import com.bldrei.jsoln.configuration.Configuration;
 import com.bldrei.jsoln.converter.text.TextConverter;
 import com.bldrei.jsoln.exception.BadDtoException;
 import com.bldrei.jsoln.jsonmodel.JsonModelType;
